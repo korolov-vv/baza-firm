@@ -1,0 +1,22 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: firms
+    profiles:
+      active: ${DEPLOY_ENV:local}
+  datasource:
+    url: ${POSTGRESQL_DB_URL:jdbc:postgresql://localhost:25432/postgres}
+    username: ${POSTGRESQL_DB_USERNAME:bazafirm}
+    password: ${POSTGRESQL_DB_PASSWORD:bazafirm}
+  jpa:
+    database: postgresql
+    hibernate:
+      ddl-auto: none
+  liquibase:
+    change-log: classpath:db/changelog/baza-firmy-changelog.yaml
+
+ceidg:
+  ceidg-path: https://dane.biznes.gov.pl/api/ceidg/v2
+  token: ${CEIDG_TOKEN}
