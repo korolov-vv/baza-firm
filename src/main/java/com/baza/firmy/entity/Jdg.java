@@ -16,6 +16,8 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -45,6 +47,7 @@ public class Jdg {
   private Long id;
   @EqualsAndHashCode.Include
   private UUID uuid;
+  private LocalDateTime createDate;
   @EqualsAndHashCode.Include
   private String nazwa;
   @EqualsAndHashCode.Include
@@ -79,11 +82,11 @@ public class Jdg {
   @JdbcTypeCode(SqlTypes.JSON)
   private List<SpolkaDto> spolki = new ArrayList<>();
 
-  private String dataRozpoczecia;
-  private String dataZawieszenia;
-  private String dataZakonczenia;
-  private String dataWykreslenia;
-  private String dataWznowienia;
+  private LocalDate dataRozpoczecia;
+  private LocalDate dataZawieszenia;
+  private LocalDate dataZakonczenia;
+  private LocalDate dataWykreslenia;
+  private LocalDate dataWznowienia;
 
   @Enumerated(EnumType.STRING)
   private BusinessStatus status;

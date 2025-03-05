@@ -1,6 +1,5 @@
 package com.baza.firmy.mapper;
 
-import com.baza.firmy.constants.enums.BusinessStatus;
 import com.baza.firmy.entity.Adres;
 import com.baza.firmy.entity.Jdg;
 import com.baza.firmy.entity.Kraj;
@@ -9,6 +8,8 @@ import com.baza.firmy.entity.Pkd;
 import com.baza.firmy.response.AdresDto;
 import com.baza.firmy.response.JdgSzczegolyDto;
 import com.baza.firmy.response.KrajDto;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 import org.mapstruct.Mapper;
@@ -16,10 +17,11 @@ import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.Named;
 
-@Mapper(componentModel = "spring", imports = { UUID.class, BusinessStatus.class, Pkd.class })
+@Mapper(componentModel = "spring", imports = { UUID.class, LocalDateTime.class })
 public interface JdgMapper {
 
   @Mapping(target = "uuid", expression = "java(UUID.randomUUID())")
+  @Mapping(target = "createDate", expression = "java(LocalDateTime.now())")
   @Mapping(target = "pelneInfo", source = ".")
   @Mapping(target = "pkdGlowny", source = ".", qualifiedByName = "setPkdGlowny")
   @Mapping(target = "pkd", source = ".", qualifiedByName = "setPkd")
@@ -27,10 +29,16 @@ public interface JdgMapper {
   Jdg toJdgEntity(JdgSzczegolyDto dto);
 
   @Mapping(target = "uuid", expression = "java(UUID.randomUUID())")
+  @Mapping(target = "createDate", expression = "java(LocalDateTime.now())")
   @Mapping(target = "pelneInfo", source = ".")
   @Mapping(target = "pkdGlowny", source = ".", qualifiedByName = "setPkdGlowny")
   @Mapping(target = "pkd", source = ".", qualifiedByName = "setPkd")
   @Mapping(target = "wlasciciel", source = ".", qualifiedByName = "setWlasciciel")
+  @Mapping(target = "dataRozpoczecia", source = "dataRozpoczecia", qualifiedByName = "setDate")
+  @Mapping(target = "dataZawieszenia", source = "dataZawieszenia", qualifiedByName = "setDate")
+  @Mapping(target = "dataZakonczenia", source = "dataZakonczenia", qualifiedByName = "setDate")
+  @Mapping(target = "dataWykreslenia", source = "dataWykreslenia", qualifiedByName = "setDate")
+  @Mapping(target = "dataWznowienia", source = "dataWznowienia", qualifiedByName = "setDate")
   Jdg toJdgEntity(@MappingTarget Jdg entity, JdgSzczegolyDto dto);
 
   @Mapping(target = "uuid", expression = "java(UUID.randomUUID())")
@@ -72,5 +80,10 @@ public interface JdgMapper {
     osoba.setRegon(dto.getWlasciciel().getRegon());
     osoba.getObywatelstwa().addAll(dto.getObywatelstwa().stream().map(this::toKrajEntity).toList());
     return osoba;
+  }
+
+  @Named("setDate")
+  default LocalDate setDate(String date) {
+    return LocalDate.parse(date);
   }
 }

@@ -20,7 +20,7 @@ public class TestSchedulerService implements BazowySchedulerService {
     try {
       log.info("Start test job");
 //      quartzManager.stworzZadanieSchedulera(SchedulerSingleEnum.POBIERAJ_LISTE_JDG_SCHEDULER);
-      quartzManager.stworzZadanieSchedulera(SchedulerSingleEnum.POBIERAJ_SZCZEGOLY_JDG_SCHEDULER);
+//      quartzManager.stworzZadanieSchedulera(SchedulerSingleEnum.POBIERAJ_SZCZEGOLY_JDG_SCHEDULER);
       TimeUnit.SECONDS.sleep(10);
       log.info("Koniec test job");
     } catch (InterruptedException exception) {

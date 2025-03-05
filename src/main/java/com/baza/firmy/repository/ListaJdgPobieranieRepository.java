@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 public interface ListaJdgPobieranieRepository extends JpaRepository<ListaJdgPobieranie, Long> {
 
   Optional<ListaJdgPobieranie> findFirstByCzyStareDaneOrderByIdDesc(boolean czyStareDane);
-  
+
   List<ListaJdgPobieranie> findAllByCzyObsluzonaIsFalseAndCzyStareDaneIsFalse();
   
   List<ListaJdgPobieranie> findAllByCzyObsluzonaIsFalseAndCzyStareDaneIsTrueOrderByIdDesc();

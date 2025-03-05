@@ -8,6 +8,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
@@ -36,6 +37,7 @@ public class ListaJdgPobieranie {
  private Long id;
  @EqualsAndHashCode.Include
  private UUID uuid;
+ private LocalDateTime createDate;
 
  @Column (columnDefinition = "jsonb")
  @JdbcTypeCode (SqlTypes.JSON)

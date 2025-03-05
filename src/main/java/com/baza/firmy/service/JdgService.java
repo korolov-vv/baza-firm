@@ -31,6 +31,10 @@ class JdgService {
   private final PkdRepository pkdRepository;
   private final KrajRepository krajRepository;
 
+  public List<Jdg> pobierzListeJdg() {
+    return jdgRepository.findAll();
+  }
+
   @Transactional
   public UUID zapiszSzczegolyJdg(JdgSzczegolyDto jdgSzczegolyDto) {
     Jdg doZapisu = jdgRepository.findByCeidgId(jdgSzczegolyDto.getCeidgId())

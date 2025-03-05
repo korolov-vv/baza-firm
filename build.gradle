@@ -32,6 +32,7 @@ dependencies {
 	implementation 'org.hibernate.orm:hibernate-envers:6.6.8.Final'
 	implementation 'org.mapstruct:mapstruct:1.6.3'
 	implementation 'org.postgresql:postgresql:42.7.5'
+	implementation 'net.kaczmarzyk:specification-arg-resolver:3.1.0'
 
 
 	compileOnly 'org.projectlombok:lombok'
