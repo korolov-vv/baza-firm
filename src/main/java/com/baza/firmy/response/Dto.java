@@ -1,6 +1,7 @@
 package com.baza.firmy.response;
 
-import java.util.UUID;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -8,11 +9,10 @@ import lombok.NoArgsConstructor;
 
 @Data
 @Builder
-@NoArgsConstructor(force = true)
+@NoArgsConstructor (force = true)
 @AllArgsConstructor
-public class KrajDto {
+public class Dto {
 
-  private UUID uuid;
-  private String symbol;
-  private String kraj;
+  @Builder.Default
+  private List<JdgSzczegolyDto> firma = new ArrayList<>();
 }

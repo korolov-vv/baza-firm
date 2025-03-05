@@ -8,11 +8,10 @@ import lombok.NoArgsConstructor;
 
 @Data
 @Builder
-@NoArgsConstructor(force = true)
+@NoArgsConstructor (force = true)
 @AllArgsConstructor
-public class KrajDto {
+public class PkdDto {
 
   private UUID uuid;
-  private String symbol;
-  private String kraj;
+  private String kod;
 }

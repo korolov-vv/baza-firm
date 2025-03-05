@@ -1,6 +1,7 @@
 package com.baza.firmy.service;
 
 import com.baza.firmy.integration.ceidg.CeidgClient;
+import com.baza.firmy.response.Dto;
 import com.baza.firmy.response.ListaJdgDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -11,7 +12,11 @@ class CeidgService {
   
   private final CeidgClient ceidgClient;
 
-  public ListaJdgDto getBusineses(String link) {
-    return ceidgClient.getBusineses(link);
+  public ListaJdgDto pobierzListeJdg(String link) {
+    return ceidgClient.pobierzListeJdg(link);
+  }
+
+  public Dto pobierzSzczegolyJdg(String link) {
+    return ceidgClient.pobierzSzczegolyJdg(link);
   }
 }

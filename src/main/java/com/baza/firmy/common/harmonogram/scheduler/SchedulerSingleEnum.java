@@ -9,7 +9,8 @@ import org.springframework.scheduling.quartz.QuartzJobBean;
 @Getter
 public enum SchedulerSingleEnum {
 
-  POBIERAJ_LISTE_JDG_SCHEDULER("POBIERAJ_LISTE_JDG_TRIGGER", "POBIERAJ_LISTE_JDG_JOB", PobierajListeJDGJob.class);
+  POBIERAJ_LISTE_JDG_SCHEDULER("POBIERAJ_LISTE_JDG_TRIGGER", "POBIERAJ_LISTE_JDG_JOB", PobierajListeJDGJob.class),
+  POBIERAJ_SZCZEGOLY_JDG_SCHEDULER("POBIERAJ_SZCZEGOLY_JDG_TRIGGER", "POBIERAJ_SZCZEGOLY_JDG_JOB", PobierajSzczegolyJDGJob.class);
 
   private String triggerKod;
   private String jobKod;

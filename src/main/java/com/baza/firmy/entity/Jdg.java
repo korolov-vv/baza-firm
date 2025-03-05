@@ -1,6 +1,7 @@
 package com.baza.firmy.entity;
 
 import com.baza.firmy.constants.enums.BusinessStatus;
+import com.baza.firmy.response.JdgSzczegolyDto;
 import com.baza.firmy.response.SpolkaDto;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -32,7 +33,7 @@ import org.hibernate.type.SqlTypes;
 @AllArgsConstructor
 @Entity
 @Table(name = "jednoosobowe_dzialalnosci_gospodarcze")
-public class JednoosobowaDzialalnoscGospodarcza {
+public class Jdg {
 
   @Id
   @SequenceGenerator (
@@ -61,7 +62,9 @@ public class JednoosobowaDzialalnoscGospodarcza {
   @JoinColumn(name = "wlasciciel_id", referencedColumnName = "id")
   private Osoba wlasciciel;
 
-  private String pkdGlowny;
+  @OneToOne
+  @JoinColumn (name = "pkd_glowny_id", referencedColumnName = "id")
+  private Pkd pkdGlowny;
 
   @OneToMany
   @JoinTable(
@@ -89,11 +92,11 @@ public class JednoosobowaDzialalnoscGospodarcza {
   private String email;
   private String www;
   private String adresDoreczenElektronicznych;
-  private String innaFormaKonaktu;
+  private String innaFormaKontaktu;
 
   @Column(columnDefinition = "jsonb")
   @JdbcTypeCode(SqlTypes.JSON)
-  private String pelneInfo;
+  private JdgSzczegolyDto pelneInfo;
   
   private String link;
 }

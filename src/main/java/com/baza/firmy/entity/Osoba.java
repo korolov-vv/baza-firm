@@ -17,7 +17,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import org.hibernate.envers.NotAudited;
 
 @Data
 @Builder
@@ -44,7 +43,6 @@ public class Osoba {
   private String regon;
   private String imie;
   private String nazwisko;
-  @NotAudited
   @OneToMany
   @JoinTable (name = "obywatelstwa",
       joinColumns = @JoinColumn(name = "osoba_id"),

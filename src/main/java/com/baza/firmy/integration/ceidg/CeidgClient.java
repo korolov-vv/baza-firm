@@ -4,6 +4,7 @@ import static com.baza.firmy.constants.WebClientConstants.CALL_TO_CEIDG_FAILED_L
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
 import com.baza.firmy.configuration.properties.CeidgProperties;
+import com.baza.firmy.response.Dto;
 import com.baza.firmy.response.ListaJdgDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,7 +23,7 @@ public class CeidgClient {
   private final WebClient webClient;
   private final CeidgProperties ceidgProperties;
 
-  public ListaJdgDto getBusineses(String link) {
+  public ListaJdgDto pobierzListeJdg(String link) {
     log.info(START_REQUEST_LOG, link);
     final var response =
         webClient
@@ -31,6 +32,25 @@ public class CeidgClient {
             .header(AUTHORIZATION, createAuthorizationHeader())
             .retrieve()
             .bodyToMono(ListaJdgDto.class)
+            .onErrorResume(
+                throwable -> {
+                  log.error(CALL_TO_CEIDG_FAILED_LOG, throwable.getMessage());
+                  return Mono.error(throwable);
+                })
+            .block();
+    log.info(COMPLETE_REQUEST_LOG, link);
+    return response;
+  }
+
+  public Dto pobierzSzczegolyJdg(String link) {
+    log.info(START_REQUEST_LOG, link);
+    final var response =
+        webClient
+            .get()
+            .uri(link)
+            .header(AUTHORIZATION, createAuthorizationHeader())
+            .retrieve()
+            .bodyToMono(Dto.class)
             .onErrorResume(
                 throwable -> {
                   log.error(CALL_TO_CEIDG_FAILED_LOG, throwable.getMessage());

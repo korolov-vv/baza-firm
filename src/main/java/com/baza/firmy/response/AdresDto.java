@@ -1,5 +1,6 @@
 package com.baza.firmy.response;
 
+import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -11,6 +12,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class AdresDto {
 
+  private UUID uuid;
   private String ulica;
   private String budynek;
   private String miasto;
