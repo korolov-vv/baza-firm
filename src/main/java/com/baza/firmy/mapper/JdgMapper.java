@@ -1,11 +1,13 @@
 package com.baza.firmy.mapper;
 
+import com.baza.firmy.dto.WlascicielDto;
 import com.baza.firmy.entity.Adres;
 import com.baza.firmy.entity.Jdg;
 import com.baza.firmy.entity.Kraj;
 import com.baza.firmy.entity.Osoba;
 import com.baza.firmy.entity.Pkd;
 import com.baza.firmy.response.AdresDto;
+import com.baza.firmy.dto.JdgListDto;
 import com.baza.firmy.response.JdgSzczegolyDto;
 import com.baza.firmy.response.KrajDto;
 import java.time.LocalDate;
@@ -41,9 +43,20 @@ public interface JdgMapper {
   @Mapping(target = "dataWznowienia", source = "dataWznowienia", qualifiedByName = "setDate")
   Jdg toJdgEntity(@MappingTarget Jdg entity, JdgSzczegolyDto dto);
 
+  @Mapping(target = "pkdGlowny", source = "pkdGlowny.kod")
+  @Mapping(target = "pkd", source = ".", qualifiedByName = "setPkdString")
+  JdgListDto toJdgListDtoList(Jdg entity);
+
+  List<JdgListDto> toJdgListDtoList(List<Jdg> entity);
+
   @Mapping(target = "uuid", expression = "java(UUID.randomUUID())")
   @Mapping(target = "kodPocztowy", source = "kod")
   Adres toAdresEntity(AdresDto dto);
+
+  @Mapping(target = "kod", source = "kodPocztowy")
+  AdresDto toAdresDto(Adres dto);
+
+  WlascicielDto toWlascicielDto(Osoba entity);
 
   @Mapping(target = "id", ignore = true)
   @Mapping(target = "uuid", expression = "java(UUID.randomUUID())")
@@ -67,6 +80,13 @@ public interface JdgMapper {
           pkd.setKod(pkdDto);
           return pkd;
         })
+        .toList();
+  }
+
+  @Named("setPkdString")
+  default List<String> setPkdString(Jdg entity) {
+    return entity.getPkd().stream()
+        .map(Pkd::getKod)
         .toList();
   }
 

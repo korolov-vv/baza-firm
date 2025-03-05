@@ -11,7 +11,8 @@ import org.springframework.data.jpa.domain.Specification;
 
 @And({
     @Spec(path = "nazwa", params = "nazwa", spec = LikeIgnoreCase.class),
-    @Spec(path = "pkdGlowny", params = "pkd", paramSeparator = ',', spec = In.class),
+    @Spec(path = "pkdGlowny", params = "pkd", spec = LikeIgnoreCase.class),
+    @Spec(path = "pkd", params = "pkd", paramSeparator = ',', spec = In.class),
     @Spec(path = "dataRozpoczecia", params = "dataRozpoczecia", spec = GreaterThanOrEqualDateIfPresent.class),
     @Spec(path = "status", params = "status", defaultVal = "AKTYWNY", spec = Equal.class),
     @Spec(path = "adresKorespondencyjny.wojewodztwo", params = "wojewodztwo", spec = LikeIgnoreCase.class),

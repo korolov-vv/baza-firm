@@ -7,10 +7,12 @@ import com.baza.firmy.entity.Osoba;
 import com.baza.firmy.entity.Pkd;
 import com.baza.firmy.mapper.JdgMapper;
 import com.baza.firmy.repository.AdresRepository;
+import com.baza.firmy.repository.JdgFilterSpecification;
 import com.baza.firmy.repository.JdgRepository;
 import com.baza.firmy.repository.KrajRepository;
 import com.baza.firmy.repository.OsobaRepository;
 import com.baza.firmy.repository.PkdRepository;
+import com.baza.firmy.dto.JdgListDto;
 import com.baza.firmy.response.JdgSzczegolyDto;
 import jakarta.transaction.Transactional;
 import java.util.List;
@@ -22,24 +24,24 @@ import org.springframework.stereotype.Service;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-class JdgService {
+public class JdgService {
 
-  private final JdgMapper jednoosobowaDzialalnoscGospodarczaMapper;
+  private final JdgMapper jdgMapper;
   private final JdgRepository jdgRepository;
   private final AdresRepository adresRepository;
   private final OsobaRepository osobaRepository;
   private final PkdRepository pkdRepository;
   private final KrajRepository krajRepository;
 
-  public List<Jdg> pobierzListeJdg() {
-    return jdgRepository.findAll();
+  public List<JdgListDto> pobierzListeJdg(JdgFilterSpecification specification) {
+    return jdgMapper.toJdgListDtoList(jdgRepository.findAll(specification));
   }
 
   @Transactional
   public UUID zapiszSzczegolyJdg(JdgSzczegolyDto jdgSzczegolyDto) {
     Jdg doZapisu = jdgRepository.findByCeidgId(jdgSzczegolyDto.getCeidgId())
-        .map(jdg -> jednoosobowaDzialalnoscGospodarczaMapper.toJdgEntity(jdg, jdgSzczegolyDto))
-        .orElseGet(() -> jednoosobowaDzialalnoscGospodarczaMapper.toJdgEntity(jdgSzczegolyDto));
+        .map(jdg -> jdgMapper.toJdgEntity(jdg, jdgSzczegolyDto))
+        .orElseGet(() -> jdgMapper.toJdgEntity(jdgSzczegolyDto));
 
     przygotujDoZapisu(doZapisu);
     Jdg saved = jdgRepository.saveAndFlush(doZapisu);
