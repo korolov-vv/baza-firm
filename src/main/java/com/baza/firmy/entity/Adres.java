@@ -46,6 +46,8 @@ public class Adres {
   @EqualsAndHashCode.Include
   private String budynek;
   @EqualsAndHashCode.Include
+  private String lokal;
+  @EqualsAndHashCode.Include
   private String kodPocztowy;
   private String terc;
   private String simc;

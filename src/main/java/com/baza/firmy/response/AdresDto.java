@@ -15,6 +15,7 @@ public class AdresDto {
   private UUID uuid;
   private String ulica;
   private String budynek;
+  private String lokal;
   private String miasto;
   private String wojewodztwo;
   private String powiat;
