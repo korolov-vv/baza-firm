@@ -1,5 +1,6 @@
 package com.baza.firmy.service;
 
+import com.baza.firmy.dto.JdgListDto;
 import com.baza.firmy.entity.Adres;
 import com.baza.firmy.entity.Jdg;
 import com.baza.firmy.entity.Kraj;
@@ -12,9 +13,9 @@ import com.baza.firmy.repository.JdgRepository;
 import com.baza.firmy.repository.KrajRepository;
 import com.baza.firmy.repository.OsobaRepository;
 import com.baza.firmy.repository.PkdRepository;
-import com.baza.firmy.dto.JdgListDto;
 import com.baza.firmy.response.JdgSzczegolyDto;
 import jakarta.transaction.Transactional;
+import jakarta.transaction.Transactional.TxType;
 import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
@@ -37,7 +38,7 @@ public class JdgService {
     return jdgMapper.toJdgListDtoList(jdgRepository.findAll(specification));
   }
 
-  @Transactional
+  @Transactional(TxType.REQUIRES_NEW)
   public UUID zapiszSzczegolyJdg(JdgSzczegolyDto jdgSzczegolyDto) {
     Jdg doZapisu = jdgRepository.findByCeidgId(jdgSzczegolyDto.getCeidgId())
         .map(jdg -> jdgMapper.toJdgEntity(jdg, jdgSzczegolyDto))

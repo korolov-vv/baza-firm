@@ -22,6 +22,7 @@ import org.mapstruct.Named;
 @Mapper(componentModel = "spring", imports = { UUID.class, LocalDateTime.class })
 public interface JdgMapper {
 
+  @Mapping(target = "id", ignore = true)
   @Mapping(target = "uuid", expression = "java(UUID.randomUUID())")
   @Mapping(target = "createDate", expression = "java(LocalDateTime.now())")
   @Mapping(target = "pelneInfo", source = ".")
@@ -30,6 +31,7 @@ public interface JdgMapper {
   @Mapping(target = "wlasciciel", source = ".", qualifiedByName = "setWlasciciel")
   Jdg toJdgEntity(JdgSzczegolyDto dto);
 
+  @Mapping(target = "id", ignore = true)
   @Mapping(target = "uuid", expression = "java(UUID.randomUUID())")
   @Mapping(target = "createDate", expression = "java(LocalDateTime.now())")
   @Mapping(target = "pelneInfo", source = ".")
@@ -49,6 +51,7 @@ public interface JdgMapper {
 
   List<JdgListDto> toJdgListDtoList(List<Jdg> entity);
 
+  @Mapping(target = "id", ignore = true)
   @Mapping(target = "uuid", expression = "java(UUID.randomUUID())")
   @Mapping(target = "kodPocztowy", source = "kod")
   Adres toAdresEntity(AdresDto dto);

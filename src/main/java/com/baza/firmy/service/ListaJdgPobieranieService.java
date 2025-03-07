@@ -5,6 +5,7 @@ import com.baza.firmy.mapper.ListaJdgPobieranieMapper;
 import com.baza.firmy.repository.ListaJdgPobieranieRepository;
 import com.baza.firmy.response.ListaJdgDto;
 import jakarta.transaction.Transactional;
+import jakarta.transaction.Transactional.TxType;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -22,6 +23,10 @@ public class ListaJdgPobieranieService {
     return listaJdgPobieranieRepository.findFirstByCzyStareDaneOrderByIdDesc(true);
   }
 
+  Optional<ListaJdgPobieranie> znajdzOstatniaZapisanaListeDlaKamila() {
+    return listaJdgPobieranieRepository.findFirstByCzyStareDaneOrderByIdDesc(false);
+  }
+
   @Transactional
   UUID zapisz(ListaJdgDto listaJdgDto) {
     return listaJdgPobieranieRepository
@@ -29,9 +34,9 @@ public class ListaJdgPobieranieService {
         .getUuid();
   }
 
-  @Transactional
+  @Transactional(TxType.REQUIRES_NEW)
   protected UUID zapisz(ListaJdgPobieranie listaJdgPobieranie) {
-    return listaJdgPobieranieRepository.saveAndFlush(listaJdgPobieranie).getUuid();
+    return listaJdgPobieranieRepository.save(listaJdgPobieranie).getUuid();
   }
 
   List<ListaJdgPobieranie> pobierzNieobsluzoneListyNowe() {

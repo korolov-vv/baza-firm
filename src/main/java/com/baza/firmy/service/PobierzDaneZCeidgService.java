@@ -15,11 +15,14 @@ import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Consumer;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.util.UriComponentsBuilder;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class PobierzDaneZCeidgService {
@@ -46,35 +49,39 @@ public class PobierzDaneZCeidgService {
     try {
       ListaJdgDto listaJdgDto = ceidgService.pobierzListeJdg(link != null ? link : zwrocLinkDoListyFirm(params));
       zapiszStrone(listaJdgDto);
-      pobierajWstecz(listaJdgDto);
+      pobierajNastepne(listaJdgDto);
     } catch (Exception e) {
       e.printStackTrace();
     }
   }
 
+  @Transactional
   public void pobierajSzczegolyNowychJdg() {
     pobierajSzczegolyJdg(listaJdgPobieranieService.pobierzNieobsluzoneListyNowe());
   }
 
+  @Transactional
   public void pobierajSzczegolyStareDaneJdg() {
     pobierajSzczegolyJdg(listaJdgPobieranieService.pobierzNieobsluzoneListyStareDane());
   }
 
   public void pobierajSzczegolyJdg(List<ListaJdgPobieranie> listaDoPobrania) {
-    listaDoPobrania.forEach(this::obsluzListeJdg);
+    listaDoPobrania.forEach(obsluzListeJdg());
   }
-
-  private void obsluzListeJdg(ListaJdgPobieranie listaJdgPobieranie) {
-    AtomicLong startTime = new AtomicLong(System.currentTimeMillis());
-    try {
-      while(LocalDateTime.now().getHour() != 0) {
-        listaJdgPobieranie.getFirmy().forEach(pobierzDaneFirm(startTime));
-        listaJdgPobieranie.setCzyObsluzona(true);
-        listaJdgPobieranieService.zapisz(listaJdgPobieranie);
-      }
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
+  
+  private Consumer<ListaJdgPobieranie> obsluzListeJdg() {
+    return listaJdgPobieranie -> {
+        AtomicLong startTime = new AtomicLong(System.currentTimeMillis());
+        try {
+          log.info("Started downloading the list {}", listaJdgPobieranie.getUuid());
+          listaJdgPobieranie.getFirmy().forEach(pobierzDaneFirm(startTime));
+          listaJdgPobieranie.setCzyObsluzona(true);
+          listaJdgPobieranieService.zapisz(listaJdgPobieranie);
+          log.info("Finished downloading the list {}", listaJdgPobieranie.getUuid());
+        } catch (Exception e) {
+          e.printStackTrace();
+        }
+    };
   }
   
   private int getStrona(String link) {
@@ -106,12 +113,13 @@ public class PobierzDaneZCeidgService {
   private Consumer<CeidgListDto> pobierzDaneFirm(AtomicLong startTime) {
     return firma -> {
       if (!jdgService.czyIstniejePoCeidgId(firma.getCeidgId())) {
-        zatrzymajJesliKrocejNiz4000(startTime.get());
-
         Dto szczegolyDto = ceidgService.pobierzSzczegolyJdg(firma.getLink());
         szczegolyDto.getFirma().forEach(jdgService::zapiszSzczegolyJdg);
 
+        zatrzymajJesliKrocejNiz4000(startTime.get());
         startTime.set(System.currentTimeMillis());
+      } else {
+        log.info("Skiped jdg {}", firma.getCeidgId());
       }
     };
   }
@@ -147,18 +155,18 @@ public class PobierzDaneZCeidgService {
       listaJdgDto = ceidgService.pobierzListeJdg(
           listaJdgDto != null ? listaJdgDto.getLinks().getPrev() : ostatniaPobranaStrona.get().getPrev());
       listaJdgDto.setCzyStareDane(true);
-      zatrzymajJesliKrocejNiz4000(startTime);
       zapiszStrone(listaJdgDto);
+      zatrzymajJesliKrocejNiz4000(startTime);
       startTime = System.currentTimeMillis();
-    } while ((getStrona(listaJdgDto.getLinks().getPrev()) > 0) || LocalDateTime.now().getHour() == 0);
+    } while ((getStrona(listaJdgDto.getLinks().getPrev()) > 0) && LocalDateTime.now().getHour() == 0);
   }
 
-  private void pobierajWstecz(ListaJdgDto listaJdgDto) {
+  private void pobierajNastepne(ListaJdgDto listaJdgDto) {
     long startTime = System.currentTimeMillis();
-    while ((getStrona(listaJdgDto.getLinks().getSelf()) != getStrona(listaJdgDto.getLinks().getLast())) || LocalDateTime.now().getHour() != 0) {
+    while ((getStrona(listaJdgDto.getLinks().getSelf()) != getStrona(listaJdgDto.getLinks().getLast())) && LocalDateTime.now().getHour() != 0) {
       listaJdgDto = ceidgService.pobierzListeJdg(listaJdgDto.getLinks().getNext());
-      zatrzymajJesliKrocejNiz4000(startTime);
       zapiszStrone(listaJdgDto);
+      zatrzymajJesliKrocejNiz4000(startTime);
       startTime = System.currentTimeMillis();
     }
   }
@@ -168,6 +176,7 @@ public class PobierzDaneZCeidgService {
     if (duration < 4000) {
       try {
         Thread.sleep(4000 - duration);
+        log.info("Finish break {} miliseconds", duration);
       } catch (InterruptedException e) {
         throw new RuntimeException(e);
       }

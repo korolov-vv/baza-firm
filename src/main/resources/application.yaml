@@ -7,7 +7,7 @@ spring:
     profiles:
       active: ${DEPLOY_ENV:local}
   datasource:
-    url: ${POSTGRESQL_DB_URL:jdbc:postgresql://localhost:25432/postgres}
+    url: ${POSTGRESQL_DB_URL:jdbc:postgresql://localhost:25432/bazafirm}
     username: ${POSTGRESQL_DB_USERNAME:bazafirm}
     password: ${POSTGRESQL_DB_PASSWORD:bazafirm}
   jpa:
