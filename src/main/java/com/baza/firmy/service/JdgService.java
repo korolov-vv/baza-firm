@@ -1,26 +1,21 @@
 package com.baza.firmy.service;
 
 import com.baza.firmy.dto.JdgListDto;
-import com.baza.firmy.entity.Adres;
-import com.baza.firmy.entity.Jdg;
-import com.baza.firmy.entity.Kraj;
-import com.baza.firmy.entity.Osoba;
-import com.baza.firmy.entity.Pkd;
+import com.baza.firmy.entity.*;
 import com.baza.firmy.mapper.JdgMapper;
-import com.baza.firmy.repository.AdresRepository;
-import com.baza.firmy.repository.JdgFilterSpecification;
-import com.baza.firmy.repository.JdgRepository;
-import com.baza.firmy.repository.KrajRepository;
-import com.baza.firmy.repository.OsobaRepository;
-import com.baza.firmy.repository.PkdRepository;
+import com.baza.firmy.repository.*;
 import com.baza.firmy.response.JdgSzczegolyDto;
 import jakarta.transaction.Transactional;
 import jakarta.transaction.Transactional.TxType;
-import java.util.List;
-import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.UUID;
 
 @Service
 @Slf4j
@@ -34,8 +29,9 @@ public class JdgService {
   private final PkdRepository pkdRepository;
   private final KrajRepository krajRepository;
 
-  public List<JdgListDto> pobierzListeJdg(JdgFilterSpecification specification) {
-    return jdgMapper.toJdgListDtoList(jdgRepository.findAll(specification));
+  public Page<JdgListDto> pobierzListeJdg(Specification<Jdg> specification, Pageable pageable) {
+    return jdgRepository.findAll(specification, pageable)
+        .map(jdgMapper::toJdgListDtoList);
   }
 
   @Transactional(TxType.REQUIRES_NEW)
