@@ -1,21 +1,39 @@
 package com.baza.firmy.service;
 
 import com.baza.firmy.dto.JdgListDto;
-import com.baza.firmy.entity.*;
+import com.baza.firmy.dto.ParametryWyszukiwaniaDto;
+import com.baza.firmy.entity.Adres;
+import com.baza.firmy.entity.Jdg;
+import com.baza.firmy.entity.Kraj;
+import com.baza.firmy.entity.Osoba;
+import com.baza.firmy.entity.Pkd;
 import com.baza.firmy.mapper.JdgMapper;
-import com.baza.firmy.repository.*;
+import com.baza.firmy.repository.AdresRepository;
+import com.baza.firmy.repository.JdgFilterSpecification;
+import com.baza.firmy.repository.JdgRepository;
+import com.baza.firmy.repository.KrajRepository;
+import com.baza.firmy.repository.OsobaRepository;
+import com.baza.firmy.repository.PkdRepository;
 import com.baza.firmy.response.JdgSzczegolyDto;
+import com.baza.firmy.util.FileUtills;
+import com.baza.firmy.util.XslxDocumentUtils;
 import jakarta.transaction.Transactional;
 import jakarta.transaction.Transactional.TxType;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import net.kaczmarzyk.spring.data.jpa.utils.SpecificationBuilder;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.UUID;
 
 @Service
 @Slf4j
@@ -28,10 +46,61 @@ public class JdgService {
   private final OsobaRepository osobaRepository;
   private final PkdRepository pkdRepository;
   private final KrajRepository krajRepository;
+  private final XslxDocumentUtils xslxDocumentUtils;
+  private final FileUtills fileUtills;
 
   public Page<JdgListDto> pobierzListeJdg(Specification<Jdg> specification, Pageable pageable) {
     return jdgRepository.findAll(specification, pageable)
         .map(jdgMapper::toJdgListDtoList);
+  }
+
+  public void exportujDoXlsx(ParametryWyszukiwaniaDto parametry) {
+    Specification<Jdg> specification = SpecificationBuilder.specification(
+            JdgFilterSpecification.class)
+        .withParam("nazwa", parametry.getNazwa())
+        .withParam("pkdGlowny", parametry.getPkd())
+        .withParam("dataRozpoczecia",
+            parametry.getDataRozpoczecia() != null ? parametry.getDataRozpoczecia().format(
+                DateTimeFormatter.ISO_DATE) : null)
+        .withParam("status", parametry.getStatus())
+        .withParam("wojewodztwo", parametry.getWojewodztwo())
+        .withParam("powiat", parametry.getPowiat())
+        .withParam("gmina", parametry.getGmina())
+        .build();
+
+    int pageNumber = 0;
+    int pageSize = 1000;
+    Page<JdgListDto> page;
+
+    ByteArrayOutputStream out = new ByteArrayOutputStream();
+
+    File reportsDir = new File("dla_kamila");
+    if (!reportsDir.exists()) {
+      reportsDir.mkdirs();
+    }
+
+    do {
+      File file = new File("dla_kamila", "Jdg_list_" + LocalDate.now() + ".xlsx");
+      if (file.exists()) {
+        try (FileInputStream fis = new FileInputStream(file)) {
+          byte[] buffer = new byte[1024];
+          int bytesRead;
+          while ((bytesRead = fis.read(buffer)) != -1) {
+            out.write(buffer, 0, bytesRead);
+          }
+        } catch (Exception e) {
+          log.error("Błąd podczas eksportu do pliku xlsx: {}", e.getMessage());
+        }
+      }
+
+      Pageable pageable = PageRequest.of(pageNumber, pageSize);
+      page = jdgRepository.findAll(specification, pageable)
+          .map(jdgMapper::toJdgListDtoList);
+
+      fileUtills.saveExcelToFile(xslxDocumentUtils.appendToExcel(out, page.getContent(), pageNumber == 0, pageNumber == page.getTotalPages()), "Jdg_list_" + LocalDate.now() + ".xlsx");
+      pageNumber++;
+    } while (page.hasNext());
+
   }
 
   @Transactional(TxType.REQUIRES_NEW)

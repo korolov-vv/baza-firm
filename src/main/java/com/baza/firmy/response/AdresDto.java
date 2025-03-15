@@ -25,4 +25,16 @@ public class AdresDto {
   private String terc;
   private String simc;
   private String ulic;
+
+  @Override
+  public String toString() {
+    return (ulica != null ? ulica + " " : "") +
+        (budynek != null ? budynek : "") +
+        (lokal != null ? "/" + lokal : " ") +
+        (kod != null ? ", " + kod : "") +
+        (miasto != null ? ", " + miasto : "") +
+        (powiat != null ? ", " + powiat : "") +
+        (gmina != null ? ", " + gmina : "") +
+        (wojewodztwo != null ? ", " + wojewodztwo : "");
+  }
 }
