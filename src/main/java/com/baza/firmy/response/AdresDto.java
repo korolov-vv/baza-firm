@@ -28,13 +28,13 @@ public class AdresDto {
 
   @Override
   public String toString() {
-    return (ulica != null ? ulica + " " : "") +
+    return (wojewodztwo != null ? wojewodztwo + ", " : "") +
+        (gmina != null ? gmina + ", " : "") +
+        (powiat != null ? powiat + ", " : "") +
+        (kod != null ?  kod + ", " : "") +
+        (miasto != null ? miasto + " " : "") +
+        (ulica != null ? ulica + " " : "") +
         (budynek != null ? budynek : "") +
-        (lokal != null ? "/" + lokal : " ") +
-        (kod != null ? ", " + kod : "") +
-        (miasto != null ? ", " + miasto : "") +
-        (powiat != null ? ", " + powiat : "") +
-        (gmina != null ? ", " + gmina : "") +
-        (wojewodztwo != null ? ", " + wojewodztwo : "");
+        (lokal != null ? "/" + lokal : "");
   }
 }
