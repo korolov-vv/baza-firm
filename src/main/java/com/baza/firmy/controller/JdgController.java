@@ -1,7 +1,6 @@
 package com.baza.firmy.controller;
 
 import com.baza.firmy.dto.JdgListDto;
-import com.baza.firmy.dto.ParametryWyszukiwaniaDto;
 import com.baza.firmy.entity.Jdg;
 import com.baza.firmy.repository.JdgFilterSpecification;
 import com.baza.firmy.service.JdgService;
@@ -18,8 +17,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -47,7 +44,7 @@ class JdgController {
     Specification<Jdg> specification = SpecificationBuilder.specification(
             JdgFilterSpecification.class)
         .withParam("nazwa", nazwa)
-        .withParam("pkdGlowny", pkd)
+        .withParam("pkd", pkd)
         .withParam("dataRozpoczecia",
             dataRozpoczecia != null ? dataRozpoczecia.format(DateTimeFormatter.ISO_DATE) : null)
         .withParam("status", status)
@@ -56,12 +53,5 @@ class JdgController {
         .withParam("gmina", gmina)
         .build();
     return ResponseEntity.ok(jdgService.pobierzListeJdg(specification, pageable));
-  }
-
-  @PostMapping ("/export")
-  @Operation (summary = "Usługa eksportująca listę JDG do pliku XLSX")
-  public ResponseEntity<Void> pobierzListeJdgDoXslx(@RequestBody ParametryWyszukiwaniaDto parametry) {
-    jdgService.exportujDoXlsx(parametry);
-    return ResponseEntity.ok().build();
   }
 }

@@ -20,8 +20,6 @@ import com.baza.firmy.util.XslxDocumentUtils;
 import jakarta.transaction.Transactional;
 import jakarta.transaction.Transactional.TxType;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -54,53 +52,12 @@ public class JdgService {
         .map(jdgMapper::toJdgListDtoList);
   }
 
+  // TODO: Implement some generic exporting
+  @Transactional
   public void exportujDoXlsx(ParametryWyszukiwaniaDto parametry) {
-    Specification<Jdg> specification = SpecificationBuilder.specification(
-            JdgFilterSpecification.class)
-        .withParam("nazwa", parametry.getNazwa())
-        .withParam("pkdGlowny", parametry.getPkd())
-        .withParam("dataRozpoczecia",
-            parametry.getDataRozpoczecia() != null ? parametry.getDataRozpoczecia().format(
-                DateTimeFormatter.ISO_DATE) : null)
-        .withParam("status", parametry.getStatus())
-        .withParam("wojewodztwo", parametry.getWojewodztwo())
-        .withParam("powiat", parametry.getPowiat())
-        .withParam("gmina", parametry.getGmina())
-        .build();
-
-    int pageNumber = 0;
-    int pageSize = 1000;
-    Page<JdgListDto> page;
-
+    Specification<Jdg> specification = createSpecification(parametry);
     ByteArrayOutputStream out = new ByteArrayOutputStream();
-
-    File reportsDir = new File("dla_kamila");
-    if (!reportsDir.exists()) {
-      reportsDir.mkdirs();
-    }
-
-    do {
-      File file = new File("dla_kamila", "Jdg_list_" + LocalDate.now() + ".xlsx");
-      if (file.exists()) {
-        try (FileInputStream fis = new FileInputStream(file)) {
-          byte[] buffer = new byte[1024];
-          int bytesRead;
-          while ((bytesRead = fis.read(buffer)) != -1) {
-            out.write(buffer, 0, bytesRead);
-          }
-        } catch (Exception e) {
-          log.error("Błąd podczas eksportu do pliku xlsx: {}", e.getMessage());
-        }
-      }
-
-      Pageable pageable = PageRequest.of(pageNumber, pageSize);
-      page = jdgRepository.findAll(specification, pageable)
-          .map(jdgMapper::toJdgListDtoList);
-
-      fileUtills.saveExcelToFile(xslxDocumentUtils.appendToExcel(out, page.getContent(), pageNumber == 0, pageNumber == page.getTotalPages()), "Jdg_list_" + LocalDate.now() + ".xlsx");
-      pageNumber++;
-    } while (page.hasNext());
-
+    readDataAndSaveToFile(specification, out);
   }
 
   @Transactional(TxType.REQUIRES_NEW)
@@ -119,6 +76,45 @@ public class JdgService {
 
   public boolean czyIstniejePoCeidgId(UUID ceidgId) {
     return jdgRepository.existsByCeidgId(ceidgId);
+  }
+
+  private static Specification<Jdg> createSpecification(ParametryWyszukiwaniaDto parametry) {
+    return SpecificationBuilder.specification(
+            JdgFilterSpecification.class)
+        .withParam("nazwa", parametry.getNazwa())
+        .withParam("pkd", parametry.getPkd())
+        .withParam("dataRozpoczecia",
+            parametry.getDataRozpoczecia() != null ? parametry.getDataRozpoczecia().format(
+                DateTimeFormatter.ISO_DATE) : null)
+        .withParam("status", parametry.getStatus())
+        .withParam("wojewodztwo", parametry.getWojewodztwo())
+        .withParam("powiat", parametry.getPowiat())
+        .withParam("gmina", parametry.getGmina())
+        .build();
+  }
+
+  private void readDataAndSaveToFile(Specification<Jdg> specification, ByteArrayOutputStream out) {
+    int pageNumber = 0;
+    int pageSize = 1000;
+    Page<JdgListDto> page;
+
+    do {
+      fileUtills.readFromFile(out, "Jdg_list_" + LocalDate.now() + ".xlsx");
+      page = fetchData(specification, pageNumber, pageSize);
+      fileUtills.saveToFile(
+          xslxDocumentUtils.appendToExcel(out, page.getContent(), pageNumber == 0,
+              pageNumber == page.getTotalPages()), "Jdg_list_" + LocalDate.now() + ".xlsx");
+      pageNumber++;
+    } while (page.hasNext());
+  }
+
+  private Page<JdgListDto> fetchData(Specification<Jdg> specification, int pageNumber,
+      int pageSize) {
+    Page<JdgListDto> page;
+    Pageable pageable = PageRequest.of(pageNumber, pageSize);
+    page = jdgRepository.findAll(specification, pageable)
+        .map(jdgMapper::toJdgListDtoList);
+    return page;
   }
 
   private void przygotujDoZapisu(Jdg doZapisu) {
