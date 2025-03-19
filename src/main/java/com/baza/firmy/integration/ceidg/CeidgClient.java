@@ -6,6 +6,7 @@ import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import com.baza.firmy.configuration.properties.CeidgProperties;
 import com.baza.firmy.response.Dto;
 import com.baza.firmy.response.ListaJdgDto;
+import com.baza.firmy.response.ListaZmienionychWpisowDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -32,6 +33,25 @@ public class CeidgClient {
             .header(AUTHORIZATION, createAuthorizationHeader())
             .retrieve()
             .bodyToMono(ListaJdgDto.class)
+            .onErrorResume(
+                throwable -> {
+                  log.error(CALL_TO_CEIDG_FAILED_LOG, throwable.getMessage());
+                  return Mono.error(throwable);
+                })
+            .block();
+    log.info(COMPLETE_REQUEST_LOG, link);
+    return response;
+  }
+
+  public ListaZmienionychWpisowDto pobierzListeZmienionychWpisow(String link) {
+    log.info(START_REQUEST_LOG, link);
+    final var response =
+        webClient
+            .get()
+            .uri(link)
+            .header(AUTHORIZATION, createAuthorizationHeader())
+            .retrieve()
+            .bodyToMono(ListaZmienionychWpisowDto.class)
             .onErrorResume(
                 throwable -> {
                   log.error(CALL_TO_CEIDG_FAILED_LOG, throwable.getMessage());

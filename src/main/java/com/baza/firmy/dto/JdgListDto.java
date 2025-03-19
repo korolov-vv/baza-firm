@@ -16,6 +16,7 @@ import lombok.NoArgsConstructor;
 public class JdgListDto {
   
   private String nazwa;
+  private String nip;
 
   private AdresDto adresDzialalnosci;
   private AdresDto adresKorespondencyjny;

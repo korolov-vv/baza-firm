@@ -47,6 +47,7 @@ public interface JdgMapper {
 
   @Mapping(target = "pkdGlowny", source = "pkdGlowny.kod")
   @Mapping(target = "pkd", source = ".", qualifiedByName = "setPkdString")
+  @Mapping(target = "nip", source = "wlasciciel.nip")
   JdgListDto toJdgListDtoList(Jdg entity);
 
   List<JdgListDto> toJdgListDtoList(List<Jdg> entity);
