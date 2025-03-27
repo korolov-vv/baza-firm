@@ -1,8 +1,0 @@
-server:
-  port: 8080
-
-spring:
-  datasource:
-    url: jdbc:postgresql://localhost:25432/bazafirm
-    username: bazafirm
-    password: bazafirm

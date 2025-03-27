@@ -5,11 +5,11 @@ spring:
   application:
     name: firms
     profiles:
-      active: ${DEPLOY_ENV:local}
+      active: ${DEPLOY_ENV}
   datasource:
-    url: ${POSTGRESQL_DB_URL:jdbc:postgresql://localhost:25432/bazafirm}
-    username: ${POSTGRESQL_DB_USERNAME:bazafirm}
-    password: ${POSTGRESQL_DB_PASSWORD:bazafirm}
+    url: ${POSTGRESQL_DB_URL}
+    username: ${POSTGRESQL_DB_USERNAME}
+    password: ${POSTGRESQL_DB_PASSWORD}
   jpa:
     database: postgresql
     hibernate:
@@ -18,5 +18,5 @@ spring:
     change-log: classpath:db/changelog/baza-firmy-changelog.yaml
 
 ceidg:
-  ceidg-path: https://dane.biznes.gov.pl/api/ceidg/v2
+  ceidg-path: {CEIDG_PATH}
   token: ${CEIDG_TOKEN}
