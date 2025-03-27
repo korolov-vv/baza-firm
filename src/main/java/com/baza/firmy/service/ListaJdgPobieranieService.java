@@ -6,10 +6,11 @@ import com.baza.firmy.repository.ListaJdgPobieranieRepository;
 import com.baza.firmy.response.ListaJdgDto;
 import jakarta.transaction.Transactional;
 import jakarta.transaction.Transactional.TxType;
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -39,11 +40,11 @@ public class ListaJdgPobieranieService {
     return listaJdgPobieranieRepository.save(listaJdgPobieranie).getUuid();
   }
 
-  List<ListaJdgPobieranie> pobierzNieobsluzoneListyNowe() {
-    return listaJdgPobieranieRepository.findAllByCzyObsluzonaIsFalseAndCzyStareDaneIsFalse();
+  Page<ListaJdgPobieranie> pobierzNieobsluzoneListyNowe(Pageable pageable) {
+    return listaJdgPobieranieRepository.findAllByCzyObsluzonaIsFalseAndCzyStareDaneIsFalse(pageable);
   }
 
-  List<ListaJdgPobieranie> pobierzNieobsluzoneListyStareDane() {
-    return listaJdgPobieranieRepository.findAllByCzyObsluzonaIsFalseAndCzyStareDaneIsTrueOrderByIdDesc();
+  Page<ListaJdgPobieranie> pobierzNieobsluzoneListyStareDane(Pageable pageable) {
+    return listaJdgPobieranieRepository.findAllByCzyObsluzonaIsFalseAndCzyStareDaneIsTrueOrderByIdDesc(pageable);
   }
 }

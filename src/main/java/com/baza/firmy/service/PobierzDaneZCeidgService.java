@@ -16,6 +16,9 @@ import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Consumer;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
@@ -57,12 +60,34 @@ public class PobierzDaneZCeidgService {
 
   @Transactional
   public void pobierajSzczegolyNowychJdg() {
-    pobierajSzczegolyJdg(listaJdgPobieranieService.pobierzNieobsluzoneListyNowe());
+    int pageNumber = 0;
+    int pageSize = 50;
+    Page<ListaJdgPobieranie> page;
+
+    do {
+      Pageable pageable = PageRequest.of(pageNumber, pageSize);
+
+      page = listaJdgPobieranieService.pobierzNieobsluzoneListyNowe(pageable);
+
+      pobierajSzczegolyJdg(page.getContent());
+      pageNumber++;
+    } while (page.hasNext());
   }
 
   @Transactional
   public void pobierajSzczegolyStareDaneJdg() {
-    pobierajSzczegolyJdg(listaJdgPobieranieService.pobierzNieobsluzoneListyStareDane());
+    int pageNumber = 0;
+    int pageSize = 50;
+    Page<ListaJdgPobieranie> page;
+
+    do {
+      Pageable pageable = PageRequest.of(pageNumber, pageSize);
+
+      page = listaJdgPobieranieService.pobierzNieobsluzoneListyStareDane(pageable);
+
+      pobierajSzczegolyJdg(page.getContent());
+      pageNumber++;
+    } while (page.hasNext());
   }
 
   public void pobierajSzczegolyJdg(List<ListaJdgPobieranie> listaDoPobrania) {
