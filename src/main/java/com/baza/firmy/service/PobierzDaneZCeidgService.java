@@ -142,6 +142,8 @@ public class PobierzDaneZCeidgService {
 
         if (szczegolyDto != null) {
           szczegolyDto.getFirma().forEach(jdgService::zapiszSzczegolyJdg);
+        } else {
+          log.info("szczegolyDto dla {} is NULL", firma.getCeidgId());
         }
 
         zatrzymajJesliKrocejNiz4000(startTime.get());
