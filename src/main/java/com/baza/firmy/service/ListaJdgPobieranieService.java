@@ -37,7 +37,7 @@ public class ListaJdgPobieranieService {
 
   @Transactional(TxType.REQUIRES_NEW)
   protected UUID zapisz(ListaJdgPobieranie listaJdgPobieranie) {
-    return listaJdgPobieranieRepository.save(listaJdgPobieranie).getUuid();
+    return listaJdgPobieranieRepository.saveAndFlush(listaJdgPobieranie).getUuid();
   }
 
   Page<ListaJdgPobieranie> pobierzNieobsluzoneListyNowe(Pageable pageable) {
