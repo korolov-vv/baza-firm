@@ -139,6 +139,7 @@ public class PobierzDaneZCeidgService {
     return firma -> {
       if (!jdgService.czyIstniejePoCeidgId(firma.getCeidgId())) {
         Dto szczegolyDto = ceidgService.pobierzSzczegolyJdg(firma.getLink());
+
         if (szczegolyDto != null) {
           szczegolyDto.getFirma().forEach(jdgService::zapiszSzczegolyJdg);
         }
