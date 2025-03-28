@@ -19,6 +19,7 @@ class PobierajListeJdgOstDobaService implements BazowySchedulerService {
 
   @Override
   public void executeScheduler(JobExecutionContext jobExecutionContext) {
+    log.info("Start POBIERAJ_LISTE_JDG_OST_DOBA_JOB");
     LocalDate dataOd = LocalDate.now().minusDays(1L);
     pobierzDaneZCeidgService.pobierzListyJdgOstDobaIZapisz(Map.of(
         "status", "AKTYWNY",
@@ -26,6 +27,7 @@ class PobierajListeJdgOstDobaService implements BazowySchedulerService {
     ), null);
 
     quartzManager.stworzZadanieSchedulera(SchedulerSingleEnum.POBIERAJ_SZCZEGOLY_JDG_SCHEDULER);
+    log.info("Completed POBIERAJ_LISTE_JDG_OST_DOBA_JOB");
   }
 }
 
