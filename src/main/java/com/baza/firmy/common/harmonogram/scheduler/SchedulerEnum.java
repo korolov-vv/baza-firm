@@ -10,7 +10,7 @@ import org.springframework.scheduling.quartz.QuartzJobBean;
 @Getter
 enum SchedulerEnum {
   TEST_SCHEDULER("TEST_TRIGGER", "TEST_JOB", "0 0/1 * * * ?", TestJob.class),
-  POBIERAJ_LISTE_JDG_OST_DOBA_SCHEDULER("POBIERAJ_LISTE_JDG_OST_DOBA_TRIGGER", "POBIERAJ_LISTE_JDG_OST_DOBA_JOB", "0 15 19 * * ?", PobierajListeJDGOstDobaJob.class);
+  POBIERAJ_LISTE_JDG_OST_DOBA_SCHEDULER("POBIERAJ_LISTE_JDG_OST_DOBA_TRIGGER", "POBIERAJ_LISTE_JDG_OST_DOBA_JOB", "0 35 19 * * ?", PobierajListeJDGOstDobaJob.class);
 
   private String triggerKod;
   private String jobKod;
