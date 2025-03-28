@@ -18,5 +18,5 @@ spring:
     change-log: classpath:db/changelog/baza-firmy-changelog.yaml
 
 ceidg:
-  ceidg-path: {CEIDG_PATH}
+  ceidg-path: ${CEIDG_PATH}
   token: ${CEIDG_TOKEN}
