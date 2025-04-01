@@ -141,14 +141,13 @@ public class PobierzDaneZCeidgService {
         try {
           zatrzymajJesliKrocejNiz4000(startTime.get());
           Dto szczegolyDto = ceidgService.pobierzSzczegolyJdg(firma.getLink());
+          startTime.set(System.currentTimeMillis());
 
           if (szczegolyDto != null) {
             szczegolyDto.getFirma().forEach(jdgService::zapiszSzczegolyJdg);
           } else {
             log.info("szczegolyDto dla {} is NULL", firma.getCeidgId());
           }
-
-          startTime.set(System.currentTimeMillis());
         } catch (Exception e) {
           e.printStackTrace();
           startTime.set(System.currentTimeMillis());
