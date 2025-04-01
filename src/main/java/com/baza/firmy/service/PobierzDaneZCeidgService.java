@@ -97,15 +97,15 @@ public class PobierzDaneZCeidgService {
   private Consumer<ListaJdgPobieranie> obsluzListeJdg() {
     return listaJdgPobieranie -> {
         AtomicLong startTime = new AtomicLong(System.currentTimeMillis());
+        log.info("Started downloading the list {}", listaJdgPobieranie.getUuid());
+        listaJdgPobieranie.getFirmy().forEach(pobierzDaneFirm(startTime));
         try {
-          log.info("Started downloading the list {}", listaJdgPobieranie.getUuid());
-          listaJdgPobieranie.getFirmy().forEach(pobierzDaneFirm(startTime));
           listaJdgPobieranie.setCzyObsluzona(true);
           listaJdgPobieranieService.zapisz(listaJdgPobieranie);
-          log.info("Finished downloading the list {}", listaJdgPobieranie.getUuid());
         } catch (Exception e) {
-          e.printStackTrace();
+          log.error("Error while saving the list {}", listaJdgPobieranie.getUuid(), e);
         }
+        log.info("Finished downloading the list {}", listaJdgPobieranie.getUuid());
     };
   }
   
@@ -138,16 +138,21 @@ public class PobierzDaneZCeidgService {
   private Consumer<CeidgListDto> pobierzDaneFirm(AtomicLong startTime) {
     return firma -> {
       if (!jdgService.czyIstniejePoCeidgId(firma.getCeidgId())) {
-        Dto szczegolyDto = ceidgService.pobierzSzczegolyJdg(firma.getLink());
+        try {
+          zatrzymajJesliKrocejNiz4000(startTime.get());
+          Dto szczegolyDto = ceidgService.pobierzSzczegolyJdg(firma.getLink());
 
-        if (szczegolyDto != null) {
-          szczegolyDto.getFirma().forEach(jdgService::zapiszSzczegolyJdg);
-        } else {
-          log.info("szczegolyDto dla {} is NULL", firma.getCeidgId());
+          if (szczegolyDto != null) {
+            szczegolyDto.getFirma().forEach(jdgService::zapiszSzczegolyJdg);
+          } else {
+            log.info("szczegolyDto dla {} is NULL", firma.getCeidgId());
+          }
+
+          startTime.set(System.currentTimeMillis());
+        } catch (Exception e) {
+          e.printStackTrace();
+          startTime.set(System.currentTimeMillis());
         }
-
-        zatrzymajJesliKrocejNiz4000(startTime.get());
-        startTime.set(System.currentTimeMillis());
       } else {
         log.info("Skiped jdg {}", firma.getCeidgId());
       }
