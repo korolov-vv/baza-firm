@@ -60,6 +60,7 @@ public class PobierzDaneZCeidgService {
 
   @Transactional
   public void pobierajSzczegolyNowychJdg() {
+    log.info("Zaczynam pobieranie szczegolow nowych jdg");
     int pageNumber = 0;
     int pageSize = 50;
     Page<ListaJdgPobieranie> page;
@@ -72,10 +73,12 @@ public class PobierzDaneZCeidgService {
       pobierajSzczegolyJdg(page.getContent());
       pageNumber++;
     } while (page.hasNext());
+    log.info("Skończono pobieranie szczegolow nowych jdg");
   }
 
   @Transactional
   public void pobierajSzczegolyStareDaneJdg() {
+    log.info("Zaczynam pobieranie szczegolow starych jdg");
     int pageNumber = 0;
     int pageSize = 50;
     Page<ListaJdgPobieranie> page;
@@ -88,6 +91,7 @@ public class PobierzDaneZCeidgService {
       pobierajSzczegolyJdg(page.getContent());
       pageNumber++;
     } while (page.hasNext());
+    log.info("Skończono pobieranie szczegolow starych jdg");
   }
 
   public void pobierajSzczegolyJdg(List<ListaJdgPobieranie> listaDoPobrania) {
