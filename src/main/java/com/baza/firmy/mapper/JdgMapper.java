@@ -13,6 +13,7 @@ import com.baza.firmy.response.KrajDto;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -68,6 +69,9 @@ public interface JdgMapper {
 
   @Named("setPkdGlowny")
   default Pkd setPkdGlowny(JdgSzczegolyDto dto) {
+    if (dto.getPkdGlowny() == null) {
+      return null;
+    }
 
     Pkd pkd = new Pkd();
     pkd.setUuid(UUID.randomUUID());
@@ -79,11 +83,15 @@ public interface JdgMapper {
   default List<Pkd> setPkd(JdgSzczegolyDto dto) {
     return dto.getPkd().stream()
         .map(pkdDto -> {
+          if (pkdDto == null) {
+            return null;
+          }
           Pkd pkd = new Pkd();
           pkd.setUuid(UUID.randomUUID());
           pkd.setKod(pkdDto);
           return pkd;
         })
+        .filter(Objects::nonNull)
         .toList();
   }
 

@@ -9,8 +9,6 @@ import jakarta.transaction.Transactional.TxType;
 import java.util.Optional;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -40,11 +38,11 @@ public class ListaJdgPobieranieService {
     return listaJdgPobieranieRepository.saveAndFlush(listaJdgPobieranie).getUuid();
   }
 
-  Page<ListaJdgPobieranie> pobierzNieobsluzoneListyNowe(Pageable pageable) {
-    return listaJdgPobieranieRepository.findAllByCzyObsluzonaIsFalseAndCzyStareDaneIsFalse(pageable);
+  ListaJdgPobieranie pobierzNieobsluzonaListeNowa() {
+    return listaJdgPobieranieRepository.findFirstByCzyObsluzonaIsFalseAndCzyStareDaneIsFalse();
   }
 
-  Page<ListaJdgPobieranie> pobierzNieobsluzoneListyStareDane(Pageable pageable) {
-    return listaJdgPobieranieRepository.findAllByCzyObsluzonaIsFalseAndCzyStareDaneIsTrueOrderByIdDesc(pageable);
+  ListaJdgPobieranie pobierzNieobsluzonaListeStareDane() {
+    return listaJdgPobieranieRepository.findFirstByCzyObsluzonaIsFalseAndCzyStareDaneIsTrueOrderByIdDesc();
   }
 }

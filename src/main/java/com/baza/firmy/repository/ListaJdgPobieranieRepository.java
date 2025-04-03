@@ -2,8 +2,6 @@ package com.baza.firmy.repository;
 
 import com.baza.firmy.entity.ListaJdgPobieranie;
 import java.util.Optional;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -12,8 +10,8 @@ public interface ListaJdgPobieranieRepository extends JpaRepository<ListaJdgPobi
 
   Optional<ListaJdgPobieranie> findFirstByCzyStareDaneOrderByIdDesc(boolean czyStareDane);
 
-  Page<ListaJdgPobieranie> findAllByCzyObsluzonaIsFalseAndCzyStareDaneIsFalse(Pageable pageable);
+  ListaJdgPobieranie findFirstByCzyObsluzonaIsFalseAndCzyStareDaneIsFalse();
 
-  Page<ListaJdgPobieranie> findAllByCzyObsluzonaIsFalseAndCzyStareDaneIsTrueOrderByIdDesc(Pageable pageable);
+  ListaJdgPobieranie findFirstByCzyObsluzonaIsFalseAndCzyStareDaneIsTrueOrderByIdDesc();
 
 }

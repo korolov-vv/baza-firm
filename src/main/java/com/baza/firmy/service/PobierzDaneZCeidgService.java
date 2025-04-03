@@ -9,16 +9,12 @@ import com.baza.firmy.response.ListaJdgDto;
 import jakarta.annotation.Nullable;
 import java.time.LocalDateTime;
 import java.util.Date;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Consumer;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
@@ -61,56 +57,44 @@ public class PobierzDaneZCeidgService {
   @Transactional
   public void pobierajSzczegolyNowychJdg() {
     log.info("Zaczynam pobieranie szczegolow nowych jdg");
-    int pageNumber = 0;
-    int pageSize = 50;
-    Page<ListaJdgPobieranie> page;
+
+    ListaJdgPobieranie lista;
 
     do {
-      Pageable pageable = PageRequest.of(pageNumber, pageSize);
+      lista = listaJdgPobieranieService.pobierzNieobsluzonaListeNowa();
+      if (lista != null) {
+        obsluzListeJdg(lista);
+      }
+    } while (lista != null);
 
-      page = listaJdgPobieranieService.pobierzNieobsluzoneListyNowe(pageable);
-
-      pobierajSzczegolyJdg(page.getContent());
-      pageNumber++;
-    } while (page.hasNext());
     log.info("Skończono pobieranie szczegolow nowych jdg");
   }
 
   @Transactional
   public void pobierajSzczegolyStareDaneJdg() {
     log.info("Zaczynam pobieranie szczegolow starych jdg");
-    int pageNumber = 0;
-    int pageSize = 50;
-    Page<ListaJdgPobieranie> page;
+    ListaJdgPobieranie lista;
 
     do {
-      Pageable pageable = PageRequest.of(pageNumber, pageSize);
-
-      page = listaJdgPobieranieService.pobierzNieobsluzoneListyStareDane(pageable);
-
-      pobierajSzczegolyJdg(page.getContent());
-      pageNumber++;
-    } while (page.hasNext());
+      lista = listaJdgPobieranieService.pobierzNieobsluzonaListeStareDane();
+      if (lista != null) {
+        obsluzListeJdg(lista);
+      }
+    } while (lista != null);
     log.info("Skończono pobieranie szczegolow starych jdg");
   }
-
-  public void pobierajSzczegolyJdg(List<ListaJdgPobieranie> listaDoPobrania) {
-    listaDoPobrania.forEach(obsluzListeJdg());
-  }
   
-  private Consumer<ListaJdgPobieranie> obsluzListeJdg() {
-    return listaJdgPobieranie -> {
-        AtomicLong startTime = new AtomicLong(System.currentTimeMillis());
-        log.info("Started downloading the list {}", listaJdgPobieranie.getUuid());
-        listaJdgPobieranie.getFirmy().forEach(pobierzDaneFirm(startTime));
-        try {
-          listaJdgPobieranie.setCzyObsluzona(true);
-          listaJdgPobieranieService.zapisz(listaJdgPobieranie);
-        } catch (Exception e) {
-          log.error("Error while saving the list {}", listaJdgPobieranie.getUuid(), e);
-        }
-        log.info("Finished downloading the list {}", listaJdgPobieranie.getUuid());
-    };
+  private void obsluzListeJdg(ListaJdgPobieranie listaJdgPobieranie) {
+    AtomicLong startTime = new AtomicLong(System.currentTimeMillis());
+    log.info("Started downloading the list {}", listaJdgPobieranie.getUuid());
+    listaJdgPobieranie.getFirmy().forEach(pobierzDaneFirm(startTime));
+    try {
+      listaJdgPobieranie.setCzyObsluzona(true);
+      listaJdgPobieranieService.zapisz(listaJdgPobieranie);
+    } catch (Exception e) {
+      log.error("Error while saving the list {}", listaJdgPobieranie.getUuid(), e);
+    }
+    log.info("Finished downloading the list {}", listaJdgPobieranie.getUuid());
   }
   
   private int getStrona(String link) {

@@ -162,6 +162,9 @@ public class JdgService {
   }
 
   private void zaktualizujPkdGlowny(Jdg doZapisu) {
+    if (doZapisu.getPkdGlowny() == null || doZapisu.getPkdGlowny().getKod() == null) {
+      return;
+    }
     pkdRepository.findByKod(doZapisu.getPkdGlowny().getKod()).ifPresentOrElse(doZapisu::setPkdGlowny,
         () -> {
           Pkd pkdGlownyZapisany = pkdRepository.save(doZapisu.getPkdGlowny());
@@ -170,8 +173,11 @@ public class JdgService {
   }
 
   private void zaktualizujPkdDodatkowe(Jdg doZapisu) {
+    if (doZapisu.getPkd() == null || doZapisu.getPkd().isEmpty()) {
+      return;
+    }
     List<Pkd> pkdZapisane = doZapisu.getPkd().stream()
-        .filter(pkd -> !pkd.getKod().equals(doZapisu.getPkdGlowny().getKod()))
+        .filter(pkd -> pkd.getKod() != null && !pkd.getKod().equals(doZapisu.getPkdGlowny().getKod()))
         .map(pkd -> pkdRepository.findByKod(pkd.getKod())
             .orElseGet(() -> pkdRepository.save(pkd)))
         .toList();
