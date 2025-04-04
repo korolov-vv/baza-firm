@@ -65,7 +65,7 @@ public class PobierzDaneZCeidgService {
       if (lista != null) {
         obsluzListeJdg(lista);
       }
-    } while (lista != null);
+    } while (lista != null || LocalDateTime.now().getHour() == 0);
 
     log.info("Skończono pobieranie szczegolow nowych jdg");
   }
@@ -80,7 +80,7 @@ public class PobierzDaneZCeidgService {
       if (lista != null) {
         obsluzListeJdg(lista);
       }
-    } while (lista != null);
+    } while (lista != null || LocalDateTime.now().getHour() == 0);
     log.info("Skończono pobieranie szczegolow starych jdg");
   }
   
