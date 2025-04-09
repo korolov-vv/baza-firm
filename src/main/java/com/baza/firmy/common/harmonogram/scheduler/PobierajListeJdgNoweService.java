@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @RequiredArgsConstructor
 @Service
-class PobierajListeJdgOstDobaService implements BazowySchedulerService {
+class PobierajListeJdgNoweService implements BazowySchedulerService {
 
   private final QuartzManager quartzManager;
   private final PobierzDaneZCeidgService pobierzDaneZCeidgService;
