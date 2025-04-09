@@ -8,6 +8,7 @@ import com.baza.firmy.response.Dto;
 import com.baza.firmy.response.ListaJdgDto;
 import jakarta.annotation.Nullable;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.Map;
 import java.util.Optional;
@@ -34,7 +35,7 @@ public class PobierzDaneZCeidgService {
   public void pobierzListyJdgWsteczIZapisz(@Nullable Map<String, String> params, @Nullable String link) {
     try {
       ListaJdgDto listaJdgDto = null;
-      Optional<ListaJdgPobieranie> ostatniaPobranaStrona = listaJdgPobieranieService.znajdzOstatniaZapisanaListe();
+      Optional<ListaJdgPobieranie> ostatniaPobranaStrona = listaJdgPobieranieService.znajdzOstatniaZapisanaListe(true);
       listaJdgDto = pobierzPierwszaStrone(params, link, ostatniaPobranaStrona, listaJdgDto);
       listaJdgDto = pobierzOstatnaStrone(ostatniaPobranaStrona, listaJdgDto);
       zapiszStrone(listaJdgDto);
@@ -44,8 +45,13 @@ public class PobierzDaneZCeidgService {
     }
   }
 
-  public void pobierzListyJdgOstDobaIZapisz(@Nullable Map<String, String> params, @Nullable String link) {
+  public void pobierzListyJdgNoweIZapisz(@Nullable Map<String, String> params, @Nullable String link) {
     try {
+      listaJdgPobieranieService.znajdzOstatniaZapisanaListe(false)
+          .map(ListaJdgPobieranie::getCreateDate)
+          .map(LocalDateTime::toLocalDate)
+          .ifPresent(data -> params.putIfAbsent("dataOd", data.format(DateTimeFormatter.ISO_LOCAL_DATE)));
+
       ListaJdgDto listaJdgDto = ceidgService.pobierzListeJdg(link != null ? link : zwrocLinkDoListyFirm(params));
       zapiszStrone(listaJdgDto);
       pobierajNastepne(listaJdgDto);

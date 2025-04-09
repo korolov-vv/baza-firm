@@ -18,8 +18,8 @@ public class ListaJdgPobieranieService {
   private final ListaJdgPobieranieRepository listaJdgPobieranieRepository;
   private final ListaJdgPobieranieMapper listaJdgPobieranieMapper;
 
-  Optional<ListaJdgPobieranie> znajdzOstatniaZapisanaListe() {
-    return listaJdgPobieranieRepository.findFirstByCzyStareDaneOrderByIdDesc(true);
+  Optional<ListaJdgPobieranie> znajdzOstatniaZapisanaListe(boolean czyStareDane) {
+    return listaJdgPobieranieRepository.findFirstByCzyStareDaneOrderByIdDesc(czyStareDane);
   }
 
   Optional<ListaJdgPobieranie> znajdzOstatniaZapisanaListeDlaKamila() {
