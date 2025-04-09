@@ -82,12 +82,15 @@ public class JdgService {
     return SpecificationBuilder.specification(
             JdgFilterSpecification.class)
         .withParam("nazwa", parametry.getNazwa())
-        .withParam("pkd", parametry.getPkd())
+        .withParam("pkd", parametry.getPkd() != null ? parametry.getPkd() : "")
         .withParam("createDate",
             parametry.getCreateDate() != null ? parametry.getCreateDate()
                 .format(DateTimeFormatter.ISO_DATE_TIME) : null)
-        .withParam("dataRozpoczecia",
-            parametry.getDataRozpoczecia() != null ? parametry.getDataRozpoczecia()
+        .withParam("dataRozpoczeciaOd",
+            parametry.getDataRozpoczeciaOd() != null ? parametry.getDataRozpoczeciaOd()
+                .format(DateTimeFormatter.ISO_DATE) : null)
+        .withParam("dataRozpoczeciaDo",
+            parametry.getDataRozpoczeciaDo() != null ? parametry.getDataRozpoczeciaDo()
                 .format(DateTimeFormatter.ISO_DATE) : null)
         .withParam("status", parametry.getStatus())
         .withParam("wojewodztwo", parametry.getWojewodztwo())

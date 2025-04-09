@@ -34,7 +34,8 @@ class JdgController {
   public ResponseEntity<Page<JdgListDto>> pobierzListeJdg(
       @Nullable @RequestParam String nazwa,
       @Nullable @RequestParam String pkd,
-      @Nullable @RequestParam LocalDate dataRozpoczecia,
+      @Nullable @RequestParam LocalDate dataRozpoczeciaOd,
+      @Nullable @RequestParam LocalDate dataRozpoczeciaDo,
       @Nullable @RequestParam String status,
       @Nullable @RequestParam String wojewodztwo,
       @Nullable @RequestParam String powiat,
@@ -44,9 +45,11 @@ class JdgController {
     Specification<Jdg> specification = SpecificationBuilder.specification(
             JdgFilterSpecification.class)
         .withParam("nazwa", nazwa)
-        .withParam("pkd", pkd)
-        .withParam("dataRozpoczecia",
-            dataRozpoczecia != null ? dataRozpoczecia.format(DateTimeFormatter.ISO_DATE) : null)
+        .withParam("pkd", pkd != null ? pkd : "")
+        .withParam("dataRozpoczeciaOd",
+            dataRozpoczeciaOd != null ? dataRozpoczeciaOd.format(DateTimeFormatter.ISO_DATE) : null)
+        .withParam("dataRozpoczeciaDo",
+            dataRozpoczeciaDo != null ? dataRozpoczeciaDo.format(DateTimeFormatter.ISO_DATE) : null)
         .withParam("status", status)
         .withParam("wojewodztwo", wojewodztwo)
         .withParam("powiat", powiat)

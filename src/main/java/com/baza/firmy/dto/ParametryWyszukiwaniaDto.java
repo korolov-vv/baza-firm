@@ -8,7 +8,8 @@ import lombok.Data;
 public class ParametryWyszukiwaniaDto {
   private String nazwa;
   private String pkd;
-  private LocalDate dataRozpoczecia;
+  private LocalDate dataRozpoczeciaOd;
+  private LocalDate dataRozpoczeciaDo;
   private LocalDateTime createDate;
   private String status;
   private String wojewodztwo;
