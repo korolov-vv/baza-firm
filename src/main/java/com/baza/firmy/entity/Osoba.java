@@ -1,5 +1,6 @@
 package com.baza.firmy.entity;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -43,7 +44,7 @@ public class Osoba {
   private String regon;
   private String imie;
   private String nazwisko;
-  @OneToMany
+  @OneToMany(cascade = CascadeType.ALL)
   @JoinTable (name = "obywatelstwa",
       joinColumns = @JoinColumn(name = "osoba_id"),
       inverseJoinColumns = @JoinColumn (name = "kraj_id"))

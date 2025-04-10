@@ -3,6 +3,7 @@ package com.baza.firmy.entity;
 import com.baza.firmy.constants.enums.BusinessStatus;
 import com.baza.firmy.response.JdgSzczegolyDto;
 import com.baza.firmy.response.SpolkaDto;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -53,23 +54,23 @@ public class Jdg {
   @EqualsAndHashCode.Include
   private UUID ceidgId;
 
-  @OneToOne
+  @OneToOne(cascade = CascadeType.ALL)
   @JoinColumn (name = "adres_dzialalnosci_id", referencedColumnName = "id")
   private Adres adresDzialalnosci;
 
-  @OneToOne
+  @OneToOne(cascade = CascadeType.ALL)
   @JoinColumn (name = "adres_korespondencyjny_id", referencedColumnName = "id")
   private Adres adresKorespondencyjny;
 
-  @OneToOne
+  @OneToOne(cascade = CascadeType.ALL)
   @JoinColumn(name = "wlasciciel_id", referencedColumnName = "id")
   private Osoba wlasciciel;
 
-  @OneToOne
+  @OneToOne(cascade = CascadeType.ALL)
   @JoinColumn (name = "pkd_glowny_id", referencedColumnName = "id")
   private Pkd pkdGlowny;
 
-  @OneToMany
+  @OneToMany(cascade = CascadeType.ALL)
   @JoinTable(
       name = "firmy_pkd",
       joinColumns = @JoinColumn(name = "firma_id"),

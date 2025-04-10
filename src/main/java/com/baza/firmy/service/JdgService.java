@@ -66,7 +66,10 @@ public class JdgService {
         .map(jdg -> jdgMapper.toJdgEntity(jdg, jdgSzczegolyDto))
         .orElseGet(() -> jdgMapper.toJdgEntity(jdgSzczegolyDto));
 
-    przygotujDoZapisu(doZapisu);
+    if (doZapisu.getId() == null) {
+      przygotujDoZapisu(doZapisu);
+    }
+
     Jdg saved = jdgRepository.saveAndFlush(doZapisu);
 
     log.info("Zapisano JDG: {}", saved.getCeidgId());
@@ -76,6 +79,12 @@ public class JdgService {
 
   public boolean czyIstniejePoCeidgId(UUID ceidgId) {
     return jdgRepository.existsByCeidgId(ceidgId);
+  }
+
+  public List<String> pobierzLinkiDoJdgBezNipow() {
+    return jdgRepository.findAllByWlascicielNipIsNull().stream()
+        .map(Jdg::getLink)
+        .toList();
   }
 
   private static Specification<Jdg> createSpecification(ParametryWyszukiwaniaDto parametry) {
@@ -138,8 +147,12 @@ public class JdgService {
   }
 
   private void zaktualizujWlasciciela(Jdg doZapisu) {
-        osobaRepository.findByNip(doZapisu.getWlasciciel().getNip())
-            .ifPresentOrElse(doZapisu::setWlasciciel, zapiszWlasciciela(doZapisu));
+    if (doZapisu.getWlasciciel().getId() == null && doZapisu.getWlasciciel().getNip() != null) {
+      osobaRepository.findByNip(doZapisu.getWlasciciel().getNip())
+          .ifPresentOrElse(doZapisu::setWlasciciel, zapiszWlasciciela(doZapisu));
+    } else {
+      zapiszWlasciciela(doZapisu);
+    }
   }
 
   Runnable zapiszWlasciciela(Jdg doZapisu) {
@@ -151,11 +164,17 @@ public class JdgService {
       doZapisu.setWlasciciel(wlascicielZapisany);
     };
   }
-  
+
   private List<Kraj> zapiszKraje(Jdg doZapisu) {
     return doZapisu.getWlasciciel().getObywatelstwa().stream()
-        .map(kraj -> krajRepository.findByKraj(kraj.getKraj())
-            .orElseGet(() -> krajRepository.save(kraj)))
+        .map(kraj -> {
+          if (kraj.getKraj() != null) {
+            return krajRepository.findByKraj(kraj.getKraj())
+                .orElseGet(() -> krajRepository.save(kraj));
+          } else {
+            return kraj;
+          }
+        })
         .toList();
   }
 
@@ -168,21 +187,32 @@ public class JdgService {
     if (doZapisu.getPkdGlowny() == null || doZapisu.getPkdGlowny().getKod() == null) {
       return;
     }
-    pkdRepository.findByKod(doZapisu.getPkdGlowny().getKod()).ifPresentOrElse(doZapisu::setPkdGlowny,
-        () -> {
-          Pkd pkdGlownyZapisany = pkdRepository.save(doZapisu.getPkdGlowny());
-          doZapisu.setPkdGlowny(pkdGlownyZapisany);
-        });
+    if (doZapisu.getWlasciciel().getId() == null) {
+      pkdRepository.findByKod(doZapisu.getPkdGlowny().getKod()).ifPresentOrElse(doZapisu::setPkdGlowny,
+          () -> {
+            Pkd pkdGlownyZapisany = pkdRepository.save(doZapisu.getPkdGlowny());
+            doZapisu.setPkdGlowny(pkdGlownyZapisany);
+          });
+    } else {
+      doZapisu.setPkdGlowny(pkdRepository.save(doZapisu.getPkdGlowny()));
+    }
   }
 
   private void zaktualizujPkdDodatkowe(Jdg doZapisu) {
     if (doZapisu.getPkd() == null || doZapisu.getPkd().isEmpty()) {
       return;
     }
+
     List<Pkd> pkdZapisane = doZapisu.getPkd().stream()
         .filter(pkd -> pkd.getKod() != null && !pkd.getKod().equals(doZapisu.getPkdGlowny().getKod()))
-        .map(pkd -> pkdRepository.findByKod(pkd.getKod())
-            .orElseGet(() -> pkdRepository.save(pkd)))
+        .map(pkd -> {
+          if (pkd.getId() == null) {
+            return pkdRepository.findByKod(pkd.getKod())
+                .orElseGet(() -> pkdRepository.save(pkd));
+          } else {
+            return pkdRepository.save(pkd);
+          }
+        })
         .toList();
 
     doZapisu.setPkd(pkdZapisane);

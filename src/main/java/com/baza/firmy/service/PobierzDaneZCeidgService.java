@@ -8,7 +8,6 @@ import com.baza.firmy.response.Dto;
 import com.baza.firmy.response.ListaJdgDto;
 import jakarta.annotation.Nullable;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.Map;
 import java.util.Optional;
@@ -47,11 +46,6 @@ public class PobierzDaneZCeidgService {
 
   public void pobierzListyJdgNoweIZapisz(@Nullable Map<String, String> params, @Nullable String link) {
     try {
-      listaJdgPobieranieService.znajdzOstatniaZapisanaListe(false)
-          .map(ListaJdgPobieranie::getCreateDate)
-          .map(LocalDateTime::toLocalDate)
-          .ifPresent(data -> params.putIfAbsent("dataOd", data.format(DateTimeFormatter.ISO_LOCAL_DATE)));
-
       ListaJdgDto listaJdgDto = ceidgService.pobierzListeJdg(link != null ? link : zwrocLinkDoListyFirm(params));
       zapiszStrone(listaJdgDto);
       pobierajNastepne(listaJdgDto);
@@ -89,7 +83,27 @@ public class PobierzDaneZCeidgService {
     } while (lista != null || LocalDateTime.now().getHour() == 0);
     log.info("Skończono pobieranie szczegolow starych jdg");
   }
-  
+
+  public void pobierzBrakujaceDane() {
+    jdgService.pobierzLinkiDoJdgBezNipow().forEach(link -> {
+      AtomicLong startTime = new AtomicLong(System.currentTimeMillis());
+        try {
+          zatrzymajJesliKrocejNiz4000(startTime.get());
+          Dto szczegolyDto = ceidgService.pobierzSzczegolyJdg(link);
+          startTime.set(System.currentTimeMillis());
+
+          if (szczegolyDto != null) {
+            szczegolyDto.getFirma().forEach(jdgService::zapiszSzczegolyJdg);
+          } else {
+            log.info("szczegolyDto dla {} is NULL", link);
+          }
+        } catch (Exception e) {
+          e.printStackTrace();
+          startTime.set(System.currentTimeMillis());
+        }
+      });
+  }
+
   private void obsluzListeJdg(ListaJdgPobieranie listaJdgPobieranie) {
     AtomicLong startTime = new AtomicLong(System.currentTimeMillis());
     log.info("Started downloading the list {}", listaJdgPobieranie.getUuid());

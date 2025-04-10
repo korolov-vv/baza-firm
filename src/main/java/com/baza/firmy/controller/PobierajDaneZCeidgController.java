@@ -25,4 +25,9 @@ class PobierajDaneZCeidgController {
   public void pobierajSzczegolyJdg() {
     quartzManager.stworzZadanieSchedulera(SchedulerSingleEnum.POBIERAJ_SZCZEGOLY_JDG_SCHEDULER);
   }
+
+  @PostMapping ("/pobierz-brakujace-dane")
+  public void pobierajBrakujaceDane() {
+    quartzManager.stworzZadanieSchedulera(SchedulerSingleEnum.POBIERAJ_BRAKUJACE_DANE);
+  }
 }

@@ -116,6 +116,9 @@ public interface JdgMapper {
 
   @Named("setDate")
   default LocalDate setDate(String date) {
+    if (date == null) {
+      return null;
+    }
     return LocalDate.parse(date);
   }
 }
