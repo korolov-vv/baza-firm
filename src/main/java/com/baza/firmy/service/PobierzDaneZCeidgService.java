@@ -35,9 +35,11 @@ public class PobierzDaneZCeidgService {
     try {
       ListaJdgDto listaJdgDto = null;
       Optional<ListaJdgPobieranie> ostatniaPobranaStrona = listaJdgPobieranieService.znajdzOstatniaZapisanaListe(true);
-      listaJdgDto = pobierzPierwszaStrone(params, link, ostatniaPobranaStrona, listaJdgDto);
-      listaJdgDto = pobierzOstatnaStrone(ostatniaPobranaStrona, listaJdgDto);
-      zapiszStrone(listaJdgDto);
+      if (ostatniaPobranaStrona == null) {
+        listaJdgDto = pobierzPierwszaStrone(params, link, ostatniaPobranaStrona, listaJdgDto);
+        listaJdgDto = pobierzOstatnaStrone(ostatniaPobranaStrona, listaJdgDto);
+        zapiszStrone(listaJdgDto);
+      }
       pobierajWstecz(listaJdgDto, ostatniaPobranaStrona);
     } catch (Exception e) {
       e.printStackTrace();
@@ -65,7 +67,7 @@ public class PobierzDaneZCeidgService {
       if (lista != null) {
         obsluzListeJdg(lista);
       }
-    } while (lista != null || LocalDateTime.now().getHour() == 0);
+    } while (lista != null || LocalDateTime.now().getHour() != 0);
 
     log.info("Skończono pobieranie szczegolow nowych jdg");
   }
@@ -80,7 +82,7 @@ public class PobierzDaneZCeidgService {
       if (lista != null) {
         obsluzListeJdg(lista);
       }
-    } while (lista != null || LocalDateTime.now().getHour() == 0);
+    } while (lista != null || LocalDateTime.now().getHour() != 0);
     log.info("Skończono pobieranie szczegolow starych jdg");
   }
 
@@ -200,7 +202,7 @@ public class PobierzDaneZCeidgService {
       zapiszStrone(listaJdgDto);
       zatrzymajJesliKrocejNiz4000(startTime);
       startTime = System.currentTimeMillis();
-    } while ((getStrona(listaJdgDto.getLinks().getPrev()) > 0) && LocalDateTime.now().getHour() == 0);
+    } while ((getStrona(listaJdgDto.getLinks().getPrev()) > 0) && LocalDateTime.now().getHour() != 0);
   }
 
   private void pobierajNastepne(ListaJdgDto listaJdgDto) {
