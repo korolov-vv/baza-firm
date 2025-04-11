@@ -56,10 +56,10 @@ public class JdgService {
   // TODO: Implement some generic exporting
   @Transactional
   public void exportujDoXlsx(ParametryWyszukiwaniaDto parametry) {
-    Specification<Jdg> specification = createSpecification(parametry);
-    ByteArrayOutputStream out = new ByteArrayOutputStream();
-
-    readDataAndSaveToFile(specification, out, createFileDto(parametry));
+    readDataAndSaveToFile(
+        createSpecification(parametry),
+        createFileDto(parametry)
+    );
   }
 
   private static FileDto createFileDto(ParametryWyszukiwaniaDto parametry) {
@@ -120,7 +120,8 @@ public class JdgService {
         .build();
   }
 
-  private void readDataAndSaveToFile(Specification<Jdg> specification, ByteArrayOutputStream out, FileDto fileDto) {
+  private void readDataAndSaveToFile(Specification<Jdg> specification, FileDto fileDto) {
+    ByteArrayOutputStream out = new ByteArrayOutputStream();
     int pageNumber = 0;
     int pageSize = 1000;
     Page<JdgListDto> page;
