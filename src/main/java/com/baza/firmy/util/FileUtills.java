@@ -1,45 +1,65 @@
 package com.baza.firmy.util;
 
 
+import com.baza.firmy.configuration.s3w.S3DownloadService;
+import com.baza.firmy.configuration.s3w.S3UploadService;
+import com.baza.firmy.dto.FileDto;
+import com.baza.firmy.entity.FileEntity;
+import com.baza.firmy.mapper.FileMapper;
+import com.baza.firmy.repository.FileRepository;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 
 @Slf4j
 @Component
 @RequiredArgsConstructor
+@Service
 public class FileUtills {
 
-  public void saveToFile(ByteArrayInputStream excelData, String fileName) {
-    File reportsDir = returnCatalog("schrack");
+  private final FileRepository fileRepository;
+  private final FileMapper fileMapper;
+  private final S3DownloadService s3DownloadService;
+  private final S3UploadService s3UploadService;
 
-    File file = new File(reportsDir, fileName);
-    try (FileOutputStream fos = new FileOutputStream(file)) {
-      byte[] buffer = new byte[1024];
-      int bytesRead;
-      while ((bytesRead = excelData.read(buffer)) != -1) {
-        fos.write(buffer, 0, bytesRead);
-      }
-      log.info("File saved to: {}", file.getAbsolutePath());
-    } catch (IOException e) {
-      log.error("Error saving file: {}", e.getMessage());
-    }
+  @Transactional
+  public FileDto saveToFile(ByteArrayInputStream excelData, FileDto fileDto) {
+    FileEntity file = saveFile(excelData, fileDto);
+    s3UploadService.uploadFile(file.getPath(), file.getFileName(), excelData.readAllBytes());
+    log.info("File saved to: {}", fileDto.getPath() + fileDto.getFileName());
+    return fileMapper.toFileDto(file);
   }
 
-  public void readFromFile(ByteArrayOutputStream out, String fileName) {
-    File file = new File("schrack", fileName);
-    if (file.exists()) {
-      try (FileInputStream fis = new FileInputStream(file)) {
+  private FileEntity saveFile(ByteArrayInputStream excelData, FileDto fileDto) {
+    FileEntity file;
+    if (fileDto.getId() == null) {
+      file = new FileEntity();
+      file.setUuid(UUID.randomUUID());
+      file.setFileName(fileDto.getFileName());
+      file.setPath(fileDto.getPath());
+      file.setExtention(fileDto.getExtention());
+      file.setSize((long) excelData.available());
+    } else {
+      file = fileRepository.findById(fileDto.getId())
+          .orElseThrow(() -> new RuntimeException("File not found"));
+    }
+
+    return fileRepository.save(file);
+  }
+
+  public void readFromFile(ByteArrayOutputStream out, String filePath, String fileName) {
+    byte[] bytes = getFile(filePath, fileName);
+    if (bytes.length > 0) {
+      try (ByteArrayInputStream bis = new ByteArrayInputStream(bytes)) {
         byte[] buffer = new byte[1024];
         int bytesRead;
-        while ((bytesRead = fis.read(buffer)) != -1) {
+        while ((bytesRead = bis.read(buffer)) != -1) {
           out.write(buffer, 0, bytesRead);
         }
       } catch (Exception e) {
@@ -48,11 +68,7 @@ public class FileUtills {
     }
   }
 
-  private File returnCatalog(String nazwaKatalogu) {
-    File katalog = new File(nazwaKatalogu);
-    if (!katalog.exists()) {
-      katalog.mkdirs();
-    }
-    return katalog;
+  private byte[] getFile(final String filePath, final String fileName) {
+    return s3DownloadService.getFileFromBucket(filePath, fileName);
   }
 }
