@@ -1,5 +1,6 @@
 package com.baza.firmy.service;
 
+import com.baza.firmy.dto.FileDto;
 import com.baza.firmy.dto.JdgListDto;
 import com.baza.firmy.dto.ParametryWyszukiwaniaDto;
 import com.baza.firmy.entity.Adres;
@@ -57,7 +58,18 @@ public class JdgService {
   public void exportujDoXlsx(ParametryWyszukiwaniaDto parametry) {
     Specification<Jdg> specification = createSpecification(parametry);
     ByteArrayOutputStream out = new ByteArrayOutputStream();
-    readDataAndSaveToFile(specification, out);
+
+    readDataAndSaveToFile(specification, out, createFileDto(parametry));
+  }
+
+  private static FileDto createFileDto(ParametryWyszukiwaniaDto parametry) {
+    FileDto fileDto = new FileDto();
+    fileDto.setVersion(0);
+    fileDto.setFileName("Jdg_list_" + parametry.getDataRozpoczeciaOd() + ".xlsx");
+    fileDto.setPath("schrack/" + LocalDate.now().getYear() + "/" + LocalDate.now().getMonth());
+    fileDto.setExtention("XLSX");
+    fileDto.setSize(0L);
+    return fileDto;
   }
 
   @Transactional(TxType.REQUIRES_NEW)
@@ -108,17 +120,19 @@ public class JdgService {
         .build();
   }
 
-  private void readDataAndSaveToFile(Specification<Jdg> specification, ByteArrayOutputStream out) {
+  private void readDataAndSaveToFile(Specification<Jdg> specification, ByteArrayOutputStream out, FileDto fileDto) {
     int pageNumber = 0;
     int pageSize = 1000;
     Page<JdgListDto> page;
 
     do {
-      fileUtills.readFromFile(out, "Jdg_list_" + LocalDate.now() + ".xlsx");
       page = fetchData(specification, pageNumber, pageSize);
-      fileUtills.saveToFile(
-          xslxDocumentUtils.appendToExcel(out, page.getContent(), pageNumber == 0,
-              pageNumber == page.getTotalPages()), "Jdg_list_" + LocalDate.now() + ".xlsx");
+      if (pageNumber > 0) {
+        fileUtills.readFromFile(out, fileDto.getPath(), fileDto.getFileName());
+      }
+      fileDto = fileUtills.saveToFile(xslxDocumentUtils.appendToExcel(out, page.getContent(),
+              pageNumber == 0, pageNumber == page.getTotalPages()),
+          fileDto);
       pageNumber++;
     } while (page.hasNext());
   }

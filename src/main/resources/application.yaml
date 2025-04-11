@@ -17,6 +17,12 @@ spring:
   liquibase:
     change-log: classpath:db/changelog/baza-firmy-changelog.yaml
 
+aws:
+  access-key: ${AWS_ACCESS_KEY}
+  secret-key: ${AWS_SECRET_KEY}
+  endpoint: ${AWS_SERVICE_ENDPOINT}
+  temp-dir-path: ${TEMP_DIR_PATH}
+
 ceidg:
   ceidg-path: ${CEIDG_PATH}
   token: ${CEIDG_TOKEN}
