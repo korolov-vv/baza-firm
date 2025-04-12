@@ -12,5 +12,19 @@ services:
     ports:
       - "25432:5432"
 
+  minio:
+    image: docker.io/bitnami/minio:2021
+    environment:
+      MINIO_ROOT_USER: minio
+      MINIO_ROOT_PASSWORD: minio123
+    ports:
+      - '19000:9000'
+      - '19001:9001'
+    volumes:
+      - 'minio_data:/data'
+
+
 volumes:
+  minio_data:
+    driver: local
   postgresql_bazafirm:
