@@ -24,6 +24,7 @@ import java.io.ByteArrayOutputStream;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -182,14 +183,9 @@ public class JdgService {
 
   private List<Kraj> zapiszKraje(Jdg doZapisu) {
     return doZapisu.getWlasciciel().getObywatelstwa().stream()
-        .map(kraj -> {
-          if (kraj.getKraj() != null) {
-            return krajRepository.findByKraj(kraj.getKraj())
-                .orElseGet(() -> krajRepository.save(kraj));
-          } else {
-            return kraj;
-          }
-        })
+        .filter(kraj -> Objects.nonNull(kraj.getKraj()))
+        .map(kraj -> krajRepository.findByKraj(kraj.getKraj())
+                .orElseGet(() -> krajRepository.save(kraj)))
         .toList();
   }
 
