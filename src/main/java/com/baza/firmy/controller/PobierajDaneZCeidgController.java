@@ -2,6 +2,7 @@ package com.baza.firmy.controller;
 
 import com.baza.firmy.common.harmonogram.scheduler.QuartzManager;
 import com.baza.firmy.common.harmonogram.scheduler.SchedulerSingleEnum;
+import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -26,6 +27,7 @@ class PobierajDaneZCeidgController {
     quartzManager.stworzZadanieSchedulera(SchedulerSingleEnum.POBIERAJ_SZCZEGOLY_JDG_SCHEDULER);
   }
 
+  @Hidden
   @PostMapping ("/pobierz-brakujace-dane")
   public void pobierajBrakujaceDane() {
     quartzManager.stworzZadanieSchedulera(SchedulerSingleEnum.POBIERAJ_BRAKUJACE_DANE);

@@ -187,7 +187,7 @@ public class JdgService {
     if (doZapisu.getPkdGlowny() == null || doZapisu.getPkdGlowny().getKod() == null) {
       return;
     }
-    if (doZapisu.getWlasciciel().getId() == null) {
+    if (doZapisu.getPkdGlowny().getId() == null) {
       pkdRepository.findByKod(doZapisu.getPkdGlowny().getKod()).ifPresentOrElse(doZapisu::setPkdGlowny,
           () -> {
             Pkd pkdGlownyZapisany = pkdRepository.save(doZapisu.getPkdGlowny());
