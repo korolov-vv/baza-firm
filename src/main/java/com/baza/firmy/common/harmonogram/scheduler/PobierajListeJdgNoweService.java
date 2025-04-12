@@ -23,7 +23,7 @@ class PobierajListeJdgNoweService implements BazowySchedulerService {
     pobierzDaneZCeidgService.pobierzListyJdgNoweIZapisz(Map.of(
         "status", "AKTYWNY",
         "dataOd", LocalDate.now().minusDays(3).format(DateTimeFormatter.ISO_LOCAL_DATE),
-        "dataDo", LocalDate.now().minusDays(2).format(DateTimeFormatter.ISO_LOCAL_DATE)
+        "dataDo", LocalDate.now().minusDays(3).format(DateTimeFormatter.ISO_LOCAL_DATE)
     ), null);
 
     quartzManager.stworzZadanieSchedulera(SchedulerSingleEnum.POBIERAJ_SZCZEGOLY_JDG_SCHEDULER);
