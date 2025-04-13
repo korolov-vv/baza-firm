@@ -10,8 +10,9 @@ import org.springframework.scheduling.quartz.QuartzJobBean;
 @Getter
 enum SchedulerEnum {
   TEST_SCHEDULER("TEST_TRIGGER", "TEST_JOB", "0 0/1 * * * ?", TestJob.class),
-  POBIERAJ_LISTE_JDG_NOWE_SCHEDULER("POBIERAJ_LISTE_JDG_NOWE_TRIGGER", "POBIERAJ_LISTE_JDG_NOWE_JOB", "0 0 1 * * ?", PobierajListeJdgNoweJob.class),
-  WYSLIJ_LISTE_JDG_NOWE_SCHEDULER("WYSLIJ_LISTE_JDG_NOWE_TRIGGER", "WYSLIJ_LISTE_JDG_NOWE_JOB", "0 23 2 * * ?", WyslijListeJdgNoweJob.class);
+  POBIERAJ_LISTE_JDG_NOWE_SCHEDULER("POBIERAJ_LISTE_JDG_NOWE_TRIGGER", "POBIERAJ_LISTE_JDG_NOWE_JOB", "0 0 3 * * ?", PobierajListeJdgNoweJob.class),
+  EKSPORTUJ_LISTE_JDG_NOWE_SCHEDULER("EKSPORTUJ_LISTE_JDG_NOWE_TRIGGER", "EKSPORTUJ_LISTE_JDG_NOWE_JOB", "0 0 7 * * ?", EksportujListeJdgNoweJob.class),
+  WYSLIJ_LISTE_JDG_NOWE_SCHEDULER("WYSLIJ_LISTE_JDG_NOWE_TRIGGER", "WYSLIJ_LISTE_JDG_NOWE_JOB", "0 0 9 * * ?", WyslijListeJdgNoweJob.class);
 
   private String triggerKod;
   private String jobKod;

@@ -17,5 +17,6 @@ class PobierajBrakujaceDaneService implements BazowySchedulerService {
  public void executeScheduler(JobExecutionContext jobExecutionContext) {
   log.info("Start POBIERAJ_BRAKUJACE_DANE_JOB");
   pobierzDaneZCeidgService.pobierzBrakujaceDane();
+  log.info("Complete POBIERAJ_BRAKUJACE_DANE_JOB");
  }
 }
