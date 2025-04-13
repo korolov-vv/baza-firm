@@ -30,7 +30,7 @@ public class XslxDocumentUtils {
       CellStyle headerStyle = createHeaderStyle(workbook);
       CellStyle cellStyle = createCellStyle(workbook);
 
-      String[] columns = {"Nazwa", "NIP", "Data rozpoczęcia działalności", "Email", "Telefon", "PKD główny", "PKD dodatkowe", "Adres Korespondencyjny", "Adres Działalności"};
+      String[] columns = {"Nazwa", "NIP", "REGON", "Data rozpoczęcia działalności", "Email", "Telefon", "PKD główny", "PKD dodatkowe", "Adres Korespondencyjny", "Adres Działalności"};
 
       if (isFirstPage) {
         Row headerRow = sheet.createRow(0);
@@ -48,13 +48,14 @@ public class XslxDocumentUtils {
 
         createCell(row, 0, jdg.getNazwa(), cellStyle);
         createCell(row, 1, jdg.getNip(), cellStyle);
-        createCell(row, 2, jdg.getDataRozpoczecia(), cellStyle);
-        createCell(row, 3, jdg.getEmail(), cellStyle);
-        createCell(row, 4, jdg.getTelefon(), cellStyle);
-        createCell(row, 5, jdg.getPkdGlowny(), cellStyle);
-        createCell(row, 6, String.join(", ", jdg.getPkd()), cellStyle);
-        createCell(row, 7, jdg.getAdresKorespondencyjny().toString(), cellStyle);
-        createCell(row, 8, jdg.getAdresDzialalnosci().toString(), cellStyle);
+        createCell(row, 2, jdg.getWlasciciel().getRegon(), cellStyle);
+        createCell(row, 3, jdg.getDataRozpoczecia(), cellStyle);
+        createCell(row, 4, jdg.getEmail(), cellStyle);
+        createCell(row, 5, jdg.getTelefon(), cellStyle);
+        createCell(row, 6, jdg.getPkdGlowny(), cellStyle);
+        createCell(row, 7, String.join(", ", jdg.getPkd()), cellStyle);
+        createCell(row, 8, jdg.getAdresKorespondencyjny().toString(), cellStyle);
+        createCell(row, 9, jdg.getAdresDzialalnosci().toString(), cellStyle);
       }
 
       for (int i = 0; i < columns.length; i++) {

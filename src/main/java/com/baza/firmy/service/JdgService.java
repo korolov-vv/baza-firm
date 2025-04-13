@@ -141,11 +141,9 @@ public class JdgService {
 
   private Page<JdgListDto> fetchData(Specification<Jdg> specification, int pageNumber,
       int pageSize) {
-    Page<JdgListDto> page;
     Pageable pageable = PageRequest.of(pageNumber, pageSize);
-    page = jdgRepository.findAll(specification, pageable)
+    return jdgRepository.findAll(specification, pageable)
         .map(jdgMapper::toJdgListDtoList);
-    return page;
   }
 
   private void przygotujDoZapisu(Jdg doZapisu) {
@@ -164,7 +162,7 @@ public class JdgService {
 
   private void zaktualizujWlasciciela(Jdg doZapisu) {
     if (doZapisu.getWlasciciel().getId() == null && doZapisu.getWlasciciel().getNip() != null) {
-      osobaRepository.findByNip(doZapisu.getWlasciciel().getNip())
+      osobaRepository.findByNip(doZapisu.getWlasciciel().getNip().trim())
           .ifPresentOrElse(doZapisu::setWlasciciel, zapiszWlasciciela(doZapisu));
     } else {
       zapiszWlasciciela(doZapisu);
@@ -184,7 +182,7 @@ public class JdgService {
   private List<Kraj> zapiszKraje(Jdg doZapisu) {
     return doZapisu.getWlasciciel().getObywatelstwa().stream()
         .filter(kraj -> Objects.nonNull(kraj.getKraj()))
-        .map(kraj -> krajRepository.findByKraj(kraj.getKraj())
+        .map(kraj -> krajRepository.findByKraj(kraj.getKraj().trim())
                 .orElseGet(() -> krajRepository.save(kraj)))
         .toList();
   }
@@ -199,7 +197,7 @@ public class JdgService {
       return;
     }
     if (doZapisu.getPkdGlowny().getId() == null) {
-      pkdRepository.findByKod(doZapisu.getPkdGlowny().getKod()).ifPresentOrElse(doZapisu::setPkdGlowny,
+      pkdRepository.findByKod(doZapisu.getPkdGlowny().getKod().trim()).ifPresentOrElse(doZapisu::setPkdGlowny,
           () -> {
             Pkd pkdGlownyZapisany = pkdRepository.save(doZapisu.getPkdGlowny());
             doZapisu.setPkdGlowny(pkdGlownyZapisany);
@@ -215,10 +213,10 @@ public class JdgService {
     }
 
     List<Pkd> pkdZapisane = doZapisu.getPkd().stream()
-        .filter(pkd -> pkd.getKod() != null && !pkd.getKod().equals(doZapisu.getPkdGlowny().getKod()))
+        .filter(pkd -> Objects.nonNull(pkd.getKod()) && !pkd.getKod().equals(doZapisu.getPkdGlowny().getKod()))
         .map(pkd -> {
           if (pkd.getId() == null) {
-            return pkdRepository.findByKod(pkd.getKod())
+            return pkdRepository.findByKod(pkd.getKod().trim())
                 .orElseGet(() -> pkdRepository.save(pkd));
           } else {
             return pkdRepository.save(pkd);
