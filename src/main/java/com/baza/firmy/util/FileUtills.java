@@ -9,6 +9,7 @@ import com.baza.firmy.mapper.FileMapper;
 import com.baza.firmy.repository.FileRepository;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -54,7 +55,7 @@ public class FileUtills {
   }
 
   public void readFromFile(ByteArrayOutputStream out, String filePath, String fileName) {
-    byte[] bytes = getFile(filePath, fileName);
+    byte[] bytes = getFileBytes(filePath, fileName);
     if (bytes.length > 0) {
       try (ByteArrayInputStream bis = new ByteArrayInputStream(bytes)) {
         byte[] buffer = new byte[1024];
@@ -68,7 +69,13 @@ public class FileUtills {
     }
   }
 
-  private byte[] getFile(final String filePath, final String fileName) {
+
+  public File getFile(final String filePath, final String fileName) {
     return s3DownloadService.getFileFromBucket(filePath, fileName);
+  }
+
+
+  private byte[] getFileBytes(final String filePath, final String fileName) {
+    return s3DownloadService.getFileBytesFromBucket(filePath, fileName);
   }
 }
