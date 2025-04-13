@@ -26,3 +26,9 @@ aws:
 ceidg:
   ceidg-path: ${CEIDG_PATH}
   token: ${CEIDG_TOKEN}
+
+smtp:
+    host: ${SMTP_HOST}
+    port: ${SMTP_PORT:587}
+    username: ${SMTP_USERNAME}
+    password: ${SMTP_PASSWORD}

@@ -1,12 +1,19 @@
 package com.baza.firmy.configuration.s3w;
 
+import static com.baza.firmy.configuration.s3w.S3Exceptions.nieMoznaDodacPliku;
+
+import com.baza.firmy.configuration.properties.AwsProperties;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLConnection;
 import java.net.URLEncoder;
+import java.util.UUID;
 import java.util.function.Consumer;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,10 +36,11 @@ import software.amazon.awssdk.services.s3.model.GetObjectResponse;
 public class S3DownloadService {
 
   private final S3Client s3Client;
+  private final AwsProperties awsProperties;
 
   @Async
   void downloadFile(final String filePath, final String fileName, HttpServletResponse response) {
-    ByteArrayInputStream bis = new ByteArrayInputStream(getFileFromBucket(filePath, fileName));
+    ByteArrayInputStream bis = new ByteArrayInputStream(getFileBytesFromBucket(filePath, fileName));
 
     try {
       String contentDisposition = "attachment;filename*=" + encodeFileName(fileName);
@@ -48,7 +56,11 @@ public class S3DownloadService {
 
   }
 
-  public byte[] getFileFromBucket(final String filePath, final String fileName) {
+  public File getFileFromBucket(final String filePath, final String fileName) {
+    return writeByte(getFileBytesFromBucket(filePath, fileName), fileName);
+  }
+
+  public byte[] getFileBytesFromBucket(final String filePath, final String fileName) {
     byte[] content = null;
     final ResponseInputStream<GetObjectResponse> stream = s3Client.getObject(
         getObjectRequestBuilder(S3Constants.BUCKET_NAME, filePath, fileName));
@@ -59,6 +71,19 @@ public class S3DownloadService {
       log.error("Błąd podczas pobierania pliku " + fileName);
     }
     return content;
+  }
+
+  private File writeByte(final byte[] bytes, final String filename) {
+    File tempDir = new File(awsProperties.getTempDirPath() + UUID.randomUUID());
+    tempDir.mkdirs();
+    File file = new File(tempDir.getAbsolutePath() + '/' + filename);
+    try(OutputStream os = new FileOutputStream(file)) {
+      os.write(bytes);
+      return file;
+    } catch (Exception e) {
+      log.error("Błąd podczas dodawania pliku", e);
+      throw nieMoznaDodacPliku(filename, e);
+    }
   }
 
   private static String encodeFileName(String fileName) throws UnsupportedEncodingException {
