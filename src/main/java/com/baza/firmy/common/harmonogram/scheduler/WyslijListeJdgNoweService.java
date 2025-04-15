@@ -17,7 +17,7 @@ class WyslijListeJdgNoweService implements BazowySchedulerService {
  @Override
  public void executeScheduler(JobExecutionContext jobExecutionContext) {
   log.info("Start WYSLIJ_LISTE_JDG_NOWE_JOB");
-  mailSenderService.sendMessageWithFirms(
+  mailSenderService.sendEmailWithFirms(
       "vadimcoffee@gmail.com",
       "Lista JDG",
       String.format("Cześć! W załączniku firmy z %s", LocalDate.now().minusDays(3)));

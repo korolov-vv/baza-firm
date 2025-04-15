@@ -50,10 +50,10 @@ public class QuartzManager implements InitializingBean {
       JobDetail jobDetail = stworzJobDetail(schedulerEnum);
       Trigger trigger = stworzCronTrigger(schedulerEnum, jobDetail);
       scheduler.scheduleJob(jobDetail, trigger);
-      log.info("Scheduler został dodany: {}", schedulerEnum.getTriggerKod());
+      log.info("---------------------------------------------------- Scheduler został dodany: {}, with cron{}", schedulerEnum.getTriggerKod(), schedulerEnum.getCron());
     } catch (ObjectAlreadyExistsException ex) {
       log.info(
-          "Pominięto dodawanie triggera - obiekt już istnieje: {}", schedulerEnum.getTriggerKod());
+          "!!!  Pominięto dodawanie triggera - obiekt już istnieje: {}", schedulerEnum.getTriggerKod());
     } catch (SchedulerException ex) {
       log.error("Błąd planowania zadań", ex);
     }
@@ -70,9 +70,9 @@ public class QuartzManager implements InitializingBean {
       LocalDateTime triggerTime =
           LocalDateTime.ofInstant(Instant.ofEpochMilli(trigger.getStartTime().getTime()),
               TimeZone.getDefault().toZoneId());
-      log.info("Scheduler został dodany: {}. Uruchomienie o : {}", jobDetail.getKey(), triggerTime);
+      log.info("---------------------------------------------------- Scheduler został dodany: {}. Uruchomienie o : {}", jobDetail.getKey(), triggerTime);
     } catch (ObjectAlreadyExistsException ex) {
-      log.info("Pominięto dodawanie triggera - obiekt już istnieje: {}", schedulerEnum.getTriggerKod());
+      log.info("!!!  Pominięto dodawanie triggera - obiekt już istnieje: {}", schedulerEnum.getTriggerKod());
     } catch (SchedulerException ex) {
       log.error("Błąd planowania zadań", ex);
     }
@@ -87,10 +87,10 @@ public class QuartzManager implements InitializingBean {
       JobDetail jobDetail = stworzJobDetail(schedulerEnum,uuid);
       Trigger trigger = stworzSimpleTrigger(schedulerEnum, jobDetail, jobData, uuid);
       scheduler.scheduleJob(jobDetail, trigger);
-      log.info("Scheduler został dodany: {}", schedulerEnum.getTriggerKod());
+      log.info("---------------------------------------------------- Scheduler został dodany: {}", schedulerEnum.getTriggerKod());
     } catch (ObjectAlreadyExistsException ex) {
       log.info(
-          "Pominięto dodawanie triggera - obiekt już istnieje: {}", schedulerEnum.getTriggerKod());
+          "!!!  Pominięto dodawanie triggera - obiekt już istnieje: {}", schedulerEnum.getTriggerKod());
     } catch (SchedulerException ex) {
       log.error("Błąd planowania zadań", ex);
     }
@@ -104,10 +104,10 @@ public class QuartzManager implements InitializingBean {
       JobDetail jobDetail = stworzJobDetail(schedulerEnum,uuid);
       Trigger trigger = stworzSimpleTrigger(schedulerEnum, jobDetail, jobData, uuid);
       scheduler.scheduleJob(jobDetail, trigger);
-      log.info("Scheduler został dodany: {}", schedulerEnum.getTriggerKod());
+      log.info("---------------------------------------------------- Scheduler został dodany: {}", schedulerEnum.getTriggerKod());
     } catch (ObjectAlreadyExistsException ex) {
       log.info(
-          "Pominięto dodawanie triggera - obiekt już istnieje: {}", schedulerEnum.getTriggerKod());
+          "!!!  Pominięto dodawanie triggera - obiekt już istnieje: {}", schedulerEnum.getTriggerKod());
     } catch (SchedulerException ex) {
       log.error("Błąd planowania zadań", ex);
     }

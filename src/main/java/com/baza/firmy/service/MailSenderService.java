@@ -19,7 +19,7 @@ public class MailSenderService {
   private final FileRepository fileRepository;
   private final FileUtills fileUtills;
 
-  public void sendMessageWithFirms(String to, String subject, String body) {
+  public void sendEmailWithFirms(String to, String subject, String body) {
 
     FileEntity fileEntity = fileRepository.findFirstByOrderByIdDesc()
         .orElseThrow(() -> new RuntimeException("File not found found"));
