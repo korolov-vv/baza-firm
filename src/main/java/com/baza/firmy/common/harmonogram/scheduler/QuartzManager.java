@@ -50,7 +50,7 @@ public class QuartzManager implements InitializingBean {
       JobDetail jobDetail = stworzJobDetail(schedulerEnum);
       Trigger trigger = stworzCronTrigger(schedulerEnum, jobDetail);
       scheduler.scheduleJob(jobDetail, trigger);
-      log.info("---------------------------------------------------- Scheduler został dodany: {}, with cron{}", schedulerEnum.getTriggerKod(), schedulerEnum.getCron());
+      log.info("---------------------------------------------------- Scheduler został dodany: {}, with cron: {}", schedulerEnum.getTriggerKod(), schedulerEnum.getCron());
     } catch (ObjectAlreadyExistsException ex) {
       log.info(
           "!!!  Pominięto dodawanie triggera - obiekt już istnieje: {}", schedulerEnum.getTriggerKod());
