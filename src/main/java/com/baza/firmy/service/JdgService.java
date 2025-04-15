@@ -163,20 +163,18 @@ public class JdgService {
   private void zaktualizujWlasciciela(Jdg doZapisu) {
     if (doZapisu.getWlasciciel().getId() == null && doZapisu.getWlasciciel().getNip() != null) {
       osobaRepository.findByNip(doZapisu.getWlasciciel().getNip().trim())
-          .ifPresentOrElse(doZapisu::setWlasciciel, zapiszWlasciciela(doZapisu));
+          .ifPresentOrElse(doZapisu::setWlasciciel, () -> zapiszWlasciciela(doZapisu));
     } else {
       zapiszWlasciciela(doZapisu);
     }
   }
 
-  Runnable zapiszWlasciciela(Jdg doZapisu) {
-    return () -> {
-      List<Kraj> krajeZapisane = zapiszKraje(doZapisu);
-      doZapisu.getWlasciciel().setObywatelstwa(krajeZapisane);
+  void zapiszWlasciciela(Jdg doZapisu) {
+    List<Kraj> krajeZapisane = zapiszKraje(doZapisu);
+    doZapisu.getWlasciciel().setObywatelstwa(krajeZapisane);
 
-      Osoba wlascicielZapisany = osobaRepository.save(doZapisu.getWlasciciel());
-      doZapisu.setWlasciciel(wlascicielZapisany);
-    };
+    Osoba wlascicielZapisany = osobaRepository.save(doZapisu.getWlasciciel());
+    doZapisu.setWlasciciel(wlascicielZapisany);
   }
 
   private List<Kraj> zapiszKraje(Jdg doZapisu) {

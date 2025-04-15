@@ -16,7 +16,7 @@ public class TestSchedulerService implements BazowySchedulerService {
 
   public void executeScheduler(JobExecutionContext jobExecutionContext) {
     try {
-      log.info("Start test job 0.1.1");
+      log.info("Start test job 0.1.1 mailing test");
       TimeUnit.SECONDS.sleep(10);
       log.info("Koniec test job");
     } catch (InterruptedException exception) {
