@@ -1,6 +1,6 @@
 package com.baza.firmy.common.harmonogram.scheduler;
 
-import com.baza.firmy.service.PobierzDaneZCeidgService;
+import com.baza.firmy.common.service.PobierzDaneZCeidgService;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Map;

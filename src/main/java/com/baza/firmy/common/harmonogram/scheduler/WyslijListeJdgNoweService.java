@@ -1,6 +1,6 @@
 package com.baza.firmy.common.harmonogram.scheduler;
 
-import com.baza.firmy.service.MailSenderService;
+import com.baza.firmy.common.service.MailSenderService;
 import java.time.LocalDate;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

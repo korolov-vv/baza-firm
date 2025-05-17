@@ -16,14 +16,6 @@ spring:
       ddl-auto: none
   liquibase:
     change-log: classpath:db/changelog/baza-firmy-changelog.yaml
-  quartz:
-    job-store-type: jdbc
-    properties:
-      org.quartz.scheduler.instanceName: BAZA_FIRM_SCHEDULER
-      org.quartz.threadPool.threadCount: 2
-      org.quartz.scheduler.instanceId: AUTO
-      org.quartz.jobStore.isClustered: false
-      org.quartz.jobStore.driverDelegateClass: org.quartz.impl.jdbcjobstore.PostgreSQLDelegate
 
 aws:
   access-key: ${AWS_ACCESS_KEY}

@@ -1,13 +1,11 @@
 package com.baza.firmy.common.harmonogram.scheduler;
 
-import com.baza.firmy.service.PobierzDaneZCeidgService;
+import com.baza.firmy.common.service.PobierzDaneZCeidgService;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.quartz.JobExecutionContext;
 import org.springframework.stereotype.Service;
 
-@Slf4j
 @RequiredArgsConstructor
 @Service
 class PobierajListeJdgService implements BazowySchedulerService {
@@ -19,4 +17,3 @@ class PobierajListeJdgService implements BazowySchedulerService {
     pobierzDaneZCeidgService.pobierzListyJdgWsteczIZapisz(Map.of("status", "AKTYWNY"), null);
   }
 }
-
