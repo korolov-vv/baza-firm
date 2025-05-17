@@ -7,6 +7,7 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.scheduling.quartz.SpringBeanJobFactory;
 
 /**
@@ -16,6 +17,7 @@ import org.springframework.scheduling.quartz.SpringBeanJobFactory;
 @Slf4j
 @Configuration
 @EnableAutoConfiguration
+@EnableJpaAuditing
 public class QuartzConfig {
 
   @Autowired

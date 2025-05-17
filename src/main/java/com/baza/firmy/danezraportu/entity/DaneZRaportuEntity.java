@@ -3,6 +3,7 @@ package com.baza.firmy.danezraportu.entity;
 import com.baza.firmy.dto.JdgSzczegolyRaportDto;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EntityListeners;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -22,6 +23,7 @@ import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Data
 @Builder
@@ -29,6 +31,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 @AllArgsConstructor
 @Entity
 @Table(name = "dane_z_raportu")
+@EntityListeners(AuditingEntityListener.class)
 class DaneZRaportuEntity {
 
   @Id
@@ -42,6 +45,7 @@ class DaneZRaportuEntity {
   @EqualsAndHashCode.Include
   private UUID uuid;
   @CreatedDate
+  @Column(updatable = false)
   private LocalDateTime createDate;
   @LastModifiedDate
   private LocalDateTime lastModifiedDate;

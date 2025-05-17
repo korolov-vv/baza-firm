@@ -13,8 +13,10 @@ import com.baza.firmy.pkd.query.PkdQueryFasade;
 import com.baza.firmy.pkd.query.PkdViewEntity;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -22,7 +24,6 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 class StworzJdgUseCase {
-
 
   private final OsobaFacade osobaFacade;
   private final OsobaQueryFacade osobaQueryFacade;
@@ -104,10 +105,18 @@ class StworzJdgUseCase {
     }
 
     List<UUID> listaUuidKodowPkdZapisanych = new ArrayList<>();
-    jdgSzczegolyDto.getPkd().stream()
+    usunDuplikatyPkd(jdgSzczegolyDto.getPkd()).stream()
         .filter(pkd -> pkd != null && !pkd.equals(jdgSzczegolyDto.getPkdGlowny().orElse(null)))
         .forEach(kod -> listaUuidKodowPkdZapisanych.add(zaktualizujPkd(kod)));
     return listaUuidKodowPkdZapisanych;
+  }
+
+  private Set<String> usunDuplikatyPkd(List<String> kodyPkd) {
+    Set<String> pkdUnikalne = new HashSet<>();
+    kodyPkd.stream()
+        .filter(n -> !pkdUnikalne.add(n))
+        .toList();
+    return pkdUnikalne;
   }
 
   private UUID zaktualizujPkd(String pkd) {

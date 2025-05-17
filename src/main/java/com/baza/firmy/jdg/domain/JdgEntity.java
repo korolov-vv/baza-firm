@@ -9,6 +9,7 @@ import com.baza.firmy.pkd.query.PkdViewEntity;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EntityListeners;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
@@ -36,6 +37,7 @@ import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Data
 @Builder
@@ -44,6 +46,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 @Entity
 @Table(name = "jednoosobowe_dzialalnosci_gospodarcze")
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@EntityListeners(AuditingEntityListener.class)
 class JdgEntity {
 
   @Id
@@ -57,6 +60,7 @@ class JdgEntity {
   @EqualsAndHashCode.Include
   private UUID uuid;
   @CreatedDate
+  @Column(updatable = false)
   private LocalDateTime createDate;
   @LastModifiedDate
   private LocalDateTime lastModifiedDate;

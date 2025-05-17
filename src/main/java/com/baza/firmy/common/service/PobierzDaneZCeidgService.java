@@ -163,6 +163,7 @@ public class PobierzDaneZCeidgService {
                   dzialalnosc.getWlasciciel().getNip(), dzialalnosc.getNazwa(), LocalDate.parse(dzialalnosc.getDataRozpoczecia()))) {
                 jdgFacade.stworzJdg(dzialalnosc);
               } else {
+                // TODO dorobić aktualizację dla aktualizacji
                 log.info("JDG dla NIP: {}, nazwa: {} oraz dataRozpoczecia: {} już istnieje",
                     firma.getWlasciciel().getNip(), firma.getNazwa(), firma.getDataRozpoczecia());
               }
