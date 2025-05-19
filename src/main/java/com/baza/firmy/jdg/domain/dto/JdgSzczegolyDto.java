@@ -35,7 +35,7 @@ public class JdgSzczegolyDto implements JdgSzczegoly {
   private StworzWlascicielaDto wlasciciel;
 
   @Builder.Default
-  private List<KrajDto> obywatelstwa = new ArrayList();
+  private List<KrajDto> obywatelstwa = new ArrayList<>();
 
   private String pkdGlowny;
   @Builder.Default

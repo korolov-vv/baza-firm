@@ -19,5 +19,5 @@ public class WlascicielDto {
   private String nip;
   private String regon;
   @Builder.Default
-  private List<KrajDto> obywatelstwa = new ArrayList();
+  private List<KrajDto> obywatelstwa = new ArrayList<>();
 }

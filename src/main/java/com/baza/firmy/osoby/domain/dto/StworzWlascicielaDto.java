@@ -23,5 +23,5 @@ public class StworzWlascicielaDto {
   private boolean nipUniewazniony;
   private String regon;
   @Builder.Default
-  private List<KrajDto> obywatelstwa = new ArrayList();
+  private List<KrajDto> obywatelstwa = new ArrayList<>();
 }
