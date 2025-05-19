@@ -43,17 +43,25 @@ public class PobierzDaneZRaportuService {
         List<JdgSzczegolyRaportDto> listaDzialalnosciWojewodztwa = unmarshalRaport(wojewodztwoRaport.getNazwaPlikuRaportu());
 
         listaDzialalnosciWojewodztwa.forEach(dzialalnosc -> {
-              if (!czyIstniejeDzialalnoscWBazie(dzialalnosc)) {
-                jdgFacade.stworzJdg(
-                    stworzJdgSzczegolyDto(dzialalnosc, wojewodztwoRaport.name())
-                );
-              } else {
-                log.info("Skip JDG NIP: {} Nazwa: {} Data rozpoczęcia: {}",
-                    dzialalnosc.getNip().orElse(null),
-                    dzialalnosc.getNazwaPodmiotu().orElse(null),
-                    dzialalnosc.getDataRozpoczeciaDzialalnosci().orElse(null));
-              }
-            });
+          try {
+            if (!czyIstniejeDzialalnoscWBazie(dzialalnosc)) {
+              jdgFacade.stworzJdg(
+                  stworzJdgSzczegolyDto(dzialalnosc, wojewodztwoRaport.name())
+              );
+            } else {
+              log.info("Skip JDG NIP: {} Nazwa: {} Data rozpoczęcia: {}",
+                  dzialalnosc.getNip().orElse(null),
+                  dzialalnosc.getNazwaPodmiotu().orElse(null),
+                  dzialalnosc.getDataRozpoczeciaDzialalnosci().orElse(null));
+            }
+          } catch (Exception e) {
+            log.error("Błąd podczas przetwarzania JDG NIP: {} Nazwa: {} Data rozpoczęcia: {}",
+                dzialalnosc.getNip().orElse(null),
+                dzialalnosc.getNazwaPodmiotu().orElse(null),
+                dzialalnosc.getDataRozpoczeciaDzialalnosci().orElse(null));
+            log.error(e.getMessage());
+          }
+        });
       } catch (Exception e) {
         log.error(e.getMessage());
       }
@@ -82,7 +90,7 @@ public class PobierzDaneZRaportuService {
 
   private boolean czyIstniejeDzialalnoscWBazie(JdgSzczegolyRaportDto dzialalnosc) {
     if (dzialalnosc.getNip().isEmpty() && dzialalnosc.getNazwaPodmiotu().isEmpty()) {
-      return false;
+      return true;
     }
 
     return jdgQueryFacade.existsByWlascicielNipAndNazwaAndDataRozpoczecia(
@@ -93,7 +101,14 @@ public class PobierzDaneZRaportuService {
 
   private JdgSzczegolyDto stworzJdgSzczegolyDto(JdgSzczegolyRaportDto dzialalnosc, String wojewodztwo) {
     return JdgSzczegolyDto.builder()
-        .nazwa(dzialalnosc.getNazwaPodmiotu().orElse(null))
+        .nazwa(dzialalnosc.getNazwaPodmiotu().map(nazwaPodmiotu -> {
+          String nazwa = ""
+           .trim();
+          if (nazwaPodmiotu.substring(0,1).equalsIgnoreCase("-")) {
+            nazwa = nazwaPodmiotu.substring(1);
+          }
+          return nazwa.trim();
+        }).orElse(null))
         .adresKorespondencyjny(AdresDto.builder()
             .ulica(dzialalnosc.getUlica().map(String::toUpperCase).orElse(null))
             .budynek(dzialalnosc.getNrBudynku().map(String::toUpperCase).orElse(null))

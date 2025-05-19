@@ -11,7 +11,7 @@ public enum BusinessStatus {
   WYKRESLONY("Wykreślony"),
   ZAWIESZONY("Zawieszony"),
   OCZEKUJE_NA_ROZPOCZECIE_DZIALANOSCI("Oczekuje na rozpoczęcie działalności"),
-  WYLACZNIE_W_FORMIE_SPOLKI("Działalność prowadzona wyłącznie w formie spółki");
+  WYLACZNIE_W_FORMIE_SPOLKI("Działalność prowadzona wyłącznie w formie spółki cywilnej");
 
   private final String raportLabel;
 

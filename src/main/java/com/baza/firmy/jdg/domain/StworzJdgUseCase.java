@@ -11,6 +11,7 @@ import com.baza.firmy.pkd.domain.PkdFasade;
 import com.baza.firmy.pkd.domain.dto.PkdDto;
 import com.baza.firmy.pkd.query.PkdQueryFasade;
 import com.baza.firmy.pkd.query.PkdViewEntity;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -19,9 +20,11 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 @Component
+@Slf4j
 @RequiredArgsConstructor
 class StworzJdgUseCase {
 
@@ -71,17 +74,27 @@ class StworzJdgUseCase {
       jdgEntity.setPkd(pkdQueryFasade.findByUuidList(pozostalePkdUuidList));
     }
 
+    if (jdgEntity.getRokPkd() == null) {
+      jdgEntity.setRokPkd(jdgEntity.getDataRozpoczecia().isBefore(LocalDate.of(2025, 01, 01)) ? "2007" : "2025");
+    }
+
     return jdgRepository.save(jdgEntity).getUuid();
+}
+
+private UUID zaktualizujWlasciciela(JdgSzczegolyDto jdgSzczegolyDto) {
+    if (jdgSzczegolyDto.getWlasciciel().getNip() == null) {
+      return stworzOsobe(jdgSzczegolyDto);
+    }
+
+    return osobaQueryFacade.findByNip(jdgSzczegolyDto.getWlasciciel().getNip())
+      .map(OsobaViewEntity::getUuid)
+      .orElseGet(() -> stworzOsobe(jdgSzczegolyDto));
   }
 
-  private UUID zaktualizujWlasciciela(JdgSzczegolyDto jdgSzczegolyDto) {
-    return osobaQueryFacade.findByNip(jdgSzczegolyDto.getWlasciciel().getNip())
-        .map(OsobaViewEntity::getUuid)
-        .orElseGet(() -> {
-          StworzWlascicielaDto osobaDto = jdgSzczegolyDto.getWlasciciel();
-          osobaDto.setObywatelstwa(jdgSzczegolyDto.getObywatelstwa());
-          return osobaFacade.stworzOsobe(osobaDto);
-        });
+  private UUID stworzOsobe(JdgSzczegolyDto jdgSzczegolyDto) {
+    StworzWlascicielaDto osobaDto = jdgSzczegolyDto.getWlasciciel();
+    osobaDto.setObywatelstwa(jdgSzczegolyDto.getObywatelstwa());
+    return osobaFacade.stworzOsobe(osobaDto);
   }
 
   private UUID zaktualizujAdresDzialalnoszci(JdgSzczegolyDto jdgSzczegolyDto) {
