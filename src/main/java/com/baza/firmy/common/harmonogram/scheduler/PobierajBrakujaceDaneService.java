@@ -1,6 +1,6 @@
 package com.baza.firmy.common.harmonogram.scheduler;
 
-import com.baza.firmy.service.PobierzDaneZCeidgService;
+import com.baza.firmy.common.service.PobierzDaneZCeidgService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.quartz.JobExecutionContext;

@@ -1,7 +1,8 @@
 package com.baza.firmy.response;
 
+import com.baza.firmy.adresy.domain.dto.AdresDto;
 import com.baza.firmy.constants.enums.BusinessStatus;
-import com.baza.firmy.entity.Osoba;
+import com.baza.firmy.osoby.query.OsobaViewEntity;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
@@ -21,7 +22,7 @@ public class CeidgListDto {
   private UUID ceidgId;
 
   private AdresDto adresDzialalnosci;
-  private Osoba wlasciciel;
+  private OsobaViewEntity wlasciciel;
 
   private String dataRozpoczecia;
 

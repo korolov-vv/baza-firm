@@ -1,9 +1,11 @@
 package com.baza.firmy.dto;
 
+import com.baza.firmy.adresy.domain.dto.AdresDto;
 import com.baza.firmy.constants.enums.BusinessStatus;
-import com.baza.firmy.response.AdresDto;
+import com.baza.firmy.osoby.domain.dto.WlascicielDto;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -36,4 +38,16 @@ public class JdgListDto {
   private String telefon;
   private String email;
   private String www;
+
+  public Optional<AdresDto> getAdresDzialalnosci() {
+    return Optional.ofNullable(adresDzialalnosci);
+  }
+
+  public Optional<WlascicielDto> getWlasciciel() {
+    return Optional.ofNullable(wlasciciel);
+  }
+
+  public Optional<String> getPkdGlowny() {
+    return Optional.ofNullable(pkdGlowny);
+  }
 }
