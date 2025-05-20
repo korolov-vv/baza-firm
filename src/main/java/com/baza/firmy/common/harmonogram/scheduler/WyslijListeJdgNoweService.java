@@ -18,7 +18,7 @@ class WyslijListeJdgNoweService implements BazowySchedulerService {
  public void executeScheduler(JobExecutionContext jobExecutionContext) {
   log.info("Start WYSLIJ_LISTE_JDG_NOWE_JOB");
   mailSenderService.sendEmailWithFirms(
-      "vadimcoffee@gmail.com",
+      "k.grabowski@schrack.pl",
       "Lista JDG",
       String.format("Cześć! W załączniku firmy z %s", LocalDate.now().minusDays(3)));
  }
