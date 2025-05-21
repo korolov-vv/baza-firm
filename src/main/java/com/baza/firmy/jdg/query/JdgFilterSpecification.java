@@ -12,12 +12,12 @@ import net.kaczmarzyk.spring.data.jpa.web.annotation.Or;
 import net.kaczmarzyk.spring.data.jpa.web.annotation.Spec;
 import org.springframework.data.jpa.domain.Specification;
 
-@Join(path = "pkdEntity", alias = "pkdEntity", type = JoinType.LEFT)
-@Join(path = "adresEntityKorespondencyjny", alias = "a", type = JoinType.LEFT)
+@Join(path = "pkd", alias = "pkd", type = JoinType.LEFT)
+@Join(path = "adresKorespondencyjny", alias = "a", type = JoinType.LEFT)
 @Conjunction(value = {
     @Or ({
-        @Spec (path = "pkdEntityGlowny.kod", params = "pkdEntity", paramSeparator = ',', spec = In.class),
-        @Spec (path = "pkdEntity.kod", params = "pkdEntity", paramSeparator = ',', spec = In.class)
+        @Spec (path = "pkdGlowny.kod", params = "pkd", paramSeparator = ',', spec = In.class),
+        @Spec (path = "pkd.kod", params = "pkd", paramSeparator = ',', spec = In.class)
     })
 }, and = {
     @Spec (path = "nazwa", params = "nazwa", spec = LikeIgnoreCase.class),
