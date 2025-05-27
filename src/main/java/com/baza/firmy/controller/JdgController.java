@@ -45,7 +45,7 @@ class JdgController {
     Specification<JdgViewEntity> specification = SpecificationBuilder.specification(
             JdgFilterSpecification.class)
         .withParam("nazwa", nazwa)
-        .withParam("pkdEntity", pkd != null ? pkd : "")
+        .withParam("pkd", pkd != null ? pkd : "")
         .withParam("dataRozpoczeciaOd",
             dataRozpoczeciaOd != null ? dataRozpoczeciaOd.format(DateTimeFormatter.ISO_DATE) : null)
         .withParam("dataRozpoczeciaDo",

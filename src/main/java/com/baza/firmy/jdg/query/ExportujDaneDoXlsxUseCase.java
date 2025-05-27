@@ -47,7 +47,7 @@ public class ExportujDaneDoXlsxUseCase {
     return SpecificationBuilder.specification(
             JdgFilterSpecification.class)
         .withParam("nazwa", parametry.getNazwa())
-        .withParam("pkdEntity", parametry.getPkd() != null ? parametry.getPkd() : "")
+        .withParam("pkd", parametry.getPkd() != null ? parametry.getPkd() : "")
         .withParam("createDate",
             parametry.getCreateDate() != null ? parametry.getCreateDate()
                 .format(DateTimeFormatter.ISO_DATE_TIME) : null)
