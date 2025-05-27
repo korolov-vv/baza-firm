@@ -18,6 +18,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicLong;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
@@ -34,6 +35,7 @@ public class PobierzDaneZRaportuService {
   private final FileUtills fileUtills;
   private final JdgFacade jdgFacade;
   private final JdgQueryFacade jdgQueryFacade;
+  private final MailSenderService mailSenderService;
 
   public void pobierzDaneZRaportu() {
     log.info("Zaczynam pobieranie danych z raportu");
@@ -42,12 +44,19 @@ public class PobierzDaneZRaportuService {
       try {
         List<JdgSzczegolyRaportDto> listaDzialalnosciWojewodztwa = unmarshalRaport(wojewodztwoRaport.getNazwaPlikuRaportu());
 
+        mailSenderService.sendEmailWithFirms(
+            "vadymkorolov@gmail.com",
+            "Lista JDG " + wojewodztwoRaport.getNazwaPlikuRaportu(),
+            String.format("Cześć! Wczytałem firmy z %s województwa. Liczba firm: %s", wojewodztwoRaport.getNazwaPlikuRaportu(), listaDzialalnosciWojewodztwa.size()));
+
+        AtomicLong liczbaZapisanychFirm = new AtomicLong(0L);
         listaDzialalnosciWojewodztwa.forEach(dzialalnosc -> {
           try {
             if (!czyIstniejeDzialalnoscWBazie(dzialalnosc)) {
               jdgFacade.stworzJdg(
                   stworzJdgSzczegolyDto(dzialalnosc, wojewodztwoRaport.name())
               );
+              liczbaZapisanychFirm.getAndIncrement();
             } else {
               log.info("Skip JDG NIP: {} Nazwa: {} Data rozpoczęcia: {}",
                   dzialalnosc.getNip().orElse(null),
@@ -62,6 +71,10 @@ public class PobierzDaneZRaportuService {
             log.error(e.getMessage());
           }
         });
+        mailSenderService.sendEmailWithFirms(
+            "vadymkorolov@gmail.com",
+            "Zapisane JDG z " + wojewodztwoRaport.getNazwaPlikuRaportu(),
+            String.format("Cześć! Zapisałem %s firm", liczbaZapisanychFirm.get()));
       } catch (Exception e) {
         log.error(e.getMessage());
       }
@@ -93,10 +106,20 @@ public class PobierzDaneZRaportuService {
       return true;
     }
 
-    return jdgQueryFacade.existsByWlascicielNipAndNazwaAndDataRozpoczecia(
-        dzialalnosc.getNip().orElse(null),
-        dzialalnosc.getNazwaPodmiotu().orElse(null),
-        dzialalnosc.getDataRozpoczeciaDzialalnosci().map(LocalDate::parse).orElse(null));
+    String nazwa = ""
+        .trim();
+    if (dzialalnosc.getNazwaPodmiotu().get().substring(0,1).equalsIgnoreCase("-")) {
+      nazwa = dzialalnosc.getNazwaPodmiotu().get().substring(1);
+    }
+
+    if (nazwa.trim().isEmpty()) {
+      return true;
+    } else {
+      return jdgQueryFacade.existsByWlascicielNipAndNazwaAndDataRozpoczecia(
+          dzialalnosc.getNip().orElse(null),
+          nazwa,
+          dzialalnosc.getDataRozpoczeciaDzialalnosci().map(LocalDate::parse).orElse(null));
+    }
   }
 
   private JdgSzczegolyDto stworzJdgSzczegolyDto(JdgSzczegolyRaportDto dzialalnosc, String wojewodztwo) {
