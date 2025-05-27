@@ -117,7 +117,7 @@ public class PobierzDaneZRaportuService {
     } else {
       return jdgQueryFacade.existsByWlascicielNipAndNazwaAndDataRozpoczecia(
           dzialalnosc.getNip().orElse(null),
-          nazwa,
+          nazwa.trim(),
           dzialalnosc.getDataRozpoczeciaDzialalnosci().map(LocalDate::parse).orElse(null));
     }
   }

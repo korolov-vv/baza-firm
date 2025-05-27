@@ -2,7 +2,6 @@ package com.baza.firmy.jdg.query;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
@@ -14,8 +13,6 @@ interface JdgQueryRepository extends JpaRepository<JdgViewEntity, Long>, JpaSpec
   boolean existsByCeidgId(UUID ceidgId);
 
   boolean existsByWlascicielNipAndNazwaAndDataRozpoczecia(String wlascicielNip, String nazwa, LocalDate dataRozpoczecia);
-
-  Optional<JdgViewEntity> findByCeidgId(UUID ceidgId);
 
   List<JdgViewEntity> findAllByWlascicielNipIsNull();
 }
