@@ -44,16 +44,8 @@ public class PobierzDaneZRaportuService {
       try {
         List<JdgSzczegolyRaportDto> listaDzialalnosciWojewodztwa = unmarshalRaport(wojewodztwoRaport.getNazwaPlikuRaportu());
 
-        List<JdgSzczegolyRaportDto> l = listaDzialalnosciWojewodztwa.stream()
-            .filter(d -> (d.getPkdGlowny().isPresent() &&
-                !Arrays.asList("4321Z", "2712Z", "6110Z").contains(d.getPkdGlowny().get())) ||
-                (d.getPkd() != null &&
-                !(d.getPkd().contains("4321Z") || !d.getPkd().contains("2712Z") || !d.getPkd().contains("6110Z")))
-            )
-            .toList();
-
         AtomicLong liczbaZapisanychFirm = new AtomicLong(0L);
-        l.forEach(dzialalnosc -> {
+        listaDzialalnosciWojewodztwa.forEach(dzialalnosc -> {
           try {
             if (!czyIstniejeDzialalnoscWBazie(dzialalnosc)) {
               jdgFacade.stworzJdg(
@@ -77,7 +69,7 @@ public class PobierzDaneZRaportuService {
         mailSenderService.sendEmailWithFirms(
             "vadymkorolov@gmail.com",
             "Zapisane JDG z " + wojewodztwoRaport.getNazwaPlikuRaportu(),
-            String.format("Cześć! Zapisałem %s firm z %s", liczbaZapisanychFirm.get(), l.size()));
+            String.format("Cześć! Zapisałem %s firm z %s", liczbaZapisanychFirm.get(), listaDzialalnosciWojewodztwa.size()));
       } catch (Exception e) {
         log.error(e.getMessage());
       }
