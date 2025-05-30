@@ -44,13 +44,16 @@ public class PobierzDaneZRaportuService {
       try {
         List<JdgSzczegolyRaportDto> listaDzialalnosciWojewodztwa = unmarshalRaport(wojewodztwoRaport.getNazwaPlikuRaportu());
 
-        mailSenderService.sendEmailWithFirms(
-            "vadymkorolov@gmail.com",
-            "Lista JDG " + wojewodztwoRaport.getNazwaPlikuRaportu(),
-            String.format("Cześć! Wczytałem firmy z %s województwa. Liczba firm: %s", wojewodztwoRaport.getNazwaPlikuRaportu(), listaDzialalnosciWojewodztwa.size()));
+        List<JdgSzczegolyRaportDto> l = listaDzialalnosciWojewodztwa.stream()
+            .filter(d -> (d.getPkdGlowny().isPresent() &&
+                !Arrays.asList("4321Z", "2712Z", "6110Z").contains(d.getPkdGlowny().get())) ||
+                (d.getPkd() != null &&
+                !(d.getPkd().contains("4321Z") || !d.getPkd().contains("2712Z") || !d.getPkd().contains("6110Z")))
+            )
+            .toList();
 
         AtomicLong liczbaZapisanychFirm = new AtomicLong(0L);
-        listaDzialalnosciWojewodztwa.forEach(dzialalnosc -> {
+        l.forEach(dzialalnosc -> {
           try {
             if (!czyIstniejeDzialalnoscWBazie(dzialalnosc)) {
               jdgFacade.stworzJdg(
@@ -74,7 +77,7 @@ public class PobierzDaneZRaportuService {
         mailSenderService.sendEmailWithFirms(
             "vadymkorolov@gmail.com",
             "Zapisane JDG z " + wojewodztwoRaport.getNazwaPlikuRaportu(),
-            String.format("Cześć! Zapisałem %s firm", liczbaZapisanychFirm.get()));
+            String.format("Cześć! Zapisałem %s firm z %s", liczbaZapisanychFirm.get(), l.size()));
       } catch (Exception e) {
         log.error(e.getMessage());
       }
@@ -102,24 +105,13 @@ public class PobierzDaneZRaportuService {
   }
 
   private boolean czyIstniejeDzialalnoscWBazie(JdgSzczegolyRaportDto dzialalnosc) {
-    if (dzialalnosc.getNip().isEmpty() && dzialalnosc.getNazwaPodmiotu().isEmpty()) {
+    if (dzialalnosc.getNip().isEmpty()) {
       return true;
     }
 
-    String nazwa = ""
-        .trim();
-    if (dzialalnosc.getNazwaPodmiotu().get().substring(0,1).equalsIgnoreCase("-")) {
-      nazwa = dzialalnosc.getNazwaPodmiotu().get().substring(1);
-    }
-
-    if (nazwa.trim().isEmpty()) {
-      return true;
-    } else {
-      return jdgQueryFacade.existsByWlascicielNipAndNazwaAndDataRozpoczecia(
+    return jdgQueryFacade.existsByWlascicielNipAndDataRozpoczecia(
           dzialalnosc.getNip().orElse(null),
-          nazwa.trim(),
           dzialalnosc.getDataRozpoczeciaDzialalnosci().map(LocalDate::parse).orElse(null));
-    }
   }
 
   private JdgSzczegolyDto stworzJdgSzczegolyDto(JdgSzczegolyRaportDto dzialalnosc, String wojewodztwo) {

@@ -2,6 +2,7 @@ package com.baza.firmy.jdg.domain;
 
 import com.baza.firmy.jdg.domain.dto.JdgSzczegolyDto;
 import java.time.LocalDate;
+import java.util.Optional;
 import java.util.UUID;
 import org.apache.logging.log4j.util.Strings;
 import org.mapstruct.Mapper;
@@ -58,6 +59,14 @@ interface JdgMapper {
 
   @Named("setNazwa")
   default String setNazwa(String nazwa) {
-    return "-".equals(nazwa) ? Strings.EMPTY : nazwa.trim();
+    return Optional.ofNullable(nazwa)
+        .map(n -> {
+          String nazwaPodmiotu = n.trim();
+          if (nazwaPodmiotu.startsWith("-")) {
+            nazwaPodmiotu = nazwaPodmiotu.substring(1);
+          }
+          return nazwaPodmiotu.trim();
+        })
+        .orElse(Strings.EMPTY);
   }
 }

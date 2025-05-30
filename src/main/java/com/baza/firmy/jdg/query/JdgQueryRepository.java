@@ -12,7 +12,7 @@ interface JdgQueryRepository extends JpaRepository<JdgViewEntity, Long>, JpaSpec
 
   boolean existsByCeidgId(UUID ceidgId);
 
-  boolean existsByWlascicielNipAndNazwaAndDataRozpoczecia(String wlascicielNip, String nazwa, LocalDate dataRozpoczecia);
+  boolean existsByWlascicielNipAndDataRozpoczecia(String wlascicielNip, LocalDate dataRozpoczecia);
 
   List<JdgViewEntity> findAllByWlascicielNipIsNull();
 }

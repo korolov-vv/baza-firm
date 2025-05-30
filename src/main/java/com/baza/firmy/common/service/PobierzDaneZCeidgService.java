@@ -159,8 +159,8 @@ public class PobierzDaneZCeidgService {
 
           if (szczegolyDto != null) {
             szczegolyDto.getFirma().forEach(dzialalnosc -> {
-              if (!jdgQueryFacade.existsByWlascicielNipAndNazwaAndDataRozpoczecia(
-                  dzialalnosc.getWlasciciel().getNip(), dzialalnosc.getNazwa(), LocalDate.parse(dzialalnosc.getDataRozpoczecia()))) {
+              if (!jdgQueryFacade.existsByWlascicielNipAndDataRozpoczecia(
+                  dzialalnosc.getWlasciciel().getNip(), LocalDate.parse(dzialalnosc.getDataRozpoczecia()))) {
                 jdgFacade.stworzJdg(dzialalnosc);
               } else {
                 // TODO dorobić aktualizację dla aktualizacji

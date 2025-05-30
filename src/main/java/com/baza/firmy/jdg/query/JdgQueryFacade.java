@@ -37,10 +37,10 @@ public class JdgQueryFacade {
     return jdgQueryRepository.existsByCeidgId(ceidgId);
   }
 
-  public boolean existsByWlascicielNipAndNazwaAndDataRozpoczecia(
-      String wlascicielNip, String nazwa, LocalDate dataRozpoczecia) {
-    return jdgQueryRepository.existsByWlascicielNipAndNazwaAndDataRozpoczecia(
-        wlascicielNip, nazwa, dataRozpoczecia);
+  public boolean existsByWlascicielNipAndDataRozpoczecia(
+      String wlascicielNip, LocalDate dataRozpoczecia) {
+    return jdgQueryRepository.existsByWlascicielNipAndDataRozpoczecia(
+        wlascicielNip, dataRozpoczecia);
   }
 
   @Transactional
