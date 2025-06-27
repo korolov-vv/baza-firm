@@ -33,7 +33,7 @@ public class FileUtills {
   public FileDto saveToFile(ByteArrayInputStream excelData, FileDto fileDto) {
     FileEntity file = saveFile(excelData, fileDto);
     s3UploadService.uploadFile(file.getPath(), file.getFileName(), excelData.readAllBytes());
-    log.info("File saved to: {}", fileDto.getPath() + fileDto.getFileName());
+    log.info("File saved to: {}", fileDto.getPath() + "/" + fileDto.getFileName());
     return fileMapper.toFileDto(file);
   }
 
