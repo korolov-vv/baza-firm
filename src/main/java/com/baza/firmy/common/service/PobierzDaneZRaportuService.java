@@ -6,9 +6,9 @@ import com.baza.firmy.constants.enums.BusinessStatus;
 import com.baza.firmy.constants.enums.WojewodztwaRaportyEnum;
 import com.baza.firmy.danezraportu.entity.RaportDto;
 import com.baza.firmy.dto.JdgSzczegolyRaportDto;
-import com.baza.firmy.jdg.domain.JdgFacade;
-import com.baza.firmy.jdg.domain.dto.JdgSzczegolyDto;
-import com.baza.firmy.jdg.query.JdgQueryFacade;
+import com.baza.firmy.podmiotygospodarcze.domain.PodmiotyGospodarczeFacade;
+import com.baza.firmy.podmiotygospodarcze.domain.dto.JdgSzczegolyDto;
+import com.baza.firmy.podmiotygospodarcze.query.PodmiotyGospodarczeQueryFacade;
 import com.baza.firmy.osoby.domain.dto.StworzWlascicielaDto;
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.JAXBException;
@@ -33,8 +33,8 @@ import org.springframework.stereotype.Service;
 public class PobierzDaneZRaportuService {
 
   private final FileUtills fileUtills;
-  private final JdgFacade jdgFacade;
-  private final JdgQueryFacade jdgQueryFacade;
+  private final PodmiotyGospodarczeFacade podmiotyGospodarczeFacade;
+  private final PodmiotyGospodarczeQueryFacade podmiotyGospodarczeQueryFacade;
   private final MailSenderService mailSenderService;
 
   public void pobierzDaneZRaportu() {
@@ -48,7 +48,7 @@ public class PobierzDaneZRaportuService {
         listaDzialalnosciWojewodztwa.forEach(dzialalnosc -> {
           try {
             if (!czyIstniejeDzialalnoscWBazie(dzialalnosc)) {
-              jdgFacade.stworzJdg(
+              podmiotyGospodarczeFacade.stworzPodmiotGospodarczy(
                   stworzJdgSzczegolyDto(dzialalnosc, wojewodztwoRaport.name())
               );
               liczbaZapisanychFirm.getAndIncrement();
@@ -101,7 +101,7 @@ public class PobierzDaneZRaportuService {
       return true;
     }
 
-    return jdgQueryFacade.existsByWlascicielNipAndDataRozpoczecia(
+    return podmiotyGospodarczeQueryFacade.existsByWlascicielNipAndDataRozpoczecia(
           dzialalnosc.getNip().orElse(null),
           dzialalnosc.getDataRozpoczeciaDzialalnosci().map(LocalDate::parse).orElse(null));
   }

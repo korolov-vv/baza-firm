@@ -27,6 +27,9 @@ ceidg:
   ceidg-path: ${CEIDG_PATH}
   token: ${CEIDG_TOKEN}
 
+krs:
+  krs-path: ${KRS_PATH}
+
 smtp:
     host: ${SMTP_HOST}
     port: ${SMTP_PORT:587}

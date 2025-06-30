@@ -1,9 +1,9 @@
 package com.baza.firmy.controller;
 
 import com.baza.firmy.dto.JdgListDto;
-import com.baza.firmy.jdg.query.JdgFilterSpecification;
-import com.baza.firmy.jdg.query.JdgQueryFacade;
-import com.baza.firmy.jdg.query.JdgViewEntity;
+import com.baza.firmy.podmiotygospodarcze.query.PodmiotyGospodarczeFilterSpecification;
+import com.baza.firmy.podmiotygospodarcze.query.PodmiotyGospodarczeQueryFacade;
+import com.baza.firmy.podmiotygospodarcze.query.PodmiotyGospodarczeViewEntity;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.time.LocalDate;
@@ -27,7 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag (name = "JDG API", description = "Dostęp do JDG")
 class JdgController {
 
-  private final JdgQueryFacade jdgQueryFacade;
+  private final PodmiotyGospodarczeQueryFacade podmiotyGospodarczeQueryFacade;
 
   @GetMapping (produces = MediaType.APPLICATION_JSON_VALUE)
   @Operation (summary = "Usługa pobierająca listę JDG")
@@ -42,8 +42,8 @@ class JdgController {
       @Nullable @RequestParam String gmina,
       Pageable pageable
   ) {
-    Specification<JdgViewEntity> specification = SpecificationBuilder.specification(
-            JdgFilterSpecification.class)
+    Specification<PodmiotyGospodarczeViewEntity> specification = SpecificationBuilder.specification(
+            PodmiotyGospodarczeFilterSpecification.class)
         .withParam("nazwa", nazwa)
         .withParam("pkd", pkd != null ? pkd : "")
         .withParam("dataRozpoczeciaOd",
@@ -55,6 +55,6 @@ class JdgController {
         .withParam("powiat", powiat)
         .withParam("gmina", gmina)
         .build();
-    return ResponseEntity.ok(jdgQueryFacade.pobierzListeJdg(specification, pageable));
+    return ResponseEntity.ok(podmiotyGospodarczeQueryFacade.pobierzListeJdg(specification, pageable));
   }
 }

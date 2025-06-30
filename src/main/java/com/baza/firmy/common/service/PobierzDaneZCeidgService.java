@@ -3,8 +3,8 @@ package com.baza.firmy.common.service;
 
 import com.baza.firmy.configuration.properties.CeidgProperties;
 import com.baza.firmy.entity.ListaJdgPobieranie;
-import com.baza.firmy.jdg.domain.JdgFacade;
-import com.baza.firmy.jdg.query.JdgQueryFacade;
+import com.baza.firmy.podmiotygospodarcze.domain.PodmiotyGospodarczeFacade;
+import com.baza.firmy.podmiotygospodarcze.query.PodmiotyGospodarczeQueryFacade;
 import com.baza.firmy.response.CeidgListDto;
 import com.baza.firmy.response.Dto;
 import com.baza.firmy.response.ListaJdgDto;
@@ -29,9 +29,9 @@ import org.springframework.web.util.UriComponentsBuilder;
 @RequiredArgsConstructor
 public class PobierzDaneZCeidgService {
 
-  private final JdgQueryFacade jdgQueryFacade;
+  private final PodmiotyGospodarczeQueryFacade podmiotyGospodarczeQueryFacade;
   private final CeidgService ceidgService;
-  private final JdgFacade jdgFacade;
+  private final PodmiotyGospodarczeFacade podmiotyGospodarczeFacade;
   private final CeidgProperties ceidgProperties;
   private final ListaJdgPobieranieService listaJdgPobieranieService;
 
@@ -91,7 +91,7 @@ public class PobierzDaneZCeidgService {
   }
 
   public void pobierzBrakujaceDane() {
-    jdgQueryFacade.pobierzLinkiDoJdgBezNipow().forEach(link -> {
+    podmiotyGospodarczeQueryFacade.pobierzLinkiDoJdgBezNipow().forEach(link -> {
       AtomicLong startTime = new AtomicLong(System.currentTimeMillis());
         try {
           zatrzymajJesliKrocejNiz4000(startTime.get());
@@ -99,7 +99,7 @@ public class PobierzDaneZCeidgService {
           startTime.set(System.currentTimeMillis());
 
           if (szczegolyDto != null) {
-            szczegolyDto.getFirma().forEach(jdgFacade::stworzJdg);
+            szczegolyDto.getFirma().forEach(podmiotyGospodarczeFacade::stworzPodmiotGospodarczy);
           } else {
             log.info("szczegolyDto dla {} is NULL", link);
           }
@@ -151,7 +151,7 @@ public class PobierzDaneZCeidgService {
 
   private Consumer<CeidgListDto> pobierzDaneFirm(AtomicLong startTime) {
     return firma -> {
-      if (!jdgQueryFacade.czyIstniejePoCeidgId(firma.getCeidgId())) {
+      if (!podmiotyGospodarczeQueryFacade.czyIstniejePoCeidgId(firma.getCeidgId())) {
         try {
           zatrzymajJesliKrocejNiz4000(startTime.get());
           Dto szczegolyDto = ceidgService.pobierzSzczegolyJdg(firma.getLink());
@@ -159,9 +159,9 @@ public class PobierzDaneZCeidgService {
 
           if (szczegolyDto != null) {
             szczegolyDto.getFirma().forEach(dzialalnosc -> {
-              if (!jdgQueryFacade.existsByWlascicielNipAndDataRozpoczecia(
+              if (!podmiotyGospodarczeQueryFacade.existsByWlascicielNipAndDataRozpoczecia(
                   dzialalnosc.getWlasciciel().getNip(), LocalDate.parse(dzialalnosc.getDataRozpoczecia()))) {
-                jdgFacade.stworzJdg(dzialalnosc);
+                podmiotyGospodarczeFacade.stworzPodmiotGospodarczy(dzialalnosc);
               } else {
                 // TODO dorobić aktualizację dla aktualizacji
                 log.info("PobierzDaneCeidgService: pobierzDaneFirm(): JDG dla NIP: {}, nazwa: {} oraz dataRozpoczecia: {} już istnieje",

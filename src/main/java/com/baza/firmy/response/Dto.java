@@ -1,6 +1,6 @@
 package com.baza.firmy.response;
 
-import com.baza.firmy.jdg.domain.dto.JdgSzczegolyDto;
+import com.baza.firmy.podmiotygospodarcze.domain.dto.JdgSzczegolyDto;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.AllArgsConstructor;
