@@ -50,4 +50,7 @@ public class ListaJdgPobieranie {
  private String last;
  private boolean czyStareDane;
  private boolean czyObsluzona;
+ @Column (columnDefinition = "jsonb")
+ @JdbcTypeCode (SqlTypes.JSON)
+ private List<String> nieobsluzoneLinki;
 }

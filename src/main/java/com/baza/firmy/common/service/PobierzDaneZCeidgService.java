@@ -11,7 +11,9 @@ import com.baza.firmy.response.ListaJdgDto;
 import jakarta.annotation.Nullable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
@@ -111,11 +113,13 @@ public class PobierzDaneZCeidgService {
   }
 
   private void obsluzListeJdg(ListaJdgPobieranie listaJdgPobieranie) {
+    List<String> nieobsluzoneLinki = new ArrayList<>();
     AtomicLong startTime = new AtomicLong(System.currentTimeMillis());
     log.info("Started downloading the list {}", listaJdgPobieranie.getUuid());
-    listaJdgPobieranie.getFirmy().forEach(pobierzDaneFirm(startTime));
+    listaJdgPobieranie.getFirmy().forEach(pobierzDaneFirm(startTime, nieobsluzoneLinki));
     try {
       listaJdgPobieranie.setCzyObsluzona(true);
+      listaJdgPobieranie.setNieobsluzoneLinki(nieobsluzoneLinki);
       listaJdgPobieranieService.zapisz(listaJdgPobieranie);
     } catch (Exception e) {
       log.error("Error while saving the list {}", listaJdgPobieranie.getUuid(), e);
@@ -149,7 +153,7 @@ public class PobierzDaneZCeidgService {
     return multiValueMap;
   }
 
-  private Consumer<CeidgListDto> pobierzDaneFirm(AtomicLong startTime) {
+  private Consumer<CeidgListDto> pobierzDaneFirm(AtomicLong startTime, List<String> nieobsluzoneLinki) {
     return firma -> {
       if (!podmiotyGospodarczeQueryFacade.czyIstniejePoCeidgId(firma.getCeidgId())) {
         try {
@@ -173,6 +177,7 @@ public class PobierzDaneZCeidgService {
           }
         } catch (Exception e) {
           e.printStackTrace();
+          nieobsluzoneLinki.add(firma.getLink());
           startTime.set(System.currentTimeMillis());
         }
       } else {
