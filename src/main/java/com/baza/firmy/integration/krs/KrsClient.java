@@ -8,8 +8,11 @@ import com.baza.firmy.response.CeidgListDto;
 import com.baza.firmy.response.Dto;
 import com.baza.firmy.response.krs.ListaZmienionychWpisowKrsResponse;
 import com.baza.firmy.response.krs.OdpisAktualnyResponse;
+import java.util.Arrays;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
@@ -23,7 +26,6 @@ public class KrsClient {
   public static final String COMPLETE_REQUEST_LOG = "----------------- Complete the request to KRS {} -------------------------";
 
   private final WebClient webClient;
-  private final CeidgProperties ceidgProperties;
 
   public ListaZmienionychWpisowKrsResponse pobierzListeZmienionychWpisow(String link) {
     log.info(START_REQUEST_LOG, link);
@@ -32,15 +34,16 @@ public class KrsClient {
             .get()
             .uri(link)
             .retrieve()
-            .bodyToMono(ListaZmienionychWpisowKrsResponse.class)
-            .onErrorResume(
-                throwable -> {
-                  log.error(CALL_TO_KRS_FAILED_LOG, throwable.getMessage());
-                  return Mono.error(throwable);
-                })
+            .bodyToMono(String[].class)
             .block();
     log.info(COMPLETE_REQUEST_LOG, link);
-    return response;
+    if (response == null || response.length == 0) {
+      log.error(CALL_TO_KRS_FAILED_LOG, "Otrzymano pustą odpowiedź z KRS dla linku: {}", link);
+      return ListaZmienionychWpisowKrsResponse.builder().numeryKrs(List.of()).build();
+    }
+    return ListaZmienionychWpisowKrsResponse.builder()
+        .numeryKrs(Arrays.asList(response))
+        .build();
   }
 
   public OdpisAktualnyResponse pobierzOdpisAktualny(String link) {

@@ -19,5 +19,6 @@ public interface ListaJdgPobieranieMapper {
   @Mapping(target = "first", source = "links.first")
   @Mapping(target = "last", source = "links.last")
   @Mapping(target = "czyObsluzona", ignore = true)
+  @Mapping(target = "nieobsluzoneLinki", ignore = true)
   ListaJdgPobieranie toEntity(ListaJdgDto dto);
 }
