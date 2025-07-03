@@ -6,10 +6,11 @@ import com.baza.firmy.constants.enums.BusinessStatus;
 import com.baza.firmy.constants.enums.WojewodztwaRaportyEnum;
 import com.baza.firmy.danezraportu.entity.RaportDto;
 import com.baza.firmy.dto.JdgSzczegolyRaportDto;
+import com.baza.firmy.osoby.domain.dto.StworzWlascicielaDto;
 import com.baza.firmy.podmiotygospodarcze.domain.PodmiotyGospodarczeFacade;
+import com.baza.firmy.podmiotygospodarcze.domain.Rejestr;
 import com.baza.firmy.podmiotygospodarcze.domain.dto.JdgSzczegolyDto;
 import com.baza.firmy.podmiotygospodarcze.query.PodmiotyGospodarczeQueryFacade;
-import com.baza.firmy.osoby.domain.dto.StworzWlascicielaDto;
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.JAXBException;
 import jakarta.xml.bind.Unmarshaller;
@@ -25,6 +26,7 @@ import javax.xml.stream.XMLStreamReader;
 import javax.xml.transform.stream.StreamSource;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 @Slf4j
@@ -37,6 +39,7 @@ public class PobierzDaneZRaportuService {
   private final PodmiotyGospodarczeQueryFacade podmiotyGospodarczeQueryFacade;
   private final MailSenderService mailSenderService;
 
+  @Async
   public void pobierzDaneZRaportu() {
     log.info("Zaczynam pobieranie danych z raportu");
 
@@ -116,6 +119,7 @@ public class PobierzDaneZRaportuService {
           }
           return nazwa.trim();
         }).orElse(null))
+        .rejestr(Rejestr.CEIDG)
         .adresKorespondencyjny(AdresDto.builder()
             .ulica(dzialalnosc.getUlica().map(String::toUpperCase).orElse(null))
             .budynek(dzialalnosc.getNrBudynku().map(String::toUpperCase).orElse(null))
