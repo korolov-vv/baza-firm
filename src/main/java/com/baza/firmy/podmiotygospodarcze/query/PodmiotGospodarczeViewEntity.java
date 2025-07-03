@@ -2,11 +2,11 @@ package com.baza.firmy.podmiotygospodarcze.query;
 
 import com.baza.firmy.adresy.query.AdresViewEntity;
 import com.baza.firmy.constants.enums.BusinessStatus;
+import com.baza.firmy.osoby.query.OsobaViewEntity;
+import com.baza.firmy.pkd.query.PkdViewEntity;
 import com.baza.firmy.podmiotygospodarcze.domain.Rejestr;
 import com.baza.firmy.podmiotygospodarcze.domain.dto.JdgSzczegolyDto;
 import com.baza.firmy.podmiotygospodarcze.domain.dto.SpolkaDto;
-import com.baza.firmy.osoby.query.OsobaViewEntity;
-import com.baza.firmy.pkd.query.PkdViewEntity;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -42,7 +42,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 @AllArgsConstructor
 @Entity
 @Table(name = "podmioty_gospodarcze")
-public class PodmiotyGospodarczeViewEntity {
+public class PodmiotGospodarczeViewEntity {
 
   @Id
   @EqualsAndHashCode.Include

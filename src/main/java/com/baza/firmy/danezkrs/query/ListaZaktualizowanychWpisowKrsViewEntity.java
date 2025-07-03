@@ -1,4 +1,4 @@
-package com.baza.firmy.danezkrs.domain;
+package com.baza.firmy.danezkrs.query;
 
 import com.baza.firmy.constants.enums.StatusPobieraniaEnum;
 import jakarta.persistence.Column;
@@ -6,10 +6,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import jakarta.persistence.Version;
 import java.time.LocalDateTime;
@@ -34,35 +31,35 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @Entity
 @Table (name = "lista_zaktualizowanych_krs")
 @EntityListeners(AuditingEntityListener.class)
-class ListaZaktualizowanychWpisowKrsEntity {
+class ListaZaktualizowanychWpisowKrsViewEntity {
 
  @Id
- @SequenceGenerator (
-     name = "lista_zaktualizowanych_krs_seq",
-     allocationSize = 1,
-     sequenceName = "lista_zaktualizowanych_krs_seq")
- @GeneratedValue (strategy = GenerationType.SEQUENCE, generator = "lista_zaktualizowanych_krs_seq")
  @EqualsAndHashCode.Include
+ @Column(insertable = false, updatable = false)
  private Long id;
  @EqualsAndHashCode.Include
- @Column(updatable = false)
+ @Column(insertable = false, updatable = false)
  private UUID uuid;
  @CreatedDate
  @Column(updatable = false)
  private LocalDateTime createDate;
  @LastModifiedDate
+ @Column(insertable = false, updatable = false)
  private LocalDateTime lastModifiedDate;
  @EqualsAndHashCode.Include
  @Version
+ @Column(insertable = false, updatable = false)
  private int version;
 
- @Column (columnDefinition = "jsonb")
+ @Column (columnDefinition = "jsonb", insertable = false, updatable = false)
  @JdbcTypeCode (SqlTypes.JSON)
  private List<String> numeryKrs;
  @Enumerated(EnumType.STRING)
+ @Column(insertable = false, updatable = false)
  private StatusPobieraniaEnum statusPobierania;
+ @Column(insertable = false, updatable = false)
  private boolean czyObsluzona;
- @Column (columnDefinition = "jsonb")
+ @Column (columnDefinition = "jsonb", insertable = false, updatable = false)
  @JdbcTypeCode (SqlTypes.JSON)
  @Builder.Default
  private List<String> nieobsluzoneKrsy = new ArrayList<>();

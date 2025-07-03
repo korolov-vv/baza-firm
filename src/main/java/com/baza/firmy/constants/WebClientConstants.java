@@ -1,7 +1,5 @@
 package com.baza.firmy.constants;
 
-import java.util.Locale;
-
 public class WebClientConstants {
 
 public static final String CALL_FAILED_LOG =

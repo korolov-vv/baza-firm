@@ -3,16 +3,12 @@ package com.baza.firmy.integration.krs;
 import static com.baza.firmy.constants.WebClientConstants.CALL_TO_CEIDG_FAILED_LOG;
 import static com.baza.firmy.constants.WebClientConstants.CALL_TO_KRS_FAILED_LOG;
 
-import com.baza.firmy.configuration.properties.CeidgProperties;
-import com.baza.firmy.response.CeidgListDto;
-import com.baza.firmy.response.Dto;
 import com.baza.firmy.response.krs.ListaZmienionychWpisowKrsResponse;
 import com.baza.firmy.response.krs.OdpisAktualnyResponse;
 import java.util.Arrays;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;

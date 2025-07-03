@@ -8,11 +8,13 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 
 @Repository
-interface PodmiotyGospodarczeQueryRepository extends JpaRepository<PodmiotyGospodarczeViewEntity, Long>, JpaSpecificationExecutor<PodmiotyGospodarczeViewEntity> {
+interface PodmiotyGospodarczeQueryRepository extends JpaRepository<PodmiotGospodarczeViewEntity, Long>, JpaSpecificationExecutor<PodmiotGospodarczeViewEntity> {
 
   boolean existsByCeidgId(UUID ceidgId);
 
   boolean existsByWlascicielNipAndDataRozpoczecia(String wlascicielNip, LocalDate dataRozpoczecia);
 
-  List<PodmiotyGospodarczeViewEntity> findAllByWlascicielNipIsNull();
+  List<PodmiotGospodarczeViewEntity> findAllByWlascicielNipIsNull();
+
+  boolean existsByNumerKrs(String krs);
 }

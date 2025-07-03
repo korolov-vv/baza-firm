@@ -1,7 +1,7 @@
 package com.baza.firmy.podmiotygospodarcze.domain;
 
 import com.baza.firmy.podmiotygospodarcze.domain.dto.JdgSzczegolyDto;
-import jakarta.transaction.Transactional;
+import com.baza.firmy.response.krs.OdpisAktualnyResponse;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -13,11 +13,22 @@ import org.springframework.stereotype.Service;
 public class PodmiotyGospodarczeFacade {
 
   private final StworzPodmiotGospodarczyZJdgUseCase stworzPodmiotGospodarczyZJdgUseCase;
+  private final StworzPodmiotGospodarczyZKrsOdpisAktualnyUseCase stworzPodmiotGospodarczyZKrsOdpisAktualnyUseCase;
+  private final ZaktualizujPodmiotGospodarczyZKrsOdpisAktualnyUseCase zaktualizujPodmiotGospodarczyZKrsOdpisAktualnyUseCase;
 
-  @Transactional(Transactional.TxType.REQUIRES_NEW)
   public UUID stworzPodmiotGospodarczy(JdgSzczegolyDto jdgSzczegolyDto) {
     UUID savedUuid = stworzPodmiotGospodarczyZJdgUseCase.stworzPodmiotGospodarczy(jdgSzczegolyDto);
     log.info("Zapisano JDG: UUID = {}", savedUuid);
     return savedUuid;
+  }
+
+  public UUID stworzPodmiotGospodarczy(OdpisAktualnyResponse odpisAktualnyResponse) {
+    UUID savedUuid = stworzPodmiotGospodarczyZKrsOdpisAktualnyUseCase.stworzPodmiotGospodarczy(odpisAktualnyResponse);
+    log.info("Zapisano JDG: UUID = {}", savedUuid);
+    return savedUuid;
+  }
+
+  public void zaktualizujPodmiotGospodarczy(OdpisAktualnyResponse odpis) {
+    zaktualizujPodmiotGospodarczyZKrsOdpisAktualnyUseCase.zaktualizujPodmiotGospodarczy(odpis);
   }
 }

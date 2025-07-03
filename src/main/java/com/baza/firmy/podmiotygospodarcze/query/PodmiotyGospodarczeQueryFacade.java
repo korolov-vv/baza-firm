@@ -22,14 +22,14 @@ public class PodmiotyGospodarczeQueryFacade {
   private final PodmiotyGospodarczeQueryMapper podmiotyGospodarczeQueryMapper;
   private final ExportujDaneDoXlsxUseCase exportujDaneDoXlsxUseCase;
 
-  public Page<JdgListDto> pobierzListeJdg(Specification<PodmiotyGospodarczeViewEntity> specification, Pageable pageable) {
+  public Page<JdgListDto> pobierzListeJdg(Specification<PodmiotGospodarczeViewEntity> specification, Pageable pageable) {
     return podmiotyGospodarczeQueryRepository.findAll(specification, pageable)
         .map(podmiotyGospodarczeQueryMapper::toJdgListDtoList);
   }
 
   public List<String> pobierzLinkiDoJdgBezNipow() {
     return podmiotyGospodarczeQueryRepository.findAllByWlascicielNipIsNull().stream()
-        .map(PodmiotyGospodarczeViewEntity::getLink)
+        .map(PodmiotGospodarczeViewEntity::getLink)
         .toList();
   }
 
@@ -46,5 +46,9 @@ public class PodmiotyGospodarczeQueryFacade {
   @Transactional
   public void exportujDoXlsx(ParametryWyszukiwaniaDto parametryWyszukiwaniaDto) {
     exportujDaneDoXlsxUseCase.exportujDoXlsx(parametryWyszukiwaniaDto);
+  }
+
+  public boolean czyIstniejePoKrs(String krs) {
+    return podmiotyGospodarczeQueryRepository.existsByNumerKrs(krs);
   }
 }

@@ -43,7 +43,7 @@ public class ExportujDaneDoXlsxUseCase {
     return fileDto;
   }
 
-  private static Specification<PodmiotyGospodarczeViewEntity> createSpecification(ParametryWyszukiwaniaDto parametry) {
+  private static Specification<PodmiotGospodarczeViewEntity> createSpecification(ParametryWyszukiwaniaDto parametry) {
     return SpecificationBuilder.specification(
             PodmiotyGospodarczeFilterSpecification.class)
         .withParam("nazwa", parametry.getNazwa())
@@ -64,7 +64,7 @@ public class ExportujDaneDoXlsxUseCase {
         .build();
   }
 
-  private void readDataAndSaveToFile(Specification<PodmiotyGospodarczeViewEntity> specification, FileDto fileDto) {
+  private void readDataAndSaveToFile(Specification<PodmiotGospodarczeViewEntity> specification, FileDto fileDto) {
     ByteArrayOutputStream out = new ByteArrayOutputStream();
     int pageNumber = 0;
     int pageSize = 1000;
@@ -82,7 +82,7 @@ public class ExportujDaneDoXlsxUseCase {
     } while (page.hasNext());
   }
 
-  private Page<JdgListDto> fetchData(Specification<PodmiotyGospodarczeViewEntity> specification, int pageNumber,
+  private Page<JdgListDto> fetchData(Specification<PodmiotGospodarczeViewEntity> specification, int pageNumber,
                                      int pageSize) {
     Pageable pageable = PageRequest.of(pageNumber, pageSize);
     return podmiotyGospodarczeQueryRepository.findAll(specification, pageable)

@@ -23,6 +23,8 @@ public record WspolnikSpzooResponse(
 
   @Builder
   public record IdentyfikatorResponse(
-      String pesel
+      String pesel,
+      String nip,
+      String regon
   ) {}
 }

@@ -13,5 +13,6 @@ interface ListaZaktualizowanychWpisowKrsMapper {
   @Mapping(target = "createDate", ignore = true)
   @Mapping(target = "czyObsluzona", ignore = true)
   @Mapping(target = "nieobsluzoneKrsy", ignore = true)
+  @Mapping(target = "statusPobierania", defaultValue = "NIEPODJETE")
   ListaZaktualizowanychWpisowKrsEntity toEntity(ListaZmienionychWpisowKrsResponse dto);
 }

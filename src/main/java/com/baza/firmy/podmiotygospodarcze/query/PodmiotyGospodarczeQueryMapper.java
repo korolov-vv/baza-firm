@@ -21,27 +21,27 @@ interface PodmiotyGospodarczeQueryMapper {
   @Mapping(target = "adresDzialalnosci", source = ".", qualifiedByName = "setAdresEntityDzialalnosci")
   @Mapping(target = "adresKorespondencyjny", source = ".", qualifiedByName = "setAdresKorespondencyjny")
   @Mapping(target = "wlasciciel", source = ".", qualifiedByName = "setWlascicielDto")
-  JdgListDto toJdgListDtoList(PodmiotyGospodarczeViewEntity entity);
+  JdgListDto toJdgListDtoList(PodmiotGospodarczeViewEntity entity);
 
   @Named("setPkdGlownyString")
-  default String setPkdGlownyString(PodmiotyGospodarczeViewEntity entity) {
+  default String setPkdGlownyString(PodmiotGospodarczeViewEntity entity) {
     return entity.getPkdGlowny().map(PkdViewEntity::getKod).orElse(Strings.EMPTY);
   }
 
   @Named("setPkdStringList")
-  default List<String> setPkdStringList(PodmiotyGospodarczeViewEntity entity) {
+  default List<String> setPkdStringList(PodmiotGospodarczeViewEntity entity) {
     return entity.getPkd().stream()
         .map(PkdViewEntity::getKod)
         .toList();
   }
 
   @Named("setNip")
-  default String setNip(PodmiotyGospodarczeViewEntity jdg) {
+  default String setNip(PodmiotGospodarczeViewEntity jdg) {
     return jdg.getWlasciciel().map(OsobaViewEntity::getNip).orElse(Strings.EMPTY);
   }
 
   @Named("setAdresEntityDzialalnosci")
-  default AdresDto setAdresEntityDzialalnosci(PodmiotyGospodarczeViewEntity jdg) {
+  default AdresDto setAdresEntityDzialalnosci(PodmiotGospodarczeViewEntity jdg) {
     return jdg.getAdresDzialalnosci()
         .map(adres -> AdresDto.builder()
             .ulica(adres.getUlica())
@@ -58,7 +58,7 @@ interface PodmiotyGospodarczeQueryMapper {
   }
 
   @Named("setAdresKorespondencyjny")
-  default AdresDto setAdresKorespondencyjny(PodmiotyGospodarczeViewEntity jdg) {
+  default AdresDto setAdresKorespondencyjny(PodmiotGospodarczeViewEntity jdg) {
     return AdresDto.builder()
             .ulica(jdg.getAdresKorespondencyjny().getUlica())
             .budynek(jdg.getAdresKorespondencyjny().getBudynek())
@@ -73,7 +73,7 @@ interface PodmiotyGospodarczeQueryMapper {
   }
 
   @Named("setWlascicielDto")
-  default WlascicielDto setWlascicielDto(PodmiotyGospodarczeViewEntity jdg) {
+  default WlascicielDto setWlascicielDto(PodmiotGospodarczeViewEntity jdg) {
     return jdg.getWlasciciel()
         .map(osoba -> WlascicielDto.builder()
             .imie(osoba.getImie())

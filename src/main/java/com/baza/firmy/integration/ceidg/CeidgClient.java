@@ -4,9 +4,9 @@ import static com.baza.firmy.constants.WebClientConstants.CALL_TO_CEIDG_FAILED_L
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
 import com.baza.firmy.configuration.properties.CeidgProperties;
+import com.baza.firmy.dto.ListaZmienionychWpisowDto;
 import com.baza.firmy.response.Dto;
 import com.baza.firmy.response.ListaJdgDto;
-import com.baza.firmy.response.ListaZmienionychWpisowDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;

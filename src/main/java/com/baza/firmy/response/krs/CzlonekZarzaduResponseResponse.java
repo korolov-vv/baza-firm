@@ -23,6 +23,8 @@ public record CzlonekZarzaduResponseResponse(
 
   @Builder
   public record IdentyfikatorResponse(
-      String pesel
+      String pesel,
+      String nip,
+      String regon
   ) {}
 }

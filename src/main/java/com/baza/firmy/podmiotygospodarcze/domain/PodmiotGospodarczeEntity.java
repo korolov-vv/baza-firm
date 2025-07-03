@@ -2,6 +2,8 @@ package com.baza.firmy.podmiotygospodarcze.domain;
 
 import com.baza.firmy.adresy.query.AdresViewEntity;
 import com.baza.firmy.constants.enums.BusinessStatus;
+import com.baza.firmy.osoby.domain.dto.ReprezentacjaDto;
+import com.baza.firmy.osoby.domain.dto.WlascicielDto;
 import com.baza.firmy.osoby.query.OsobaViewEntity;
 import com.baza.firmy.pkd.query.PkdViewEntity;
 import com.baza.firmy.podmiotygospodarcze.domain.dto.JdgSzczegolyDto;
@@ -47,7 +49,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @Table(name = "podmioty_gospodarcze")
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @EntityListeners(AuditingEntityListener.class)
-class PodmiotyGospodarczeEntity {
+class PodmiotGospodarczeEntity {
 
   @Id
   @SequenceGenerator (
@@ -88,6 +90,15 @@ class PodmiotyGospodarczeEntity {
   @OneToOne(cascade = CascadeType.ALL)
   @JoinColumn(name = "wlasciciel_id", referencedColumnName = "id")
   private OsobaViewEntity wlasciciel;
+
+  @Builder.Default
+  @Column(columnDefinition = "jsonb")
+  @JdbcTypeCode(SqlTypes.JSON)
+  private List<WlascicielDto> wspolnicySpzoo = new ArrayList<>();
+
+  @Column(columnDefinition = "jsonb")
+  @JdbcTypeCode(SqlTypes.JSON)
+  private ReprezentacjaDto reprezentacja;
 
   @OneToOne(cascade = CascadeType.ALL)
   @JoinColumn (name = "pkd_glowny_id", referencedColumnName = "id")

@@ -11,6 +11,7 @@ import com.baza.firmy.pkd.domain.dto.PkdDto;
 import com.baza.firmy.pkd.query.PkdQueryFasade;
 import com.baza.firmy.pkd.query.PkdViewEntity;
 import com.baza.firmy.podmiotygospodarcze.domain.dto.JdgSzczegolyDto;
+import jakarta.transaction.Transactional;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -37,6 +38,7 @@ class StworzPodmiotGospodarczyZJdgUseCase {
   private final PodmiotyGospodarczeRepository podmiotyGospodarczeRepository;
   private final PodmiotyGospodarczeMapper podmiotyGospodarczeMapper;
 
+  @Transactional(Transactional.TxType.REQUIRES_NEW)
   public UUID stworzPodmiotGospodarczy(JdgSzczegolyDto jdgSzczegolyDto) {
     UUID adresKorespondencyjnyUuid;
     UUID adresDzialalnosciUuid;
@@ -52,33 +54,33 @@ class StworzPodmiotGospodarczyZJdgUseCase {
     UUID pkdGlownyUuid = zaktualizujPkdGlowny(jdgSzczegolyDto);
     List<UUID> pozostalePkdUuidList = zaktualizujPkdDodatkowe(jdgSzczegolyDto);
 
-    PodmiotyGospodarczeEntity podmiotyGospodarczeEntity = podmiotyGospodarczeMapper.toJdgEntity(jdgSzczegolyDto);
+    PodmiotGospodarczeEntity podmiotGospodarczeEntity = podmiotyGospodarczeMapper.toJdgEntity(jdgSzczegolyDto);
 
     if (adresDzialalnosciUuid != null) {
-      podmiotyGospodarczeEntity.setAdresDzialalnosci(adresQueryFacade.getAdresPoUuid(adresDzialalnosciUuid));
+      podmiotGospodarczeEntity.setAdresDzialalnosci(adresQueryFacade.getAdresPoUuid(adresDzialalnosciUuid));
     }
 
     if (adresKorespondencyjnyUuid != null) {
-      podmiotyGospodarczeEntity.setAdresKorespondencyjny(adresQueryFacade.getAdresPoUuid(adresKorespondencyjnyUuid));
+      podmiotGospodarczeEntity.setAdresKorespondencyjny(adresQueryFacade.getAdresPoUuid(adresKorespondencyjnyUuid));
     }
 
     if (wlascicielUuid != null) {
-      podmiotyGospodarczeEntity.setWlasciciel(osobaQueryFacade.findByUuid(wlascicielUuid));
+      podmiotGospodarczeEntity.setWlasciciel(osobaQueryFacade.findByUuid(wlascicielUuid));
     }
 
     if (pkdGlownyUuid != null) {
-      podmiotyGospodarczeEntity.setPkdGlowny(pkdQueryFasade.findByUuid(pkdGlownyUuid));
+      podmiotGospodarczeEntity.setPkdGlowny(pkdQueryFasade.findByUuid(pkdGlownyUuid));
     }
 
     if (!pozostalePkdUuidList.isEmpty()) {
-      podmiotyGospodarczeEntity.setPkd(pkdQueryFasade.findByUuidList(pozostalePkdUuidList));
+      podmiotGospodarczeEntity.setPkd(pkdQueryFasade.findByUuidList(pozostalePkdUuidList));
     }
 
-    if (podmiotyGospodarczeEntity.getRokPkd() == null) {
-      podmiotyGospodarczeEntity.setRokPkd(podmiotyGospodarczeEntity.getDataRozpoczecia().isBefore(LocalDate.of(2025, 01, 01)) ? "2007" : "2025");
+    if (podmiotGospodarczeEntity.getRokPkd() == null) {
+      podmiotGospodarczeEntity.setRokPkd(podmiotGospodarczeEntity.getDataRozpoczecia().isBefore(LocalDate.of(2025, 01, 01)) ? "2007" : "2025");
     }
 
-    return podmiotyGospodarczeRepository.save(podmiotyGospodarczeEntity).getUuid();
+    return podmiotyGospodarczeRepository.save(podmiotGospodarczeEntity).getUuid();
 }
 
 private UUID zaktualizujWlasciciela(JdgSzczegolyDto jdgSzczegolyDto) {

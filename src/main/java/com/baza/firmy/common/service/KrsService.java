@@ -3,11 +3,12 @@ package com.baza.firmy.common.service;
 import com.baza.firmy.configuration.properties.KrsProperties;
 import com.baza.firmy.integration.krs.KrsClient;
 import com.baza.firmy.response.krs.ListaZmienionychWpisowKrsResponse;
-import jakarta.annotation.Nullable;
+import com.baza.firmy.response.krs.OdpisAktualnyResponse;
 import java.time.LocalDate;
-import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -29,6 +30,18 @@ public class KrsService {
     return response;
   }
 
+  @Async("pobierzOdpisAktualny")
+  public CompletableFuture<OdpisAktualnyResponse> pobierzOdpisAktualny(String nrKrs) {
+    log.info("Pobieranie odpisu aktualnego KRS dla numeru KRS: {}", nrKrs);
+    final var link = UriComponentsBuilder.fromUriString(krsProperties.getKrsPath())
+        .path("/OdpisAktualny")
+        .path("/" + nrKrs)
+        .toUriString();
+
+    final var response = krsClient.pobierzOdpisAktualny(link);
+    log.info("Pobrano odpis aktualny KRS dla numeru KRS: {},\n response: {}", nrKrs, response);
+    return CompletableFuture.completedFuture(response);
+  }
   private String zwrocLinkDoListyZmienionychWpisow(LocalDate data, int godzinaOd, int godzinaDo) {
     return UriComponentsBuilder.fromUriString(krsProperties.getKrsPath())
         .path("/Biuletyn")

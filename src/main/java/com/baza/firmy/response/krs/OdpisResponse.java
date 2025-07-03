@@ -1,13 +1,14 @@
 package com.baza.firmy.response.krs;
 
-import java.util.List;
 import java.util.Map;
 import lombok.Builder;
 
 @Builder
 public record OdpisResponse(
     String rodzaj,
-    NaglowekAResponse naglowekA
+    NaglowekAResponse naglowekA,
+    Wpis dane
+
 ) {
   @Builder
   public record NaglowekAResponse(
@@ -20,8 +21,7 @@ public record OdpisResponse(
       String dataOstatniegoWpisu,
       String sygnaturaAktSprawyDotyczacejOstatniegoWpisu,
       String oznaczenieSaduDokonujacegoOstatniegoWpisu,
-      int stanPozycji,
-      List<Wpis> dane
+      int stanPozycji
   ) {
   }
 
