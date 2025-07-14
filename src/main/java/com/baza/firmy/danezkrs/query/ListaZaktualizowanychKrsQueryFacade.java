@@ -26,6 +26,6 @@ public class ListaZaktualizowanychKrsQueryFacade {
             .identyfikatoryWpisow(
                 lista.getNumeryKrs() != null ? lista.getNumeryKrs() : List.of())
             .build())
-        .orElseThrow(() -> new RuntimeException("Brak nieobsłużonej listy zaktualizowanych wpisów KRS"));
+        .orElse(null);
   }
 }

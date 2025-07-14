@@ -2,7 +2,6 @@ package com.baza.firmy.dto;
 
 import com.baza.firmy.adresy.domain.dto.AdresDto;
 import com.baza.firmy.constants.enums.BusinessStatus;
-import com.baza.firmy.osoby.domain.dto.WlascicielDto;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -19,11 +18,10 @@ public class JdgListDto {
   
   private String nazwa;
   private String nip;
+  private String regon;
 
   private AdresDto adresDzialalnosci;
   private AdresDto adresKorespondencyjny;
-
-  private WlascicielDto wlasciciel;
 
   private String pkdGlowny;
   @Builder.Default
@@ -41,10 +39,6 @@ public class JdgListDto {
 
   public Optional<AdresDto> getAdresDzialalnosci() {
     return Optional.ofNullable(adresDzialalnosci);
-  }
-
-  public Optional<WlascicielDto> getWlasciciel() {
-    return Optional.ofNullable(wlasciciel);
   }
 
   public Optional<String> getPkdGlowny() {

@@ -18,9 +18,9 @@ interface PodmiotyGospodarczeQueryMapper {
   @Mapping(target = "pkdGlowny", source = ".", qualifiedByName = "setPkdGlownyString")
   @Mapping(target = "pkd", source = ".", qualifiedByName = "setPkdStringList")
   @Mapping(target = "nip", source = ".", qualifiedByName = "setNip")
+  @Mapping(target = "regon", source = ".", qualifiedByName = "setRegon")
   @Mapping(target = "adresDzialalnosci", source = ".", qualifiedByName = "setAdresEntityDzialalnosci")
   @Mapping(target = "adresKorespondencyjny", source = ".", qualifiedByName = "setAdresKorespondencyjny")
-  @Mapping(target = "wlasciciel", source = ".", qualifiedByName = "setWlascicielDto")
   JdgListDto toJdgListDtoList(PodmiotGospodarczeViewEntity entity);
 
   @Named("setPkdGlownyString")
@@ -38,6 +38,11 @@ interface PodmiotyGospodarczeQueryMapper {
   @Named("setNip")
   default String setNip(PodmiotGospodarczeViewEntity jdg) {
     return jdg.getWlasciciel().map(OsobaViewEntity::getNip).orElse(Strings.EMPTY);
+  }
+
+  @Named("setRegon")
+  default String setRegon(PodmiotGospodarczeViewEntity jdg) {
+    return jdg.getWlasciciel().map(OsobaViewEntity::getRegon).orElse(Strings.EMPTY);
   }
 
   @Named("setAdresEntityDzialalnosci")

@@ -38,7 +38,7 @@ interface PodmiotyGospodarczeMapper {
   @Mapping(target = "pkd", ignore = true)
   @Mapping(target = "rejestr", defaultValue = "CEIDG")
   @Mapping(target = "nip", source = "wlasciciel.nip")
-  @Mapping(target = "regon", ignore = true)
+  @Mapping(target = "regon", source = "wlasciciel.regon")
   @Mapping(target = "numerKrs", ignore = true)
   @Mapping(target = "dataRozpoczecia", source = "dataRozpoczecia", qualifiedByName = "setDate")
   @Mapping(target = "dataZawieszenia", source = "dataZawieszenia", qualifiedByName = "setDate")

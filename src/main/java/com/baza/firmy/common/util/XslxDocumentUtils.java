@@ -2,7 +2,6 @@ package com.baza.firmy.common.util;
 
 import com.baza.firmy.adresy.domain.dto.AdresDto;
 import com.baza.firmy.dto.JdgListDto;
-import com.baza.firmy.osoby.domain.dto.WlascicielDto;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -51,7 +50,7 @@ public class XslxDocumentUtils {
 
         createCell(row, 0, jdg.getNazwa(), cellStyle);
         createCell(row, 1, jdg.getNip(), cellStyle);
-        createCell(row, 2, jdg.getWlasciciel().map(WlascicielDto::getRegon).orElse(Strings.EMPTY), cellStyle);
+        createCell(row, 2, jdg.getRegon(), cellStyle);
         createCell(row, 3, jdg.getDataRozpoczecia(), cellStyle);
         createCell(row, 4, jdg.getEmail(), cellStyle);
         createCell(row, 5, jdg.getTelefon(), cellStyle);

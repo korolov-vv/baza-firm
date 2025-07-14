@@ -35,7 +35,8 @@ public class PobierajDaneZaktualizowanychFirmZKrsService implements BazowySchedu
     log.info("Rozpoczynam pobieranie danych z KRS dla zaktualizowanych firm.");
     ListaZmienionychWpisowDto listaZmienionychWpisowDto =
         listaZaktualizowanychKrsQueryFacade.pobierzNiepodjetaListeZaktualizowanychWpisow();
-    if (listaZmienionychWpisowDto.getIdentyfikatoryWpisow().isEmpty()) {
+
+    if (Objects.isNull(listaZmienionychWpisowDto) || listaZmienionychWpisowDto.getIdentyfikatoryWpisow().isEmpty()) {
       log.info("Brak zaktualizowanych wpisów do pobrania z KRS.");
       return;
     }
