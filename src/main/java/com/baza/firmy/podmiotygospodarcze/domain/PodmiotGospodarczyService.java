@@ -18,6 +18,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
@@ -87,7 +88,7 @@ class PodmiotGospodarczyService {
     }
 
     final var pkdGlownyResponse = dzial3.przedmiotDzialalnosci().przedmiotPrzewazajacejDzialalnosci().getFirst();
-    final String pkd = pkdGlownyResponse.kodDzial() + pkdGlownyResponse.kodKlasa() + pkdGlownyResponse.kodPodklasa();
+    final String pkd = pkdGlownyResponse.kodDzial() + pkdGlownyResponse.kodKlasa() + Optional.ofNullable(pkdGlownyResponse.kodPodklasa()).orElse(Strings.EMPTY);
 
     return zaktualizujPkd(pkd);
   }
@@ -105,14 +106,14 @@ class PodmiotGospodarczyService {
         dzial3.przedmiotDzialalnosci().przedmiotPrzewazajacejDzialalnosci().size() > 1) {
       List.copyOf(dzial3.przedmiotDzialalnosci().przedmiotPrzewazajacejDzialalnosci()).subList(1, dzial3.przedmiotDzialalnosci().przedmiotPrzewazajacejDzialalnosci().size() - 1).stream()
           .filter(kodPkdResp -> Objects.nonNull(kodPkdResp) && !Objects.equals(kodPkdResp, dzial3.przedmiotDzialalnosci().przedmiotPrzewazajacejDzialalnosci().getFirst()))
-          .map(kodPkdResponse -> kodPkdResponse.kodDzial() + kodPkdResponse.kodKlasa() + kodPkdResponse.kodPodklasa())
+          .map(kodPkdResponse -> kodPkdResponse.kodDzial() + kodPkdResponse.kodKlasa() + Optional.ofNullable(kodPkdResponse.kodPodklasa()).orElse(Strings.EMPTY))
           .forEach(kod -> listaUuidKodowPkdZapisanych.add(zaktualizujPkd(kod)));
     }
 
     dzial3.przedmiotDzialalnosci().przedmiotPozostalejDzialalnosci().stream()
         .filter(kodPkdResp -> Objects.nonNull(kodPkdResp) &&
             !Objects.equals(kodPkdResp, getPkdPrzewazajacy(dzial3)))
-        .map(kodPkdResponse -> kodPkdResponse.kodDzial() + kodPkdResponse.kodKlasa() + kodPkdResponse.kodPodklasa())
+        .map(kodPkdResponse -> kodPkdResponse.kodDzial() + kodPkdResponse.kodKlasa() + Optional.ofNullable(kodPkdResponse.kodPodklasa()).orElse(Strings.EMPTY))
         .forEach(kod -> listaUuidKodowPkdZapisanych.add(zaktualizujPkd(kod)));
     return List.copyOf(listaUuidKodowPkdZapisanych);
   }
