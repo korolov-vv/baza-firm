@@ -32,7 +32,7 @@ public class XslxDocumentUtils {
       CellStyle headerStyle = createHeaderStyle(workbook);
       CellStyle cellStyle = createCellStyle(workbook);
 
-      String[] columns = {"Nazwa", "NIP", "REGON", "Data rozpoczęcia działalności", "Email", "Telefon", "PKD główny", "PKD dodatkowe", "AdresEntity Korespondencyjny", "AdresEntity Działalności"};
+      String[] columns = {"Nazwa", "NIP", "REGON", "KRS", "Data rozpoczęcia działalności", "Email", "Telefon", "PKD główny", "PKD dodatkowe", "AdresEntity Korespondencyjny", "AdresEntity Działalności"};
 
       if (isFirstPage) {
         Row headerRow = sheet.createRow(0);
@@ -51,6 +51,7 @@ public class XslxDocumentUtils {
         createCell(row, 0, jdg.getNazwa(), cellStyle);
         createCell(row, 1, jdg.getNip(), cellStyle);
         createCell(row, 2, jdg.getRegon(), cellStyle);
+        createCell(row, 2, jdg.getKrs(), cellStyle);
         createCell(row, 3, jdg.getDataRozpoczecia(), cellStyle);
         createCell(row, 4, jdg.getEmail(), cellStyle);
         createCell(row, 5, jdg.getTelefon(), cellStyle);

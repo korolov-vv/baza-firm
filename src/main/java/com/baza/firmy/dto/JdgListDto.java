@@ -19,6 +19,7 @@ public class JdgListDto {
   private String nazwa;
   private String nip;
   private String regon;
+  private String krs;
 
   private AdresDto adresDzialalnosci;
   private AdresDto adresKorespondencyjny;

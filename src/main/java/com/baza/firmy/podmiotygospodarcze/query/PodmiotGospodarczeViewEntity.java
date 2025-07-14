@@ -174,4 +174,8 @@ public class PodmiotGospodarczeViewEntity {
       return pkd;
     }
   }
+
+  public Optional<String> getNumerKrs() {
+    return Optional.ofNullable(numerKrs);
+  }
 }

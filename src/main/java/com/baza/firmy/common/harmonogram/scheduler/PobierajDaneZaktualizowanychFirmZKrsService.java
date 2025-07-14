@@ -32,7 +32,7 @@ public class PobierajDaneZaktualizowanychFirmZKrsService implements BazowySchedu
       log.info("Zadanie PobierajDaneZaktualizowanychFirmZKrsService nie zostanie wykonane, ponieważ istnieje już lista zaktualizowanych wpisów w trakcie pobierania.");
       return;
     }
-    log.info("Rozpoczynam pobieranie danych z KRS dla zaktualizowanych firm.");
+
     ListaZmienionychWpisowDto listaZmienionychWpisowDto =
         listaZaktualizowanychKrsQueryFacade.pobierzNiepodjetaListeZaktualizowanychWpisow();
 
@@ -40,6 +40,8 @@ public class PobierajDaneZaktualizowanychFirmZKrsService implements BazowySchedu
       log.info("Brak zaktualizowanych wpisów do pobrania z KRS.");
       return;
     }
+
+    log.info("Rozpoczynam pobieranie danych z KRS dla zaktualizowanych firm.");
     List<String> listaNiepobranychKrs = new ArrayList<>();
 
     listaZaktualizowanychKrsFacade.zmienStatusListyWpisow(
