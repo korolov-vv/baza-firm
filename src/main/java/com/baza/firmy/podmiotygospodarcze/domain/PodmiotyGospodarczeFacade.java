@@ -18,17 +18,18 @@ public class PodmiotyGospodarczeFacade {
 
   public UUID stworzPodmiotGospodarczy(JdgSzczegolyDto jdgSzczegolyDto) {
     UUID savedUuid = stworzPodmiotGospodarczyZJdgUseCase.stworzPodmiotGospodarczy(jdgSzczegolyDto);
-    log.info("Zapisano JDG: UUID = {}", savedUuid);
+    log.info("Zapisano Podmiot Gospodarczy: UUID = {}", savedUuid);
     return savedUuid;
   }
 
   public UUID stworzPodmiotGospodarczy(OdpisAktualnyResponse odpisAktualnyResponse) {
     UUID savedUuid = stworzPodmiotGospodarczyZKrsOdpisAktualnyUseCase.stworzPodmiotGospodarczy(odpisAktualnyResponse);
-    log.info("Zapisano JDG: UUID = {}", savedUuid);
+    log.info("Zapisano Podmiot Gospodarczy: UUID = {}", savedUuid);
     return savedUuid;
   }
 
   public void zaktualizujPodmiotGospodarczy(OdpisAktualnyResponse odpis) {
-    zaktualizujPodmiotGospodarczyZKrsOdpisAktualnyUseCase.zaktualizujPodmiotGospodarczy(odpis);
+    UUID savedUuid = zaktualizujPodmiotGospodarczyZKrsOdpisAktualnyUseCase.zaktualizujPodmiotGospodarczy(odpis);
+    log.info("Zapisano Podmiot Gospodarczy: UUID = {}", savedUuid);
   }
 }

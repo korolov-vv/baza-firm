@@ -19,8 +19,8 @@ public class ListaZaktualizowanychKrsQueryFacade {
     return repository.existsByStatusPobierania(StatusPobieraniaEnum.W_TRAKCIE);
   }
 
-  public ListaZmienionychWpisowDto pobierzNieobsluzanaListeZaktualizowanychWpisow() {
-    return repository.findFirstByCzyObsluzonaIsFalse()
+  public ListaZmienionychWpisowDto pobierzNiepodjetaListeZaktualizowanychWpisow() {
+    return repository.findFirstByStatusPobierania(StatusPobieraniaEnum.NIEPODJETE)
         .map(lista -> ListaZmienionychWpisowDto.builder()
             .uuid(lista.getUuid())
             .identyfikatoryWpisow(

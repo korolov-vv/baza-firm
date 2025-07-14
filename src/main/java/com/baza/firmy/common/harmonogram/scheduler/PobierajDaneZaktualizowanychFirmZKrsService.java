@@ -9,6 +9,7 @@ import com.baza.firmy.podmiotygospodarcze.domain.PodmiotyGospodarczeFacade;
 import com.baza.firmy.podmiotygospodarcze.query.PodmiotyGospodarczeQueryFacade;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.quartz.JobExecutionContext;
@@ -33,35 +34,45 @@ public class PobierajDaneZaktualizowanychFirmZKrsService implements BazowySchedu
     }
     log.info("Rozpoczynam pobieranie danych z KRS dla zaktualizowanych firm.");
     ListaZmienionychWpisowDto listaZmienionychWpisowDto =
-        listaZaktualizowanychKrsQueryFacade.pobierzNieobsluzanaListeZaktualizowanychWpisow();
+        listaZaktualizowanychKrsQueryFacade.pobierzNiepodjetaListeZaktualizowanychWpisow();
     if (listaZmienionychWpisowDto.getIdentyfikatoryWpisow().isEmpty()) {
       log.info("Brak zaktualizowanych wpisów do pobrania z KRS.");
       return;
     }
     List<String> listaNiepobranychKrs = new ArrayList<>();
 
-    listaZaktualizowanychKrsFacade.zmienStatusListyWpisow(listaZmienionychWpisowDto.getUuid(), StatusPobieraniaEnum.W_TRAKCIE);
+    listaZaktualizowanychKrsFacade.zmienStatusListyWpisow(
+        listaZmienionychWpisowDto.getUuid(), StatusPobieraniaEnum.W_TRAKCIE);
     listaZmienionychWpisowDto.getIdentyfikatoryWpisow()
        .forEach(krs -> {
          try {
            final var odpis = krsService.pobierzOdpisAktualny(krs);
+
+           if (Objects.isNull(odpis.get())) {
+             log.warn("Nie udało się pobrać odpisu aktualnego KRS dla numeru: {}", krs);
+             listaNiepobranychKrs.add(krs);
+             return;
+           }
+
            if (podmiotyGospodarczeQueryFacade.czyIstniejePoKrs(krs)) {
              podmiotyGospodarczeFacade.zaktualizujPodmiotGospodarczy(odpis.get());
            } else {
              podmiotyGospodarczeFacade.stworzPodmiotGospodarczy(odpis.get());
            }
          } catch (Exception e) {
-           log.error("Błąd podczas pobierania danych z KRS dla zaktualizowanych firm: {}", e.getMessage(), e);
+           log.error("Błąd podczas pobierania danych z KRS dla zaktualizowanych firm", e);
            listaNiepobranychKrs.add(krs);
          }
        });
 
     if (!listaNiepobranychKrs.isEmpty()) {
       log.warn("Nie udało się pobrać danych z KRS dla następujących wpisów: {}", listaNiepobranychKrs);
-      listaZaktualizowanychKrsFacade.zmienStatusListyWpisow(listaZmienionychWpisowDto.getUuid(), StatusPobieraniaEnum.ZAKONCZONE_Z_BLENDAMI, listaNiepobranychKrs);
+      listaZaktualizowanychKrsFacade.zmienStatusListyWpisow(
+          listaZmienionychWpisowDto.getUuid(), StatusPobieraniaEnum.ZAKONCZONE_Z_BLENDAMI, listaNiepobranychKrs);
     } else {
       log.info("Pobieranie danych z KRS dla zaktualizowanych firm zakończone pomyślnie.");
-      listaZaktualizowanychKrsFacade.zmienStatusListyWpisow(listaZmienionychWpisowDto.getUuid(), StatusPobieraniaEnum.ZAKONCZONE);
+      listaZaktualizowanychKrsFacade.zmienStatusListyWpisow(
+          listaZmienionychWpisowDto.getUuid(), StatusPobieraniaEnum.ZAKONCZONE);
     }
   }
 }

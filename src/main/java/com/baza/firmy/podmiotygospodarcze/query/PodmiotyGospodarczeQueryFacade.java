@@ -49,6 +49,12 @@ public class PodmiotyGospodarczeQueryFacade {
   }
 
   public boolean czyIstniejePoKrs(String krs) {
-    return podmiotyGospodarczeQueryRepository.existsByNumerKrs(krs);
+    if (krs == null || krs.isBlank()) {
+      return false;
+    }
+    final String krsDefault = "0000000000";
+    final int krsSize = krs.length();
+    final String krsNormalized = krsDefault.substring(0, (krsDefault.length() - krsSize)).concat(krs);
+    return podmiotyGospodarczeQueryRepository.existsByNumerKrs(krsNormalized);
   }
 }

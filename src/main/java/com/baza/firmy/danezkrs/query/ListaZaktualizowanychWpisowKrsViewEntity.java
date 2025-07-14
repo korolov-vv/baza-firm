@@ -57,8 +57,6 @@ class ListaZaktualizowanychWpisowKrsViewEntity {
  @Enumerated(EnumType.STRING)
  @Column(insertable = false, updatable = false)
  private StatusPobieraniaEnum statusPobierania;
- @Column(insertable = false, updatable = false)
- private boolean czyObsluzona;
  @Column (columnDefinition = "jsonb", insertable = false, updatable = false)
  @JdbcTypeCode (SqlTypes.JSON)
  @Builder.Default

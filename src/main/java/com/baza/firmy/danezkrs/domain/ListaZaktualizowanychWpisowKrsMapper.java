@@ -11,7 +11,6 @@ interface ListaZaktualizowanychWpisowKrsMapper {
   @Mapping (target = "id", ignore = true)
   @Mapping(target = "uuid", expression = "java(UUID.randomUUID())")
   @Mapping(target = "createDate", ignore = true)
-  @Mapping(target = "czyObsluzona", ignore = true)
   @Mapping(target = "nieobsluzoneKrsy", ignore = true)
   @Mapping(target = "statusPobierania", defaultValue = "NIEPODJETE")
   ListaZaktualizowanychWpisowKrsEntity toEntity(ListaZmienionychWpisowKrsResponse dto);

@@ -25,6 +25,6 @@ public class ListaZaktualizowanychKrsFacade {
     zmienStatusListyWpisowUseCase.zmienStatusListyWpisowUseCase(uuid, status);
   }
   public void zmienStatusListyWpisow(UUID uuid, StatusPobieraniaEnum status, List<String> listaNiepobranychWpisow) {
-    zmienStatusListyWpisowUseCase.zmienStatusListyWpisowUseCase(uuid, status);
+    zmienStatusListyWpisowUseCase.zmienStatusListyWpisowUseCase(uuid, status, listaNiepobranychWpisow);
   }
 }

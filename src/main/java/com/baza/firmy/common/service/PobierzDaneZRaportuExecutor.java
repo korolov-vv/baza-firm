@@ -26,7 +26,6 @@ import javax.xml.stream.XMLStreamReader;
 import javax.xml.transform.stream.StreamSource;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 @Slf4j
@@ -39,7 +38,7 @@ public class PobierzDaneZRaportuExecutor {
   private final FileUtills fileUtills;
   private final PodmiotyGospodarczeQueryFacade podmiotyGospodarczeQueryFacade;
 
-  @Async("pobierzDaneZRaportu")
+//  @Async("pobierzDaneZRaportu")
   CompletableFuture<Void> zapiszDaneDlaWojewodztwa(WojewodztwaRaportyEnum wojewodztwoRaport) {
     try {
       log.info("Zaczynam pobieranie danych z raportu dla województwa: {}", wojewodztwoRaport.name());

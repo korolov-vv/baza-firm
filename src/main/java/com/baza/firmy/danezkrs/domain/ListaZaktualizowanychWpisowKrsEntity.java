@@ -61,7 +61,6 @@ class ListaZaktualizowanychWpisowKrsEntity {
  private List<String> numeryKrs;
  @Enumerated(EnumType.STRING)
  private StatusPobieraniaEnum statusPobierania;
- private boolean czyObsluzona;
  @Column (columnDefinition = "jsonb")
  @JdbcTypeCode (SqlTypes.JSON)
  @Builder.Default

@@ -21,6 +21,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
@@ -32,12 +33,11 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 class ZaktualizujPodmiotGospodarczyZKrsOdpisAktualnyUseCase {
 
-  private final AdresFacade adresFacade;
   private final AdresQueryFacade adresQueryFacade;
-  private final PkdFasade pkdFasade;
   private final PkdQueryFasade pkdQueryFasade;
   private final PodmiotyGospodarczeRepository podmiotyGospodarczeRepository;
   private final PodmiotyGospodarczeMapper podmiotyGospodarczeMapper;
+  private final PodmiotGospodarczyService podmiotGospodarczyService;
 
   @Transactional
   public UUID zaktualizujPodmiotGospodarczy(OdpisAktualnyResponse odpisAktualnyResponse) {
@@ -48,25 +48,25 @@ class ZaktualizujPodmiotGospodarczyZKrsOdpisAktualnyUseCase {
     final var dzial3 = odpisAktualnyResponse.odpis().dane().dzial3();
 
     if (Objects.equals(dzial1.siedzibaIAdres().siedziba(), dzial1.siedzibaIAdres().adres())) {
-      UUID adresUuid = zaktualizujAdresKorespondencyjny(dzial1.siedzibaIAdres());
+      UUID adresUuid = podmiotGospodarczyService.zaktualizujAdresKorespondencyjny(dzial1.siedzibaIAdres());
       adresKorespondencyjnyUuid = adresUuid;
       adresDzialalnosciUuid = adresUuid;
     } else {
-      adresKorespondencyjnyUuid = zaktualizujAdresKorespondencyjny(dzial1.siedzibaIAdres());
-      adresDzialalnosciUuid = zaktualizujAdresDzialalnoszci(dzial1.siedzibaIAdres());
+      adresKorespondencyjnyUuid = podmiotGospodarczyService.zaktualizujAdresKorespondencyjny(dzial1.siedzibaIAdres());
+      adresDzialalnosciUuid = podmiotGospodarczyService.zaktualizujAdresDzialalnoszci(dzial1.siedzibaIAdres());
     }
 
-    UUID pkdGlownyUuid = zaktualizujPkdGlowny(dzial3);
-    List<UUID> pozostalePkdUuidList = zaktualizujPkdDodatkowe(dzial3);
+    UUID pkdGlownyUuid = podmiotGospodarczyService.zaktualizujPkdGlowny(dzial3);
+    List<UUID> pozostalePkdUuidList = podmiotGospodarczyService.zaktualizujPkdDodatkowe(dzial3);
 
     PodmiotGospodarczeEntity podmiotGospodarczeEntity = podmiotyGospodarczeRepository.findByNumerKrs(odpisAktualnyResponse.odpis().naglowekA().numerKRS())
         .orElseThrow(() -> new IllegalArgumentException("Podmiot gospodarczy o podanym KRS nie istnieje"));
 
     podmiotyGospodarczeMapper.toJdgEntity(podmiotGospodarczeEntity, odpisAktualnyResponse);
 
-    ustawWspolnikow(odpisAktualnyResponse, podmiotGospodarczeEntity);
+    podmiotGospodarczyService.ustawWspolnikow(odpisAktualnyResponse, podmiotGospodarczeEntity);
 
-    ustawReprezentacje(odpisAktualnyResponse, podmiotGospodarczeEntity);
+    podmiotGospodarczyService.ustawReprezentacje(odpisAktualnyResponse, podmiotGospodarczeEntity);
 
     if (adresDzialalnosciUuid != null) {
       podmiotGospodarczeEntity.setAdresDzialalnosci(adresQueryFacade.getAdresPoUuid(adresDzialalnosciUuid));
@@ -89,112 +89,5 @@ class ZaktualizujPodmiotGospodarczyZKrsOdpisAktualnyUseCase {
     }
 
     return podmiotyGospodarczeRepository.save(podmiotGospodarczeEntity).getUuid();
-  }
-
-  private void ustawReprezentacje(OdpisAktualnyResponse odpisAktualnyResponse, PodmiotGospodarczeEntity podmiotGospodarczeEntity) {
-    final var reprezentacja = odpisAktualnyResponse.odpis().dane().dzial2().reprezentacja();
-    podmiotGospodarczeEntity.setReprezentacja(
-        ReprezentacjaDto.builder()
-            .nazwaOrganu(reprezentacja.nazwaOrganu())
-            .sposobReprezentacji(reprezentacja.sposobReprezentacji())
-            .sklad(reprezentacja.sklad().stream()
-                .map(this::stworzReprezentanta)
-                .toList())
-            .build()
-    );
-  }
-
-  private ReprezentantDto stworzReprezentanta(CzlonekZarzaduResponseResponse reprezentant) {
-    return ReprezentantDto.builder()
-        .funkcjaWOrganie(reprezentant.funkcjaWOrganie())
-        .czyZawieszona(reprezentant.czyZawieszona())
-        .imie(reprezentant.imiona().imie())
-        .nazwisko(reprezentant.nazwisko().nazwiskoICzlon())
-        .pesel(reprezentant.identyfikator().pesel())
-        .nip(reprezentant.identyfikator().nip())
-        .regon(reprezentant.identyfikator().regon())
-        .build();
-  }
-
-  private void ustawWspolnikow(OdpisAktualnyResponse odpisAktualnyResponse, PodmiotGospodarczeEntity podmiotGospodarczeEntity) {
-    podmiotGospodarczeEntity.getWspolnicySpzoo().clear();
-    podmiotGospodarczeEntity.getWspolnicySpzoo().addAll(
-        odpisAktualnyResponse.odpis().dane().dzial1().wspolnicySpzoo().stream()
-            .map(this::stworzWlasciciela
-            )
-            .toList()
-    );
-  }
-
-  private WlascicielDto stworzWlasciciela(WspolnikSpzooResponse wspolnikSpzooResponse) {
-    return WlascicielDto.builder()
-        .nazwisko(wspolnikSpzooResponse.nazwisko().nazwiskoICzlon())
-        .imie(wspolnikSpzooResponse.imiona().imie())
-        .pesel(wspolnikSpzooResponse.identyfikator().pesel())
-        .nip(wspolnikSpzooResponse.identyfikator().nip())
-        .regon(wspolnikSpzooResponse.identyfikator().regon())
-        .posiadaneUdzialy(wspolnikSpzooResponse.posiadaneUdzialy())
-        .czyPosiadaCaloscUdzialow(wspolnikSpzooResponse.czyPosiadaCaloscUdzialow())
-        .build();
-  }
-
-  private UUID zaktualizujAdresDzialalnoszci(SiedzibaIAdresResponse siedzibaIAdres) {
-    return adresFacade.stworzAdres(siedzibaIAdres.adres());
-  }
-  private UUID zaktualizujAdresKorespondencyjny(SiedzibaIAdresResponse siedzibaIAdres) {
-    return adresFacade.stworzAdres(siedzibaIAdres.siedziba());
-  }
-
-  private UUID zaktualizujPkdGlowny(Dzial3Response dzial3) {
-    if (Objects.isNull(dzial3.przedmiotDzialalnosci()) ||
-        dzial3.przedmiotDzialalnosci().przedmiotPrzewazajacejDzialalnosci().isEmpty()) {
-      return null;
-    }
-
-    final var pkdGlownyResponse = dzial3.przedmiotDzialalnosci().przedmiotPrzewazajacejDzialalnosci().getFirst();
-    final String pkd = pkdGlownyResponse.kodDzial() + pkdGlownyResponse.kodKlasa() + pkdGlownyResponse.kodPodklasa();
-
-    return zaktualizujPkd(pkd);
-  }
-
-  private List<UUID> zaktualizujPkdDodatkowe(Dzial3Response dzial3) {
-    if (Objects.isNull(dzial3.przedmiotDzialalnosci()) ||
-        dzial3.przedmiotDzialalnosci().przedmiotPozostalejDzialalnosci().isEmpty()) {
-      return Collections.emptyList();
-    }
-
-    List<UUID> listaUuidKodowPkdZapisanych = new ArrayList<>();
-
-    if (dzial3.przedmiotDzialalnosci().przedmiotPrzewazajacejDzialalnosci().size() > 1) {
-      usunDuplikatyPkd(
-          List.copyOf(dzial3.przedmiotDzialalnosci().przedmiotPrzewazajacejDzialalnosci()).subList(1, dzial3.przedmiotDzialalnosci().przedmiotPrzewazajacejDzialalnosci().size() - 1)
-      ).stream()
-          .filter(kodPkdResp -> Objects.nonNull(kodPkdResp) && !Objects.equals(kodPkdResp, dzial3.przedmiotDzialalnosci().przedmiotPrzewazajacejDzialalnosci().getFirst()))
-          .map(kodPkdResponse -> kodPkdResponse.kodDzial() + kodPkdResponse.kodKlasa() + kodPkdResponse.kodPodklasa())
-          .forEach(kod -> listaUuidKodowPkdZapisanych.add(zaktualizujPkd(kod)));
-    }
-
-    usunDuplikatyPkd(dzial3.przedmiotDzialalnosci().przedmiotPozostalejDzialalnosci()).stream()
-        .filter(kodPkdResp -> Objects.nonNull(kodPkdResp) && !Objects.equals(kodPkdResp, dzial3.przedmiotDzialalnosci().przedmiotPrzewazajacejDzialalnosci().getFirst()))
-        .map(kodPkdResponse -> kodPkdResponse.kodDzial() + kodPkdResponse.kodKlasa() + kodPkdResponse.kodPodklasa())
-        .forEach(kod -> listaUuidKodowPkdZapisanych.add(zaktualizujPkd(kod)));
-    return listaUuidKodowPkdZapisanych;
-  }
-
-  private Set<Dzial3Response.KodPkdResponse> usunDuplikatyPkd(List<Dzial3Response.KodPkdResponse> kodyPkd) {
-    Set<Dzial3Response.KodPkdResponse> pkdUnikalne = new HashSet<>();
-    kodyPkd.stream()
-        .filter(n -> !pkdUnikalne.add(n))
-        .toList();
-    return pkdUnikalne;
-  }
-
-  private UUID zaktualizujPkd(String pkd) {
-    return pkdQueryFasade.findByKod(pkd.trim())
-        .map(PkdViewEntity::getUuid)
-        .orElseGet(() -> pkdFasade.stworzPkd(PkdDto.builder()
-            .uuid(UUID.randomUUID())
-            .kod(pkd.trim())
-            .build()));
   }
 }

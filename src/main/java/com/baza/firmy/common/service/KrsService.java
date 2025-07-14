@@ -12,6 +12,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+import org.springframework.web.reactive.function.client.WebClientException;
 import org.springframework.web.util.UriComponentsBuilder;
 
 @Slf4j
@@ -38,8 +39,18 @@ public class KrsService {
         .path("/" + nrKrs)
         .toUriString();
 
-    final var response = krsClient.pobierzOdpisAktualny(link);
-    log.info("Pobrano odpis aktualny KRS dla numeru KRS: {},\n response: {}", nrKrs, response);
+    OdpisAktualnyResponse response;
+    try {
+      response = krsClient.pobierzOdpisAktualny(link);
+      log.info("Pobrano odpis aktualny KRS dla numeru KRS: {},\n response: {}", nrKrs, response);
+    } catch (WebClientException e) {
+      if (e.getMessage().contains("404 Not Found")) {
+        log.warn("Nie znaleziono odpisu aktualnego KRS dla numeru KRS: {}", nrKrs);
+      } else {
+        log.error("Błąd podczas pobierania odpisu aktualnego KRS dla numeru KRS: {}", nrKrs, e);
+      }
+      return CompletableFuture.completedFuture(null);
+    }
     return CompletableFuture.completedFuture(response);
   }
   private String zwrocLinkDoListyZmienionychWpisow(LocalDate data, int godzinaOd, int godzinaDo) {
