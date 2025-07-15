@@ -81,7 +81,8 @@ public class JdgSzczegolyDto implements JdgSzczegoly {
   private List<UprawnieniaDto> uprawnienia = new ArrayList<>();
   @Builder.Default
   private List<OgraniczeniaDto> ograniczenia = new ArrayList<>();
-  private OgraniczeniaZdolnosciPrawnejDto ograniczeniaZdolnosciPrawnej;
+  @Builder.Default
+  private List<OgraniczeniaZdolnosciPrawnejDto> ograniczeniaZdolnosciPrawnej = new ArrayList<>();
 
   private String link;
 
