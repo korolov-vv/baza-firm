@@ -29,7 +29,7 @@ public class ListaJdgPobieranieService {
         .getUuid();
   }
 
-  @Transactional(TxType.REQUIRES_NEW)
+  @Transactional
   protected UUID zapisz(ListaJdgPobieranie listaJdgPobieranie) {
     return listaJdgPobieranieRepository.saveAndFlush(listaJdgPobieranie).getUuid();
   }

@@ -26,7 +26,7 @@ class StworzPodmiotGospodarczyZJdgUseCase {
   private final JdgService jdgService;
 
 
-  @Transactional(Transactional.TxType.REQUIRES_NEW)
+  @Transactional
   public UUID stworzPodmiotGospodarczy(JdgSzczegolyDto jdgSzczegolyDto) {
     UUID adresKorespondencyjnyUuid;
     UUID adresDzialalnosciUuid;

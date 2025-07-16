@@ -62,7 +62,6 @@ public class PobierzDaneZCeidgService {
     }
   }
 
-  @Transactional
   public void pobierajSzczegolyNowychJdg() {
     log.info("Zaczynam pobieranie szczegolow nowych jdg");
 
@@ -78,7 +77,6 @@ public class PobierzDaneZCeidgService {
     log.info("Skończono pobieranie szczegolow nowych jdg");
   }
 
-  @Transactional
   public void pobierajSzczegolyStareDaneJdg() {
     log.info("Zaczynam pobieranie szczegolow starych jdg");
     ListaJdgPobieranie lista;

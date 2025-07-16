@@ -25,7 +25,7 @@ class ZaktualizujPodmiotGospodarczyZJdgUseCase {
   private final PodmiotyGospodarczeMapper podmiotyGospodarczeMapper;
   private final JdgService jdgService;
 
-  @Transactional(Transactional.TxType.REQUIRES_NEW)
+  @Transactional
   public UUID zaktualizujPodmiotGospodarczy(JdgSzczegolyDto jdgSzczegolyDto) {
     UUID adresKorespondencyjnyUuid;
     UUID adresDzialalnosciUuid;

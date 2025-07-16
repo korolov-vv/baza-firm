@@ -4,8 +4,10 @@ import com.baza.firmy.integration.ceidg.CeidgClient;
 import com.baza.firmy.response.Dto;
 import com.baza.firmy.response.ListaJdgDto;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 class CeidgService {
@@ -17,6 +19,8 @@ class CeidgService {
   }
 
   public Dto pobierzSzczegolyJdg(String link) {
-    return ceidgClient.pobierzSzczegolyJdg(link);
+    final var response = ceidgClient.pobierzSzczegolyJdg(link);
+    log.info("Pobrano szczegóły JDG link: {},\n response: {}", link, response);
+    return response;
   }
 }
