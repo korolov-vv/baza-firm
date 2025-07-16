@@ -27,7 +27,7 @@ import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
 @Service
-class PodmiotGospodarczyService {
+class SpolkaService {
 
   private final AdresFacade adresFacade;
   private final PkdFasade pkdFasade;

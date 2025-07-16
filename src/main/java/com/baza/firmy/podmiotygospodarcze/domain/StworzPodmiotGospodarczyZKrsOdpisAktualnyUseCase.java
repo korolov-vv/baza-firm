@@ -21,7 +21,7 @@ class StworzPodmiotGospodarczyZKrsOdpisAktualnyUseCase {
   private final PkdQueryFasade pkdQueryFasade;
   private final PodmiotyGospodarczeRepository podmiotyGospodarczeRepository;
   private final PodmiotyGospodarczeMapper podmiotyGospodarczeMapper;
-  private final PodmiotGospodarczyService podmiotGospodarczyService;
+  private final SpolkaService spolkaService;
 
   @Transactional
   public UUID stworzPodmiotGospodarczy(OdpisAktualnyResponse odpisAktualnyResponse) {
@@ -33,22 +33,22 @@ class StworzPodmiotGospodarczyZKrsOdpisAktualnyUseCase {
     final var dzial3 = odpisAktualnyResponse.odpis().dane().dzial3();
 
     if (Objects.equals(dzial1.siedzibaIAdres().siedziba(), dzial1.siedzibaIAdres().adres())) {
-      UUID adresUuid = podmiotGospodarczyService.zaktualizujAdresKorespondencyjny(dzial1.siedzibaIAdres());
+      UUID adresUuid = spolkaService.zaktualizujAdresKorespondencyjny(dzial1.siedzibaIAdres());
       adresKorespondencyjnyUuid = adresUuid;
       adresDzialalnosciUuid = adresUuid;
     } else {
-      adresKorespondencyjnyUuid = podmiotGospodarczyService.zaktualizujAdresKorespondencyjny(dzial1.siedzibaIAdres());
-      adresDzialalnosciUuid = podmiotGospodarczyService.zaktualizujAdresDzialalnoszci(dzial1.siedzibaIAdres());
+      adresKorespondencyjnyUuid = spolkaService.zaktualizujAdresKorespondencyjny(dzial1.siedzibaIAdres());
+      adresDzialalnosciUuid = spolkaService.zaktualizujAdresDzialalnoszci(dzial1.siedzibaIAdres());
     }
 
-    UUID pkdGlownyUuid = podmiotGospodarczyService.zaktualizujPkdGlowny(dzial3);
-    List<UUID> pozostalePkdUuidList = podmiotGospodarczyService.zaktualizujPkdDodatkowe(dzial3);
+    UUID pkdGlownyUuid = spolkaService.zaktualizujPkdGlowny(dzial3);
+    List<UUID> pozostalePkdUuidList = spolkaService.zaktualizujPkdDodatkowe(dzial3);
 
     PodmiotGospodarczeEntity podmiotGospodarczeEntity = podmiotyGospodarczeMapper.toJdgEntity(odpisAktualnyResponse);
 
-    podmiotGospodarczyService.ustawWspolnikow(odpisAktualnyResponse, podmiotGospodarczeEntity);
+    spolkaService.ustawWspolnikow(odpisAktualnyResponse, podmiotGospodarczeEntity);
 
-    podmiotGospodarczyService.ustawReprezentacje(odpisAktualnyResponse, podmiotGospodarczeEntity);
+    spolkaService.ustawReprezentacje(odpisAktualnyResponse, podmiotGospodarczeEntity);
 
     if (adresDzialalnosciUuid != null) {
       podmiotGospodarczeEntity.setAdresDzialalnosci(adresQueryFacade.getAdresPoUuid(adresDzialalnosciUuid));

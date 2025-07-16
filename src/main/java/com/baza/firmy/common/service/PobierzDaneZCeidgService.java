@@ -101,7 +101,7 @@ public class PobierzDaneZCeidgService {
           startTime.set(System.currentTimeMillis());
 
           if (szczegolyDto != null) {
-            szczegolyDto.getFirma().forEach(podmiotyGospodarczeFacade::stworzPodmiotGospodarczy);
+            szczegolyDto.getFirma().forEach(podmiotyGospodarczeFacade::zaktualizujPodmiotGospodarczy);
           } else {
             log.info("szczegolyDto dla {} is NULL", link);
           }
@@ -163,13 +163,11 @@ public class PobierzDaneZCeidgService {
 
           if (szczegolyDto != null) {
             szczegolyDto.getFirma().forEach(dzialalnosc -> {
-              if (!podmiotyGospodarczeQueryFacade.existsByWlascicielNipAndDataRozpoczecia(
+              if (!podmiotyGospodarczeQueryFacade.existsByNipAndDataRozpoczecia(
                   dzialalnosc.getWlasciciel().getNip(), LocalDate.parse(dzialalnosc.getDataRozpoczecia()))) {
                 podmiotyGospodarczeFacade.stworzPodmiotGospodarczy(dzialalnosc);
               } else {
-                // TODO dorobić aktualizację dla aktualizacji
-                log.info("PobierzDaneCeidgService: pobierzDaneFirm(): JDG dla NIP: {}, nazwa: {} oraz dataRozpoczecia: {} już istnieje",
-                    firma.getWlasciciel().getNip(), firma.getNazwa(), firma.getDataRozpoczecia());
+                podmiotyGospodarczeFacade.zaktualizujPodmiotGospodarczy(dzialalnosc);
               }
             });
           } else {

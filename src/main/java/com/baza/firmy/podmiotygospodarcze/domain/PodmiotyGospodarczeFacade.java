@@ -15,10 +15,17 @@ public class PodmiotyGospodarczeFacade {
   private final StworzPodmiotGospodarczyZJdgUseCase stworzPodmiotGospodarczyZJdgUseCase;
   private final StworzPodmiotGospodarczyZKrsOdpisAktualnyUseCase stworzPodmiotGospodarczyZKrsOdpisAktualnyUseCase;
   private final ZaktualizujPodmiotGospodarczyZKrsOdpisAktualnyUseCase zaktualizujPodmiotGospodarczyZKrsOdpisAktualnyUseCase;
+  private final ZaktualizujPodmiotGospodarczyZJdgUseCase zaktualizujPodmiotGospodarczyZJdgUseCase;
 
   public UUID stworzPodmiotGospodarczy(JdgSzczegolyDto jdgSzczegolyDto) {
     UUID savedUuid = stworzPodmiotGospodarczyZJdgUseCase.stworzPodmiotGospodarczy(jdgSzczegolyDto);
     log.info("Zapisano Podmiot Gospodarczy: UUID = {}", savedUuid);
+    return savedUuid;
+  }
+
+  public UUID zaktualizujPodmiotGospodarczy(JdgSzczegolyDto jdgSzczegolyDto) {
+    UUID savedUuid = zaktualizujPodmiotGospodarczyZJdgUseCase.zaktualizujPodmiotGospodarczy(jdgSzczegolyDto);
+    log.info("Zaktualizowano Podmiot Gospodarczy: UUID = {}", savedUuid);
     return savedUuid;
   }
 
@@ -30,6 +37,6 @@ public class PodmiotyGospodarczeFacade {
 
   public void zaktualizujPodmiotGospodarczy(OdpisAktualnyResponse odpis) {
     UUID savedUuid = zaktualizujPodmiotGospodarczyZKrsOdpisAktualnyUseCase.zaktualizujPodmiotGospodarczy(odpis);
-    log.info("Zapisano Podmiot Gospodarczy: UUID = {}", savedUuid);
+    log.info("Zaktualizowano Podmiot Gospodarczy: UUID = {}", savedUuid);
   }
 }
