@@ -10,5 +10,5 @@ interface ListaZaktualizowanychWpisowKrsQueryRepository extends JpaRepository<Li
 
   boolean existsByStatusPobierania(StatusPobieraniaEnum statusPobierania);
 
-  Optional<ListaZaktualizowanychWpisowKrsViewEntity> findFirstByStatusPobierania(StatusPobieraniaEnum status);
+  Optional<ListaZaktualizowanychWpisowKrsViewEntity> findFirstByStatusPobieraniaOrderByCreateDateDesc(StatusPobieraniaEnum status);
 }

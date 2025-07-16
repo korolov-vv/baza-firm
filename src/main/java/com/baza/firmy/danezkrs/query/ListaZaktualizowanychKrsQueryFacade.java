@@ -20,7 +20,7 @@ public class ListaZaktualizowanychKrsQueryFacade {
   }
 
   public ListaZmienionychWpisowDto pobierzNiepodjetaListeZaktualizowanychWpisow() {
-    return repository.findFirstByStatusPobierania(StatusPobieraniaEnum.NIEPODJETE)
+    return repository.findFirstByStatusPobieraniaOrderByCreateDateDesc(StatusPobieraniaEnum.NIEPODJETE)
         .map(lista -> ListaZmienionychWpisowDto.builder()
             .uuid(lista.getUuid())
             .identyfikatoryWpisow(
