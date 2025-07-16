@@ -12,7 +12,7 @@ interface PodmiotyGospodarczeQueryRepository extends JpaRepository<PodmiotGospod
 
   boolean existsByCeidgId(UUID ceidgId);
 
-  boolean existsByWlascicielNipAndDataRozpoczecia(String wlascicielNip, LocalDate dataRozpoczecia);
+  boolean existsByNipAndDataRozpoczecia(String nip, LocalDate dataRozpoczecia);
 
   List<PodmiotGospodarczeViewEntity> findAllByWlascicielNipIsNull();
 

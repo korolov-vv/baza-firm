@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component;
 @Component
 @Slf4j
 @RequiredArgsConstructor
-class StworzPodmiotGospodarczyZJdgUseCase {
+class ZaktualizujPodmiotGospodarczyZJdgUseCase {
 
   private final OsobaQueryFacade osobaQueryFacade;
   private final AdresQueryFacade adresQueryFacade;
@@ -25,9 +25,8 @@ class StworzPodmiotGospodarczyZJdgUseCase {
   private final PodmiotyGospodarczeMapper podmiotyGospodarczeMapper;
   private final JdgService jdgService;
 
-
   @Transactional(Transactional.TxType.REQUIRES_NEW)
-  public UUID stworzPodmiotGospodarczy(JdgSzczegolyDto jdgSzczegolyDto) {
+  public UUID zaktualizujPodmiotGospodarczy(JdgSzczegolyDto jdgSzczegolyDto) {
     UUID adresKorespondencyjnyUuid;
     UUID adresDzialalnosciUuid;
     if (Objects.equals(jdgSzczegolyDto.getAdresDzialalnosci(), jdgSzczegolyDto.getAdresKorespondencyjny())) {
@@ -42,7 +41,15 @@ class StworzPodmiotGospodarczyZJdgUseCase {
     UUID pkdGlownyUuid = jdgService.zaktualizujPkdGlowny(jdgSzczegolyDto);
     List<UUID> pozostalePkdUuidList = jdgService.zaktualizujPkdDodatkowe(jdgSzczegolyDto);
 
-    PodmiotGospodarczeEntity podmiotGospodarczeEntity = podmiotyGospodarczeMapper.toJdgEntity(jdgSzczegolyDto);
+    PodmiotGospodarczeEntity podmiotGospodarczeEntity = podmiotyGospodarczeRepository.findByNipAndDataRozpoczecia(
+        jdgSzczegolyDto.getWlasciciel().getNip(), LocalDate.parse(jdgSzczegolyDto.getDataRozpoczecia())
+        )
+        .orElseThrow(() -> new IllegalArgumentException(
+            String.format("Podmiot gospodarczy o podanym numere NIP: %s oraz dacie rozpoczęcia działalności: %s nie istnieje",
+                jdgSzczegolyDto.getWlasciciel().getNip(), jdgSzczegolyDto.getDataRozpoczecia())));
+
+
+    podmiotyGospodarczeMapper.toJdgEntity(podmiotGospodarczeEntity, jdgSzczegolyDto);
 
     if (adresDzialalnosciUuid != null) {
       podmiotGospodarczeEntity.setAdresDzialalnosci(adresQueryFacade.getAdresPoUuid(adresDzialalnosciUuid));
@@ -61,7 +68,8 @@ class StworzPodmiotGospodarczyZJdgUseCase {
     }
 
     if (!pozostalePkdUuidList.isEmpty()) {
-      podmiotGospodarczeEntity.setPkd(pkdQueryFasade.findByUuidList(pozostalePkdUuidList));
+      podmiotGospodarczeEntity.getPkd().clear();
+      podmiotGospodarczeEntity.getPkd().addAll(pkdQueryFasade.findByUuidList(pozostalePkdUuidList));
     }
 
     if (podmiotGospodarczeEntity.getRokPkd() == null) {

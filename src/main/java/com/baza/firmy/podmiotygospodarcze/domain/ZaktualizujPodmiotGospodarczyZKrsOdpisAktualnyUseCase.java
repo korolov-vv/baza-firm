@@ -1,28 +1,12 @@
 package com.baza.firmy.podmiotygospodarcze.domain;
 
-import com.baza.firmy.adresy.domain.AdresFacade;
 import com.baza.firmy.adresy.query.AdresQueryFacade;
-import com.baza.firmy.osoby.domain.dto.ReprezentacjaDto;
-import com.baza.firmy.osoby.domain.dto.ReprezentantDto;
-import com.baza.firmy.osoby.domain.dto.WlascicielDto;
-import com.baza.firmy.pkd.domain.PkdFasade;
-import com.baza.firmy.pkd.domain.dto.PkdDto;
 import com.baza.firmy.pkd.query.PkdQueryFasade;
-import com.baza.firmy.pkd.query.PkdViewEntity;
-import com.baza.firmy.response.krs.CzlonekZarzaduResponseResponse;
-import com.baza.firmy.response.krs.Dzial3Response;
 import com.baza.firmy.response.krs.OdpisAktualnyResponse;
-import com.baza.firmy.response.krs.SiedzibaIAdresResponse;
-import com.baza.firmy.response.krs.WspolnikSpzooResponse;
 import jakarta.transaction.Transactional;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -37,7 +21,7 @@ class ZaktualizujPodmiotGospodarczyZKrsOdpisAktualnyUseCase {
   private final PkdQueryFasade pkdQueryFasade;
   private final PodmiotyGospodarczeRepository podmiotyGospodarczeRepository;
   private final PodmiotyGospodarczeMapper podmiotyGospodarczeMapper;
-  private final PodmiotGospodarczyService podmiotGospodarczyService;
+  private final SpolkaService spolkaService;
 
   @Transactional
   public UUID zaktualizujPodmiotGospodarczy(OdpisAktualnyResponse odpisAktualnyResponse) {
@@ -48,25 +32,28 @@ class ZaktualizujPodmiotGospodarczyZKrsOdpisAktualnyUseCase {
     final var dzial3 = odpisAktualnyResponse.odpis().dane().dzial3();
 
     if (Objects.equals(dzial1.siedzibaIAdres().siedziba(), dzial1.siedzibaIAdres().adres())) {
-      UUID adresUuid = podmiotGospodarczyService.zaktualizujAdresKorespondencyjny(dzial1.siedzibaIAdres());
+      UUID adresUuid = spolkaService.zaktualizujAdresKorespondencyjny(dzial1.siedzibaIAdres());
       adresKorespondencyjnyUuid = adresUuid;
       adresDzialalnosciUuid = adresUuid;
     } else {
-      adresKorespondencyjnyUuid = podmiotGospodarczyService.zaktualizujAdresKorespondencyjny(dzial1.siedzibaIAdres());
-      adresDzialalnosciUuid = podmiotGospodarczyService.zaktualizujAdresDzialalnoszci(dzial1.siedzibaIAdres());
+      adresKorespondencyjnyUuid = spolkaService.zaktualizujAdresKorespondencyjny(dzial1.siedzibaIAdres());
+      adresDzialalnosciUuid = spolkaService.zaktualizujAdresDzialalnoszci(dzial1.siedzibaIAdres());
     }
 
-    UUID pkdGlownyUuid = podmiotGospodarczyService.zaktualizujPkdGlowny(dzial3);
-    List<UUID> pozostalePkdUuidList = podmiotGospodarczyService.zaktualizujPkdDodatkowe(dzial3);
+    UUID pkdGlownyUuid = spolkaService.zaktualizujPkdGlowny(dzial3);
+    List<UUID> pozostalePkdUuidList = spolkaService.zaktualizujPkdDodatkowe(dzial3);
 
-    PodmiotGospodarczeEntity podmiotGospodarczeEntity = podmiotyGospodarczeRepository.findByNumerKrs(odpisAktualnyResponse.odpis().naglowekA().numerKRS())
-        .orElseThrow(() -> new IllegalArgumentException("Podmiot gospodarczy o podanym KRS nie istnieje"));
+    PodmiotGospodarczeEntity podmiotGospodarczeEntity =
+        podmiotyGospodarczeRepository.findByNumerKrs(odpisAktualnyResponse.odpis().naglowekA().numerKRS())
+            .orElseThrow(() -> new IllegalArgumentException(
+                String.format("Podmiot gospodarczy o podanym KRS: %s nie istnieje",
+                    odpisAktualnyResponse.odpis().naglowekA().numerKRS())));
 
     podmiotyGospodarczeMapper.toJdgEntity(podmiotGospodarczeEntity, odpisAktualnyResponse);
 
-    podmiotGospodarczyService.ustawWspolnikow(odpisAktualnyResponse, podmiotGospodarczeEntity);
+    spolkaService.ustawWspolnikow(odpisAktualnyResponse, podmiotGospodarczeEntity);
 
-    podmiotGospodarczyService.ustawReprezentacje(odpisAktualnyResponse, podmiotGospodarczeEntity);
+    spolkaService.ustawReprezentacje(odpisAktualnyResponse, podmiotGospodarczeEntity);
 
     if (adresDzialalnosciUuid != null) {
       podmiotGospodarczeEntity.setAdresDzialalnosci(adresQueryFacade.getAdresPoUuid(adresDzialalnosciUuid));

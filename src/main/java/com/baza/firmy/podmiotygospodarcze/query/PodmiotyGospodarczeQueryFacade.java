@@ -37,9 +37,9 @@ public class PodmiotyGospodarczeQueryFacade {
     return podmiotyGospodarczeQueryRepository.existsByCeidgId(ceidgId);
   }
 
-  public boolean existsByWlascicielNipAndDataRozpoczecia(
+  public boolean existsByNipAndDataRozpoczecia(
       String wlascicielNip, LocalDate dataRozpoczecia) {
-    return podmiotyGospodarczeQueryRepository.existsByWlascicielNipAndDataRozpoczecia(
+    return podmiotyGospodarczeQueryRepository.existsByNipAndDataRozpoczecia(
         wlascicielNip, dataRozpoczecia);
   }
 

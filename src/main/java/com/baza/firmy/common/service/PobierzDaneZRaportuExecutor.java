@@ -101,7 +101,7 @@ public class PobierzDaneZRaportuExecutor {
       return true;
     }
 
-    return podmiotyGospodarczeQueryFacade.existsByWlascicielNipAndDataRozpoczecia(
+    return podmiotyGospodarczeQueryFacade.existsByNipAndDataRozpoczecia(
         dzialalnosc.getNip().orElse(null),
         dzialalnosc.getDataRozpoczeciaDzialalnosci().map(LocalDate::parse).orElse(null));
   }
