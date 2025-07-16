@@ -10,7 +10,6 @@ import com.baza.firmy.response.krs.OdpisResponse;
 import com.baza.firmy.response.krs.SiedzibaIAdresResponse;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.time.format.FormatStyle;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
@@ -135,7 +134,7 @@ interface PodmiotyGospodarczeMapper {
     if (date == null) {
       return null;
     }
-    return LocalDate.parse(date, DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT));
+    return LocalDate.parse(date, DateTimeFormatter.ofPattern("dd.MM.yyyy"));
   }
 
   @Named("setNazwa")
