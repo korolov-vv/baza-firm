@@ -1,6 +1,5 @@
 package com.baza.firmy.integration.krs;
 
-import static com.baza.firmy.constants.WebClientConstants.CALL_TO_CEIDG_FAILED_LOG;
 import static com.baza.firmy.constants.WebClientConstants.CALL_TO_KRS_FAILED_LOG;
 
 import com.baza.firmy.response.krs.ListaZmienionychWpisowKrsResponse;
@@ -52,7 +51,7 @@ public class KrsClient {
             .bodyToMono(OdpisAktualnyResponse.class)
             .onErrorResume(
                 throwable -> {
-                  log.error(CALL_TO_CEIDG_FAILED_LOG, throwable.getMessage());
+                  log.error(CALL_TO_KRS_FAILED_LOG, throwable.getMessage());
                   return Mono.error(throwable);
                 })
             .block();
