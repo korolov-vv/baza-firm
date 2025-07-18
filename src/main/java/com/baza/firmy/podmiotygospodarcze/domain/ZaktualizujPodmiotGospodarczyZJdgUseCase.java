@@ -49,7 +49,7 @@ class ZaktualizujPodmiotGospodarczyZJdgUseCase {
                 jdgSzczegolyDto.getWlasciciel().getNip(), jdgSzczegolyDto.getDataRozpoczecia())));
 
 
-    podmiotyGospodarczeMapper.toJdgEntity(podmiotGospodarczeEntity, jdgSzczegolyDto);
+    podmiotyGospodarczeMapper.toPodmiotGospodarczyEntity(podmiotGospodarczeEntity, jdgSzczegolyDto);
 
     if (adresDzialalnosciUuid != null) {
       podmiotGospodarczeEntity.setAdresDzialalnosci(adresQueryFacade.getAdresPoUuid(adresDzialalnosciUuid));

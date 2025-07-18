@@ -42,7 +42,7 @@ class StworzPodmiotGospodarczyZJdgUseCase {
     UUID pkdGlownyUuid = jdgService.zaktualizujPkdGlowny(jdgSzczegolyDto);
     List<UUID> pozostalePkdUuidList = jdgService.zaktualizujPkdDodatkowe(jdgSzczegolyDto);
 
-    PodmiotGospodarczeEntity podmiotGospodarczeEntity = podmiotyGospodarczeMapper.toJdgEntity(jdgSzczegolyDto);
+    PodmiotGospodarczeEntity podmiotGospodarczeEntity = podmiotyGospodarczeMapper.toPodmiotGospodarczyEntity(jdgSzczegolyDto);
 
     if (adresDzialalnosciUuid != null) {
       podmiotGospodarczeEntity.setAdresDzialalnosci(adresQueryFacade.getAdresPoUuid(adresDzialalnosciUuid));

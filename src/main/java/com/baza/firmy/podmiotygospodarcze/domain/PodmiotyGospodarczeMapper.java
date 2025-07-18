@@ -44,7 +44,7 @@ interface PodmiotyGospodarczeMapper {
   @Mapping(target = "dataZakonczenia", source = "dataZakonczenia", qualifiedByName = "setDate")
   @Mapping(target = "dataWykreslenia", source = "dataWykreslenia", qualifiedByName = "setDate")
   @Mapping(target = "nazwa", source = "nazwa", qualifiedByName = "setNazwa")
-  PodmiotGospodarczeEntity toJdgEntity(JdgSzczegolyDto dto);
+  PodmiotGospodarczeEntity toPodmiotGospodarczyEntity(JdgSzczegolyDto dto);
 
   @Mapping(target = "id", ignore = true)
   @Mapping(target = "uuid", expression = "java(UUID.randomUUID())")
@@ -69,7 +69,7 @@ interface PodmiotyGospodarczeMapper {
   @Mapping(target = "dataWznowienia", source = "dataWznowienia", qualifiedByName = "setDate")
 
   @Mapping(target = "nazwa", source = "nazwa", qualifiedByName = "setNazwa")
-  PodmiotGospodarczeEntity toJdgEntity(@MappingTarget PodmiotGospodarczeEntity entity, JdgSzczegolyDto dto);
+  PodmiotGospodarczeEntity toPodmiotGospodarczyEntity(@MappingTarget PodmiotGospodarczeEntity entity, JdgSzczegolyDto dto);
 
   @Mapping(target = "id", ignore = true)
   @Mapping(target = "uuid", expression = "java(UUID.randomUUID())")
@@ -94,7 +94,7 @@ interface PodmiotyGospodarczeMapper {
   @Mapping(target = "nazwa", source = "odpis.dane.dzial1.danePodmiotu.nazwa")
   @Mapping(target = "status", ignore = true)
   @Mapping(target = "email", expression = "java(Objects.nonNull(odpisAktualnyResponse.odpis().dane().dzial1().siedzibaIAdres()) ? odpisAktualnyResponse.odpis().dane().dzial1().siedzibaIAdres().adresPocztyElektronicznej() : Strings.EMPTY)")
-  PodmiotGospodarczeEntity toJdgEntity(OdpisAktualnyResponse odpisAktualnyResponse);
+  PodmiotGospodarczeEntity toPodmiotGospodarczyEntity(OdpisAktualnyResponse odpisAktualnyResponse);
 
   @Mapping(target = "id", ignore = true)
   @Mapping(target = "uuid", expression = "java(UUID.randomUUID())")
@@ -119,7 +119,7 @@ interface PodmiotyGospodarczeMapper {
   @Mapping(target = "nazwa", source = "odpis.dane.dzial1.danePodmiotu.nazwa")
   @Mapping(target = "status", ignore = true)
   @Mapping(target = "email", expression = "java(Objects.nonNull(odpisAktualnyResponse.odpis().dane().dzial1().siedzibaIAdres()) ? odpisAktualnyResponse.odpis().dane().dzial1().siedzibaIAdres().adresPocztyElektronicznej() : Strings.EMPTY)")
-  PodmiotGospodarczeEntity toJdgEntity(@MappingTarget PodmiotGospodarczeEntity entity, OdpisAktualnyResponse odpisAktualnyResponse);
+  PodmiotGospodarczeEntity toPodmiotGospodarczyEntity(@MappingTarget PodmiotGospodarczeEntity entity, OdpisAktualnyResponse odpisAktualnyResponse);
 
   @Named("setDate")
   default LocalDate setDate(String date) {

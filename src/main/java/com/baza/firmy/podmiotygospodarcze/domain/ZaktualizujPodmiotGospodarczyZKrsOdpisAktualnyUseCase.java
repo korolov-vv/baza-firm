@@ -49,7 +49,7 @@ class ZaktualizujPodmiotGospodarczyZKrsOdpisAktualnyUseCase {
                 String.format("Podmiot gospodarczy o podanym KRS: %s nie istnieje",
                     odpisAktualnyResponse.odpis().naglowekA().numerKRS())));
 
-    podmiotyGospodarczeMapper.toJdgEntity(podmiotGospodarczeEntity, odpisAktualnyResponse);
+    podmiotyGospodarczeMapper.toPodmiotGospodarczyEntity(podmiotGospodarczeEntity, odpisAktualnyResponse);
 
     spolkaService.ustawWspolnikow(odpisAktualnyResponse, podmiotGospodarczeEntity);
 

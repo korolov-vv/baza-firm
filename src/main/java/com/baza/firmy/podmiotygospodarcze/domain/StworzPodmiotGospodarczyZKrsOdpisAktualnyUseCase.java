@@ -1,6 +1,7 @@
 package com.baza.firmy.podmiotygospodarcze.domain;
 
 import com.baza.firmy.adresy.query.AdresQueryFacade;
+import com.baza.firmy.constants.enums.BusinessStatus;
 import com.baza.firmy.pkd.query.PkdQueryFasade;
 import com.baza.firmy.response.krs.OdpisAktualnyResponse;
 import jakarta.transaction.Transactional;
@@ -32,7 +33,8 @@ class StworzPodmiotGospodarczyZKrsOdpisAktualnyUseCase {
     final var dzial1 = odpisAktualnyResponse.odpis().dane().dzial1();
     final var dzial3 = odpisAktualnyResponse.odpis().dane().dzial3();
 
-    if (Objects.equals(dzial1.siedzibaIAdres().siedziba(), dzial1.siedzibaIAdres().adres())) {
+    if (Objects.nonNull(dzial1.siedzibaIAdres()) &&
+        Objects.equals(dzial1.siedzibaIAdres().siedziba(), dzial1.siedzibaIAdres().adres())) {
       UUID adresUuid = spolkaService.zaktualizujAdresKorespondencyjny(dzial1.siedzibaIAdres());
       adresKorespondencyjnyUuid = adresUuid;
       adresDzialalnosciUuid = adresUuid;
@@ -44,7 +46,8 @@ class StworzPodmiotGospodarczyZKrsOdpisAktualnyUseCase {
     UUID pkdGlownyUuid = spolkaService.zaktualizujPkdGlowny(dzial3);
     List<UUID> pozostalePkdUuidList = spolkaService.zaktualizujPkdDodatkowe(dzial3);
 
-    PodmiotGospodarczeEntity podmiotGospodarczeEntity = podmiotyGospodarczeMapper.toJdgEntity(odpisAktualnyResponse);
+    PodmiotGospodarczeEntity podmiotGospodarczeEntity = podmiotyGospodarczeMapper.toPodmiotGospodarczyEntity(odpisAktualnyResponse);
+    podmiotGospodarczeEntity.setStatus(BusinessStatus.AKTYWNY);
 
     spolkaService.ustawWspolnikow(odpisAktualnyResponse, podmiotGospodarczeEntity);
 
