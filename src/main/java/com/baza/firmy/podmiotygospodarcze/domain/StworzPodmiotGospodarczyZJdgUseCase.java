@@ -42,32 +42,32 @@ class StworzPodmiotGospodarczyZJdgUseCase {
     UUID pkdGlownyUuid = jdgService.zaktualizujPkdGlowny(jdgSzczegolyDto);
     List<UUID> pozostalePkdUuidList = jdgService.zaktualizujPkdDodatkowe(jdgSzczegolyDto);
 
-    PodmiotGospodarczeEntity podmiotGospodarczeEntity = podmiotyGospodarczeMapper.toPodmiotGospodarczyEntity(jdgSzczegolyDto);
+    PodmiotGospodarczyEntity podmiotGospodarczyEntity = podmiotyGospodarczeMapper.toPodmiotGospodarczyEntity(jdgSzczegolyDto);
 
     if (adresDzialalnosciUuid != null) {
-      podmiotGospodarczeEntity.setAdresDzialalnosci(adresQueryFacade.getAdresPoUuid(adresDzialalnosciUuid));
+      podmiotGospodarczyEntity.setAdresDzialalnosci(adresQueryFacade.getAdresPoUuid(adresDzialalnosciUuid));
     }
 
     if (adresKorespondencyjnyUuid != null) {
-      podmiotGospodarczeEntity.setAdresKorespondencyjny(adresQueryFacade.getAdresPoUuid(adresKorespondencyjnyUuid));
+      podmiotGospodarczyEntity.setAdresKorespondencyjny(adresQueryFacade.getAdresPoUuid(adresKorespondencyjnyUuid));
     }
 
     if (wlascicielUuid != null) {
-      podmiotGospodarczeEntity.setWlasciciel(osobaQueryFacade.findByUuid(wlascicielUuid));
+      podmiotGospodarczyEntity.setWlasciciel(osobaQueryFacade.findByUuid(wlascicielUuid));
     }
 
     if (pkdGlownyUuid != null) {
-      podmiotGospodarczeEntity.setPkdGlowny(pkdQueryFasade.findByUuid(pkdGlownyUuid));
+      podmiotGospodarczyEntity.setPkdGlowny(pkdQueryFasade.findByUuid(pkdGlownyUuid));
     }
 
     if (!pozostalePkdUuidList.isEmpty()) {
-      podmiotGospodarczeEntity.setPkd(pkdQueryFasade.findByUuidList(pozostalePkdUuidList));
+      podmiotGospodarczyEntity.setPkd(pkdQueryFasade.findByUuidList(pozostalePkdUuidList));
     }
 
-    if (podmiotGospodarczeEntity.getRokPkd() == null) {
-      podmiotGospodarczeEntity.setRokPkd(podmiotGospodarczeEntity.getDataRozpoczecia().isBefore(LocalDate.of(2025, 01, 01)) ? "2007" : "2025");
+    if (podmiotGospodarczyEntity.getRokPkd() == null) {
+      podmiotGospodarczyEntity.setRokPkd(podmiotGospodarczyEntity.getDataRozpoczecia().isBefore(LocalDate.of(2025, 01, 01)) ? "2007" : "2025");
     }
 
-    return podmiotyGospodarczeRepository.save(podmiotGospodarczeEntity).getUuid();
+    return podmiotyGospodarczeRepository.save(podmiotGospodarczyEntity).getUuid();
   }
 }

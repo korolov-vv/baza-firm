@@ -41,7 +41,7 @@ class ZaktualizujPodmiotGospodarczyZJdgUseCase {
     UUID pkdGlownyUuid = jdgService.zaktualizujPkdGlowny(jdgSzczegolyDto);
     List<UUID> pozostalePkdUuidList = jdgService.zaktualizujPkdDodatkowe(jdgSzczegolyDto);
 
-    PodmiotGospodarczeEntity podmiotGospodarczeEntity = podmiotyGospodarczeRepository.findByNipAndDataRozpoczecia(
+    PodmiotGospodarczyEntity podmiotGospodarczyEntity = podmiotyGospodarczeRepository.findByNipAndDataRozpoczecia(
         jdgSzczegolyDto.getWlasciciel().getNip(), LocalDate.parse(jdgSzczegolyDto.getDataRozpoczecia())
         )
         .orElseThrow(() -> new IllegalArgumentException(
@@ -49,33 +49,33 @@ class ZaktualizujPodmiotGospodarczyZJdgUseCase {
                 jdgSzczegolyDto.getWlasciciel().getNip(), jdgSzczegolyDto.getDataRozpoczecia())));
 
 
-    podmiotyGospodarczeMapper.toPodmiotGospodarczyEntity(podmiotGospodarczeEntity, jdgSzczegolyDto);
+    podmiotyGospodarczeMapper.toPodmiotGospodarczyEntity(podmiotGospodarczyEntity, jdgSzczegolyDto);
 
     if (adresDzialalnosciUuid != null) {
-      podmiotGospodarczeEntity.setAdresDzialalnosci(adresQueryFacade.getAdresPoUuid(adresDzialalnosciUuid));
+      podmiotGospodarczyEntity.setAdresDzialalnosci(adresQueryFacade.getAdresPoUuid(adresDzialalnosciUuid));
     }
 
     if (adresKorespondencyjnyUuid != null) {
-      podmiotGospodarczeEntity.setAdresKorespondencyjny(adresQueryFacade.getAdresPoUuid(adresKorespondencyjnyUuid));
+      podmiotGospodarczyEntity.setAdresKorespondencyjny(adresQueryFacade.getAdresPoUuid(adresKorespondencyjnyUuid));
     }
 
     if (wlascicielUuid != null) {
-      podmiotGospodarczeEntity.setWlasciciel(osobaQueryFacade.findByUuid(wlascicielUuid));
+      podmiotGospodarczyEntity.setWlasciciel(osobaQueryFacade.findByUuid(wlascicielUuid));
     }
 
     if (pkdGlownyUuid != null) {
-      podmiotGospodarczeEntity.setPkdGlowny(pkdQueryFasade.findByUuid(pkdGlownyUuid));
+      podmiotGospodarczyEntity.setPkdGlowny(pkdQueryFasade.findByUuid(pkdGlownyUuid));
     }
 
     if (!pozostalePkdUuidList.isEmpty()) {
-      podmiotGospodarczeEntity.getPkd().clear();
-      podmiotGospodarczeEntity.getPkd().addAll(pkdQueryFasade.findByUuidList(pozostalePkdUuidList));
+      podmiotGospodarczyEntity.getPkd().clear();
+      podmiotGospodarczyEntity.getPkd().addAll(pkdQueryFasade.findByUuidList(pozostalePkdUuidList));
     }
 
-    if (podmiotGospodarczeEntity.getRokPkd() == null) {
-      podmiotGospodarczeEntity.setRokPkd(podmiotGospodarczeEntity.getDataRozpoczecia().isBefore(LocalDate.of(2025, 01, 01)) ? "2007" : "2025");
+    if (podmiotGospodarczyEntity.getRokPkd() == null) {
+      podmiotGospodarczyEntity.setRokPkd(podmiotGospodarczyEntity.getDataRozpoczecia().isBefore(LocalDate.of(2025, 01, 01)) ? "2007" : "2025");
     }
 
-    return podmiotyGospodarczeRepository.save(podmiotGospodarczeEntity).getUuid();
+    return podmiotyGospodarczeRepository.save(podmiotGospodarczyEntity).getUuid();
   }
 }

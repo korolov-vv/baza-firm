@@ -33,13 +33,13 @@ class SpolkaService {
   private final PkdFasade pkdFasade;
   private final PkdQueryFasade pkdQueryFasade;
 
-  void ustawReprezentacje(OdpisAktualnyResponse odpisAktualnyResponse, PodmiotGospodarczeEntity podmiotGospodarczeEntity) {
+  void ustawReprezentacje(OdpisAktualnyResponse odpisAktualnyResponse, PodmiotGospodarczyEntity podmiotGospodarczyEntity) {
     final var reprezentacja = odpisAktualnyResponse.odpis().dane().dzial2().reprezentacja();
     if (Objects.isNull(reprezentacja)) {
-      podmiotGospodarczeEntity.setReprezentacja(null);
+      podmiotGospodarczyEntity.setReprezentacja(null);
       return;
     }
-    podmiotGospodarczeEntity.setReprezentacja(
+    podmiotGospodarczyEntity.setReprezentacja(
         ReprezentacjaDto.builder()
             .nazwaOrganu(reprezentacja.nazwaOrganu())
             .sposobReprezentacji(reprezentacja.sposobReprezentacji())
@@ -48,8 +48,8 @@ class SpolkaService {
     );
   }
 
-  void ustawWspolnikow(OdpisAktualnyResponse odpisAktualnyResponse, PodmiotGospodarczeEntity podmiotGospodarczeEntity) {
-    podmiotGospodarczeEntity.getWspolnicySpzoo().clear();
+  void ustawWspolnikow(OdpisAktualnyResponse odpisAktualnyResponse, PodmiotGospodarczyEntity podmiotGospodarczyEntity) {
+    podmiotGospodarczyEntity.getWspolnicySpzoo().clear();
 
     if (Objects.isNull(odpisAktualnyResponse) || Objects.isNull(odpisAktualnyResponse.odpis()) ||
         Objects.isNull(odpisAktualnyResponse.odpis().dane()) ||
@@ -58,7 +58,7 @@ class SpolkaService {
       return;
     }
 
-    podmiotGospodarczeEntity.getWspolnicySpzoo().addAll(
+    podmiotGospodarczyEntity.getWspolnicySpzoo().addAll(
         odpisAktualnyResponse.odpis().dane().dzial1().wspolnicySpzoo().stream()
             .map(this::stworzWlasciciela)
             .toList()

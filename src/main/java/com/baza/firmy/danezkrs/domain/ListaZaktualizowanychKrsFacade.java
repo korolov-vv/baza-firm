@@ -22,9 +22,9 @@ public class ListaZaktualizowanychKrsFacade {
   }
 
   public void zmienStatusListyWpisow(UUID uuid, StatusPobieraniaEnum status) {
-    zmienStatusListyWpisowUseCase.zmienStatusListyWpisowUseCase(uuid, status);
+    zmienStatusListyWpisowUseCase.zmienStatusListyWpisow(uuid, status);
   }
   public void zmienStatusListyWpisow(UUID uuid, StatusPobieraniaEnum status, List<String> listaNiepobranychWpisow) {
-    zmienStatusListyWpisowUseCase.zmienStatusListyWpisowUseCase(uuid, status, listaNiepobranychWpisow);
+    zmienStatusListyWpisowUseCase.zmienStatusListyWpisow(uuid, status, listaNiepobranychWpisow);
   }
 }

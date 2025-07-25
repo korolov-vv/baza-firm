@@ -16,7 +16,7 @@ class ZmienStatusListyWpisowUseCase {
   private final ListaZaktualizowanychWpisowKrsRepository repository;
 
   @Transactional
-  public void zmienStatusListyWpisowUseCase(UUID uuid, StatusPobieraniaEnum status) {
+  public void zmienStatusListyWpisow(UUID uuid, StatusPobieraniaEnum status) {
     ListaZaktualizowanychWpisowKrsEntity doAktualizacji = repository.findByUuid(uuid)
         .orElseThrow(() -> new RuntimeException("Nie znaleziono listy zaktualizowanych wpisów KRS o UUID: " + uuid));
 
@@ -25,7 +25,7 @@ class ZmienStatusListyWpisowUseCase {
   }
 
   @Transactional
-  public void zmienStatusListyWpisowUseCase(UUID uuid, StatusPobieraniaEnum status, List<String> listaNiepobranychWpisow) {
+  public void zmienStatusListyWpisow(UUID uuid, StatusPobieraniaEnum status, List<String> listaNiepobranychWpisow) {
     ListaZaktualizowanychWpisowKrsEntity doAktualizacji = repository.findByUuid(uuid)
         .orElseThrow(() -> new RuntimeException("Nie znaleziono listy zaktualizowanych wpisów KRS o UUID: " + uuid));
 

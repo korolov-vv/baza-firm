@@ -1,5 +1,6 @@
 package com.baza.firmy.podmiotygospodarcze.domain;
 
+import com.baza.firmy.danezportaluzewn.domain.dto.FirmaPortalZewnDto;
 import com.baza.firmy.podmiotygospodarcze.domain.dto.JdgSzczegolyDto;
 import com.baza.firmy.response.krs.OdpisAktualnyResponse;
 import java.util.UUID;
@@ -16,6 +17,7 @@ public class PodmiotyGospodarczeFacade {
   private final StworzPodmiotGospodarczyZKrsOdpisAktualnyUseCase stworzPodmiotGospodarczyZKrsOdpisAktualnyUseCase;
   private final ZaktualizujPodmiotGospodarczyZKrsOdpisAktualnyUseCase zaktualizujPodmiotGospodarczyZKrsOdpisAktualnyUseCase;
   private final ZaktualizujPodmiotGospodarczyZJdgUseCase zaktualizujPodmiotGospodarczyZJdgUseCase;
+  private final ZaktualizujDaneKontaktoweUseCase zaktualizujDaneKontaktoweUseCase;
 
   public UUID stworzPodmiotGospodarczy(JdgSzczegolyDto jdgSzczegolyDto) {
     UUID savedUuid = stworzPodmiotGospodarczyZJdgUseCase.stworzPodmiotGospodarczy(jdgSzczegolyDto);
@@ -38,5 +40,9 @@ public class PodmiotyGospodarczeFacade {
   public void zaktualizujPodmiotGospodarczy(OdpisAktualnyResponse odpis) {
     UUID savedUuid = zaktualizujPodmiotGospodarczyZKrsOdpisAktualnyUseCase.zaktualizujPodmiotGospodarczy(odpis);
     log.info("Zaktualizowano Podmiot Gospodarczy: UUID = {}", savedUuid);
+  }
+
+  public void zaktualizujDaneKontaktowe(FirmaPortalZewnDto firma) {
+    zaktualizujDaneKontaktoweUseCase.zaktualizujDaneKontaktowe(firma);
   }
 }

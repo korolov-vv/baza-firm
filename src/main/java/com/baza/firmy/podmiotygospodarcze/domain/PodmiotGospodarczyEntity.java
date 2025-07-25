@@ -49,7 +49,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @Table(name = "podmioty_gospodarcze")
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @EntityListeners(AuditingEntityListener.class)
-class PodmiotGospodarczeEntity {
+class PodmiotGospodarczyEntity {
 
   @Id
   @SequenceGenerator (
