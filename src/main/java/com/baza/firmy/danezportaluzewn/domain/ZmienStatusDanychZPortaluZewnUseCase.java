@@ -3,6 +3,7 @@ package com.baza.firmy.danezportaluzewn.domain;
 import com.baza.firmy.constants.enums.StatusPobieraniaEnum;
 import com.baza.firmy.danezportaluzewn.domain.dto.FirmaPortalZewnDto;
 import jakarta.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
@@ -30,7 +31,12 @@ class ZmienStatusDanychZPortaluZewnUseCase {
     PortalZewnEntity doAktualizacji = repository.findByUuid(uuid)
         .orElseThrow(() -> new RuntimeException("Nie znaleziono danych z portalu zewnętrznego o UUID: " + uuid));
 
-    doAktualizacji.getNiepobraneFirmy().clear();
+    if (doAktualizacji.getNiepobraneFirmy() != null) {
+      doAktualizacji.getNiepobraneFirmy().clear();
+    } else {
+      doAktualizacji.setNiepobraneFirmy(new ArrayList<>());
+    }
+
     doAktualizacji.getNiepobraneFirmy().addAll(listaNiepobranychFirm);
     doAktualizacji.setStatusPobierania(status);
     repository.save(doAktualizacji);

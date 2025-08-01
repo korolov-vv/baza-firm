@@ -68,6 +68,7 @@ class SpolkaService {
   UUID zaktualizujAdresDzialalnoszci(SiedzibaIAdresResponse siedzibaIAdres) {
     return adresFacade.stworzAdres(siedzibaIAdres.adres());
   }
+
   UUID zaktualizujAdresKorespondencyjny(SiedzibaIAdresResponse siedzibaIAdres) {
     return adresFacade.stworzAdres(siedzibaIAdres.siedziba());
   }

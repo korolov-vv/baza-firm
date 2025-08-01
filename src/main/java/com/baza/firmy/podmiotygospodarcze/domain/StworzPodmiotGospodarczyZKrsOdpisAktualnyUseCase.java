@@ -27,20 +27,23 @@ class StworzPodmiotGospodarczyZKrsOdpisAktualnyUseCase {
   @Transactional
   public UUID stworzPodmiotGospodarczy(OdpisAktualnyResponse odpisAktualnyResponse) {
 
-    UUID adresKorespondencyjnyUuid;
-    UUID adresDzialalnosciUuid;
+    UUID adresKorespondencyjnyUuid = null;
+    UUID adresDzialalnosciUuid = null;
 
     final var dzial1 = odpisAktualnyResponse.odpis().dane().dzial1();
     final var dzial3 = odpisAktualnyResponse.odpis().dane().dzial3();
 
-    if (Objects.nonNull(dzial1.siedzibaIAdres()) &&
-        Objects.equals(dzial1.siedzibaIAdres().siedziba(), dzial1.siedzibaIAdres().adres())) {
-      UUID adresUuid = spolkaService.zaktualizujAdresKorespondencyjny(dzial1.siedzibaIAdres());
-      adresKorespondencyjnyUuid = adresUuid;
-      adresDzialalnosciUuid = adresUuid;
-    } else {
-      adresKorespondencyjnyUuid = spolkaService.zaktualizujAdresKorespondencyjny(dzial1.siedzibaIAdres());
-      adresDzialalnosciUuid = spolkaService.zaktualizujAdresDzialalnoszci(dzial1.siedzibaIAdres());
+    if (Objects.nonNull(dzial1.siedzibaIAdres())) {
+      if (Objects.equals(dzial1.siedzibaIAdres().siedziba(), dzial1.siedzibaIAdres().adres())) {
+        UUID adresUuid = spolkaService.zaktualizujAdresKorespondencyjny(dzial1.siedzibaIAdres());
+        adresKorespondencyjnyUuid = adresUuid;
+        adresDzialalnosciUuid = adresUuid;
+      } else{
+        adresKorespondencyjnyUuid = spolkaService.zaktualizujAdresKorespondencyjny(
+            dzial1.siedzibaIAdres());
+        adresDzialalnosciUuid = spolkaService.zaktualizujAdresDzialalnoszci(
+            dzial1.siedzibaIAdres());
+      }
     }
 
     UUID pkdGlownyUuid = spolkaService.zaktualizujPkdGlowny(dzial3);

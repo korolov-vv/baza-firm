@@ -11,6 +11,7 @@ import com.baza.firmy.podmiotygospodarcze.query.PodmiotyGospodarczeQueryFacade;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.ExecutionException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.quartz.JobExecutionContext;
@@ -50,9 +51,18 @@ public class PobierajDaneFirmZPortalaZewnService implements BazowySchedulerServi
     daneZPortaluZewnDto.getFirmy()
        .forEach(firma -> {
          if (firma.getKrs().isPresent()) {
-           pobierzDaneZKrs(firma, listaNiepobranychFirm);
+           try{
+             pobierzDaneZKrs(firma, listaNiepobranychFirm);
+           } catch (Exception e) {
+             log.error("Błąd podczas pobierania danych z KRS dla firmy: {}", firma.getNazwa(), e);
+             listaNiepobranychFirm.add(firma);
+           }
          } else {
-           zaktualizujDaneKontaktowe(firma);
+           try {
+             zaktualizujDaneKontaktowe(firma);
+           } catch (Exception e) {
+             log.error("Błąd podczas aktualizacji danych kontaktowych dla firmy: {}", firma.getNazwa(), e);
+           }
          }
        });
 
@@ -67,9 +77,9 @@ public class PobierajDaneFirmZPortalaZewnService implements BazowySchedulerServi
     }
   }
 
-  private void pobierzDaneZKrs(FirmaPortalZewnDto firma, List<FirmaPortalZewnDto> listaNiepobranychFirm) {
+  private void pobierzDaneZKrs(FirmaPortalZewnDto firma, List<FirmaPortalZewnDto> listaNiepobranychFirm)
+      throws ExecutionException, InterruptedException {
     final String krs = firma.getKrs().get();
-    try {
       if (podmiotyGospodarczeQueryFacade.czyIstniejePoKrs(krs)) {
         zaktualizujDaneKontaktowe(firma);
       } else {
@@ -81,10 +91,6 @@ public class PobierajDaneFirmZPortalaZewnService implements BazowySchedulerServi
         }
         podmiotyGospodarczeFacade.stworzPodmiotGospodarczy(odpis.get());
       }
-    } catch (Exception e) {
-      log.error("Błąd podczas pobierania danych z KRS dla zaktualizowanych firm", e);
-      listaNiepobranychFirm.add(firma);
-    }
   }
 
   private void zaktualizujDaneKontaktowe(FirmaPortalZewnDto firma) {
