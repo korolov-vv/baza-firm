@@ -1,9 +1,8 @@
 package com.baza.firmy.podmiotygospodarcze.query;
 
 import com.baza.firmy.adresy.domain.dto.AdresDto;
-import com.baza.firmy.dto.JdgListDto;
+import com.baza.firmy.dto.PodmiotGospodarczyListDto;
 import com.baza.firmy.osoby.domain.dto.WlascicielDto;
-import com.baza.firmy.osoby.query.OsobaViewEntity;
 import com.baza.firmy.pkd.query.PkdViewEntity;
 import java.util.List;
 import java.util.UUID;
@@ -22,7 +21,7 @@ interface PodmiotyGospodarczeQueryMapper {
   @Mapping(target = "krs", source = ".", qualifiedByName = "setKrs")
   @Mapping(target = "adresDzialalnosci", source = ".", qualifiedByName = "setAdresEntityDzialalnosci")
   @Mapping(target = "adresKorespondencyjny", source = ".", qualifiedByName = "setAdresKorespondencyjny")
-  JdgListDto toJdgListDtoList(PodmiotGospodarczeViewEntity entity);
+  PodmiotGospodarczyListDto toJdgListDtoList(PodmiotGospodarczeViewEntity entity);
 
   @Named("setPkdGlownyString")
   default String setPkdGlownyString(PodmiotGospodarczeViewEntity entity) {
@@ -37,23 +36,24 @@ interface PodmiotyGospodarczeQueryMapper {
   }
 
   @Named("setNip")
-  default String setNip(PodmiotGospodarczeViewEntity jdg) {
-    return jdg.getWlasciciel().map(OsobaViewEntity::getNip).orElse(Strings.EMPTY);
+  default String setNip(PodmiotGospodarczeViewEntity podmiotGospodarczy) {
+    return podmiotGospodarczy.getRegon();
   }
 
+
   @Named("setRegon")
-  default String setRegon(PodmiotGospodarczeViewEntity jdg) {
-    return jdg.getWlasciciel().map(OsobaViewEntity::getRegon).orElse(Strings.EMPTY);
+  default String setRegon(PodmiotGospodarczeViewEntity podmiotGospodarczy) {
+    return podmiotGospodarczy.getNip();
   }
 
   @Named("setKrs")
-  default String setKrs(PodmiotGospodarczeViewEntity jdg) {
-    return jdg.getNumerKrs().orElse(Strings.EMPTY);
+  default String setKrs(PodmiotGospodarczeViewEntity podmiotGospodarczy) {
+    return podmiotGospodarczy.getNumerKrs().orElse(Strings.EMPTY);
   }
 
   @Named("setAdresEntityDzialalnosci")
-  default AdresDto setAdresEntityDzialalnosci(PodmiotGospodarczeViewEntity jdg) {
-    return jdg.getAdresDzialalnosci()
+  default AdresDto setAdresEntityDzialalnosci(PodmiotGospodarczeViewEntity podmiotGospodarczy) {
+    return podmiotGospodarczy.getAdresDzialalnosci()
         .map(adres -> AdresDto.builder()
             .ulica(adres.getUlica())
             .budynek(adres.getBudynek())
@@ -69,23 +69,23 @@ interface PodmiotyGospodarczeQueryMapper {
   }
 
   @Named("setAdresKorespondencyjny")
-  default AdresDto setAdresKorespondencyjny(PodmiotGospodarczeViewEntity jdg) {
+  default AdresDto setAdresKorespondencyjny(PodmiotGospodarczeViewEntity podmiotGospodarczy) {
     return AdresDto.builder()
-            .ulica(jdg.getAdresKorespondencyjny().getUlica())
-            .budynek(jdg.getAdresKorespondencyjny().getBudynek())
-            .lokal(jdg.getAdresKorespondencyjny().getLokal())
-            .miasto(jdg.getAdresKorespondencyjny().getMiasto())
-            .wojewodztwo(jdg.getAdresKorespondencyjny().getWojewodztwo())
-            .powiat(jdg.getAdresKorespondencyjny().getPowiat())
-            .gmina(jdg.getAdresKorespondencyjny().getGmina())
-            .kraj(jdg.getAdresKorespondencyjny().getKraj())
-            .kod(jdg.getAdresKorespondencyjny().getKodPocztowy())
+            .ulica(podmiotGospodarczy.getAdresKorespondencyjny().getUlica())
+            .budynek(podmiotGospodarczy.getAdresKorespondencyjny().getBudynek())
+            .lokal(podmiotGospodarczy.getAdresKorespondencyjny().getLokal())
+            .miasto(podmiotGospodarczy.getAdresKorespondencyjny().getMiasto())
+            .wojewodztwo(podmiotGospodarczy.getAdresKorespondencyjny().getWojewodztwo())
+            .powiat(podmiotGospodarczy.getAdresKorespondencyjny().getPowiat())
+            .gmina(podmiotGospodarczy.getAdresKorespondencyjny().getGmina())
+            .kraj(podmiotGospodarczy.getAdresKorespondencyjny().getKraj())
+            .kod(podmiotGospodarczy.getAdresKorespondencyjny().getKodPocztowy())
             .build();
   }
 
   @Named("setWlascicielDto")
-  default WlascicielDto setWlascicielDto(PodmiotGospodarczeViewEntity jdg) {
-    return jdg.getWlasciciel()
+  default WlascicielDto setWlascicielDto(PodmiotGospodarczeViewEntity podmiotGospodarczy) {
+    return podmiotGospodarczy.getWlasciciel()
         .map(osoba -> WlascicielDto.builder()
             .imie(osoba.getImie())
             .nazwisko(osoba.getNazwisko())

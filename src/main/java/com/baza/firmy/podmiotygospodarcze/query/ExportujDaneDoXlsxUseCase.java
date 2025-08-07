@@ -3,7 +3,7 @@ package com.baza.firmy.podmiotygospodarcze.query;
 import com.baza.firmy.common.util.FileUtills;
 import com.baza.firmy.common.util.XslxDocumentUtils;
 import com.baza.firmy.dto.FileDto;
-import com.baza.firmy.dto.JdgListDto;
+import com.baza.firmy.dto.PodmiotGospodarczyListDto;
 import com.baza.firmy.dto.ParametryWyszukiwaniaDto;
 import java.io.ByteArrayOutputStream;
 import java.time.LocalDate;
@@ -68,7 +68,7 @@ public class ExportujDaneDoXlsxUseCase {
     ByteArrayOutputStream out = new ByteArrayOutputStream();
     int pageNumber = 0;
     int pageSize = 1000;
-    Page<JdgListDto> page;
+    Page<PodmiotGospodarczyListDto> page;
 
     do {
       page = fetchData(specification, pageNumber, pageSize);
@@ -82,7 +82,7 @@ public class ExportujDaneDoXlsxUseCase {
     } while (page.hasNext());
   }
 
-  private Page<JdgListDto> fetchData(Specification<PodmiotGospodarczeViewEntity> specification, int pageNumber,
+  private Page<PodmiotGospodarczyListDto> fetchData(Specification<PodmiotGospodarczeViewEntity> specification, int pageNumber,
                                      int pageSize) {
     Pageable pageable = PageRequest.of(pageNumber, pageSize);
     return podmiotyGospodarczeQueryRepository.findAll(specification, pageable)

@@ -1,6 +1,6 @@
 package com.baza.firmy.controller;
 
-import com.baza.firmy.dto.JdgListDto;
+import com.baza.firmy.dto.PodmiotGospodarczyListDto;
 import com.baza.firmy.podmiotygospodarcze.query.PodmiotGospodarczeViewEntity;
 import com.baza.firmy.podmiotygospodarcze.query.PodmiotyGospodarczeFilterSpecification;
 import com.baza.firmy.podmiotygospodarcze.query.PodmiotyGospodarczeQueryFacade;
@@ -31,7 +31,7 @@ class JdgController {
 
   @GetMapping (produces = MediaType.APPLICATION_JSON_VALUE)
   @Operation (summary = "Usługa pobierająca listę JDG")
-  public ResponseEntity<Page<JdgListDto>> pobierzListeJdg(
+  public ResponseEntity<Page<PodmiotGospodarczyListDto>> pobierzListeJdg(
       @Nullable @RequestParam String nazwa,
       @Nullable @RequestParam String pkd,
       @Nullable @RequestParam LocalDate dataRozpoczeciaOd,

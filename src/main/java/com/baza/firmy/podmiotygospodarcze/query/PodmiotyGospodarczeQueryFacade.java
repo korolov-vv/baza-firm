@@ -1,6 +1,6 @@
 package com.baza.firmy.podmiotygospodarcze.query;
 
-import com.baza.firmy.dto.JdgListDto;
+import com.baza.firmy.dto.PodmiotGospodarczyListDto;
 import com.baza.firmy.dto.ParametryWyszukiwaniaDto;
 import jakarta.transaction.Transactional;
 import java.time.LocalDate;
@@ -22,7 +22,7 @@ public class PodmiotyGospodarczeQueryFacade {
   private final PodmiotyGospodarczeQueryMapper podmiotyGospodarczeQueryMapper;
   private final ExportujDaneDoXlsxUseCase exportujDaneDoXlsxUseCase;
 
-  public Page<JdgListDto> pobierzListeJdg(Specification<PodmiotGospodarczeViewEntity> specification, Pageable pageable) {
+  public Page<PodmiotGospodarczyListDto> pobierzListeJdg(Specification<PodmiotGospodarczeViewEntity> specification, Pageable pageable) {
     return podmiotyGospodarczeQueryRepository.findAll(specification, pageable)
         .map(podmiotyGospodarczeQueryMapper::toJdgListDtoList);
   }

@@ -1,7 +1,7 @@
 package com.baza.firmy.common.util;
 
 import com.baza.firmy.adresy.domain.dto.AdresDto;
-import com.baza.firmy.dto.JdgListDto;
+import com.baza.firmy.dto.PodmiotGospodarczyListDto;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -25,7 +25,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class XslxDocumentUtils {
 
-  public ByteArrayInputStream appendToExcel(ByteArrayOutputStream out, List<JdgListDto> jdgList, boolean isFirstPage, boolean isLastPage) {
+  public ByteArrayInputStream appendToExcel(ByteArrayOutputStream out, List<PodmiotGospodarczyListDto> jdgList, boolean isFirstPage, boolean isLastPage) {
     try (Workbook workbook = isFirstPage ? new XSSFWorkbook() : WorkbookFactory.create(new ByteArrayInputStream(out.toByteArray()))) {
       Sheet sheet = isFirstPage ? workbook.createSheet("Dane firm") : workbook.getSheetAt(0);
 
@@ -45,7 +45,7 @@ public class XslxDocumentUtils {
 
       int rowNum = sheet.getLastRowNum() + 1;
 
-      for (JdgListDto jdg : jdgList) {
+      for (PodmiotGospodarczyListDto jdg : jdgList) {
         Row row = sheet.createRow(rowNum++);
 
         createCell(row, 0, jdg.getNazwa(), cellStyle);

@@ -41,13 +41,28 @@ class ZaktualizujPodmiotGospodarczyZJdgUseCase {
     UUID pkdGlownyUuid = jdgService.zaktualizujPkdGlowny(jdgSzczegolyDto);
     List<UUID> pozostalePkdUuidList = jdgService.zaktualizujPkdDodatkowe(jdgSzczegolyDto);
 
+    List<PodmiotGospodarczyEntity> podmiotyGospodarczeEntities = podmiotyGospodarczeRepository.findAllByNipAndDataRozpoczecia(
+        jdgSzczegolyDto.getWlasciciel().getNip(), LocalDate.parse(jdgSzczegolyDto.getDataRozpoczecia()));
+
+    if (podmiotyGospodarczeEntities.size() > 1) {
+      podmiotyGospodarczeEntities.subList(1, podmiotyGospodarczeEntities.size())
+          .forEach(podmiotGospodarczeEntity -> {
+            podmiotGospodarczeEntity.setPkdGlowny(null);
+            podmiotGospodarczeEntity.getPkd().clear();
+            podmiotGospodarczeEntity.setAdresDzialalnosci(null);
+            podmiotGospodarczeEntity.setAdresKorespondencyjny(null);
+            podmiotGospodarczeEntity.setWlasciciel(null);
+            podmiotyGospodarczeRepository.save(podmiotGospodarczeEntity);
+            podmiotyGospodarczeRepository.deleteById(podmiotGospodarczeEntity.getId());
+          });
+    }
+
     PodmiotGospodarczyEntity podmiotGospodarczyEntity = podmiotyGospodarczeRepository.findByNipAndDataRozpoczecia(
         jdgSzczegolyDto.getWlasciciel().getNip(), LocalDate.parse(jdgSzczegolyDto.getDataRozpoczecia())
         )
         .orElseThrow(() -> new IllegalArgumentException(
             String.format("Podmiot gospodarczy o podanym numere NIP: %s oraz dacie rozpoczęcia działalności: %s nie istnieje",
                 jdgSzczegolyDto.getWlasciciel().getNip(), jdgSzczegolyDto.getDataRozpoczecia())));
-
 
     podmiotyGospodarczeMapper.toPodmiotGospodarczyEntity(podmiotGospodarczyEntity, jdgSzczegolyDto);
 

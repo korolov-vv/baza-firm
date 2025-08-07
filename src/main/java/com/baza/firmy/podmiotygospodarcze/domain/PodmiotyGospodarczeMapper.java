@@ -82,8 +82,8 @@ interface PodmiotyGospodarczeMapper {
   @Mapping(target = "pkdGlowny", ignore = true)
   @Mapping(target = "pkd", ignore = true)
   @Mapping(target = "rejestr", defaultValue = "KRS")
-  @Mapping(target = "nip", expression = "java(Objects.nonNull(odpisAktualnyResponse.odpis().dane().dzial1().danePodmiotu().identyfikatory()) ? odpisAktualnyResponse.odpis().dane().dzial1().danePodmiotu().identyfikatory().nip() : Strings.EMPTY)")
-  @Mapping(target = "regon", expression = "java(Objects.nonNull(odpisAktualnyResponse.odpis().dane().dzial1().danePodmiotu().identyfikatory()) ? odpisAktualnyResponse.odpis().dane().dzial1().danePodmiotu().identyfikatory().regon() : Strings.EMPTY)")
+  @Mapping(target = "nip", source = ".", qualifiedByName = "setNip")
+  @Mapping(target = "regon", source = ".", qualifiedByName = "setRegon")
   @Mapping(target = "numerKrs", source = "odpis.naglowekA.numerKRS")
   @Mapping(target = "dataRozpoczecia", source = "odpis.naglowekA.dataRejestracjiWKRS", qualifiedByName = "setDateDlaKrs")
   @Mapping(target = "dataZawieszenia", ignore = true)
@@ -91,10 +91,18 @@ interface PodmiotyGospodarczeMapper {
   @Mapping(target = "dataWykreslenia", ignore = true)
   @Mapping(target = "ceidgId", ignore = true)
   @Mapping(target = "link", ignore = true)
-  @Mapping(target = "nazwa", source = "odpis.dane.dzial1.danePodmiotu.nazwa")
+  @Mapping(target = "nazwa", expression = "java(Objects.nonNull(odpisAktualnyResponse.odpis().dane().dzial1().danePodmiotu()) ? odpisAktualnyResponse.odpis().dane().dzial1().danePodmiotu().nazwa() : Strings.EMPTY)")
   @Mapping(target = "status", ignore = true)
   @Mapping(target = "email", expression = "java(Objects.nonNull(odpisAktualnyResponse.odpis().dane().dzial1().siedzibaIAdres()) ? odpisAktualnyResponse.odpis().dane().dzial1().siedzibaIAdres().adresPocztyElektronicznej() : Strings.EMPTY)")
-  PodmiotGospodarczyEntity toPodmiotGospodarczyEntity(OdpisAktualnyResponse odpisAktualnyResponse);
+  PodmiotGospodarczyEntity toPodmiotGospodarczyEntity(@MappingTarget PodmiotGospodarczyEntity entity, OdpisAktualnyResponse odpisAktualnyResponse);
+
+  @Named("setDate")
+  default LocalDate setDate(String date) {
+    if (date == null) {
+      return null;
+    }
+    return LocalDate.parse(date);
+  }
 
   @Mapping(target = "id", ignore = true)
   @Mapping(target = "uuid", expression = "java(UUID.randomUUID())")
@@ -107,8 +115,8 @@ interface PodmiotyGospodarczeMapper {
   @Mapping(target = "pkdGlowny", ignore = true)
   @Mapping(target = "pkd", ignore = true)
   @Mapping(target = "rejestr", defaultValue = "KRS")
-  @Mapping(target = "nip", expression = "java(Objects.nonNull(odpisAktualnyResponse.odpis().dane().dzial1().danePodmiotu().identyfikatory()) ? odpisAktualnyResponse.odpis().dane().dzial1().danePodmiotu().identyfikatory().nip() : Strings.EMPTY)")
-  @Mapping(target = "regon", expression = "java(Objects.nonNull(odpisAktualnyResponse.odpis().dane().dzial1().danePodmiotu().identyfikatory()) ? odpisAktualnyResponse.odpis().dane().dzial1().danePodmiotu().identyfikatory().regon() : Strings.EMPTY)")
+  @Mapping(target = "nip", source = ".", qualifiedByName = "setNip")
+  @Mapping(target = "regon", source = ".", qualifiedByName = "setRegon")
   @Mapping(target = "numerKrs", source = "odpis.naglowekA.numerKRS")
   @Mapping(target = "dataRozpoczecia", source = "odpis.naglowekA.dataRejestracjiWKRS", qualifiedByName = "setDateDlaKrs")
   @Mapping(target = "dataZawieszenia", ignore = true)
@@ -116,18 +124,10 @@ interface PodmiotyGospodarczeMapper {
   @Mapping(target = "dataWykreslenia", ignore = true)
   @Mapping(target = "ceidgId", ignore = true)
   @Mapping(target = "link", ignore = true)
-  @Mapping(target = "nazwa", source = "odpis.dane.dzial1.danePodmiotu.nazwa")
+  @Mapping(target = "nazwa", expression = "java(Objects.nonNull(odpisAktualnyResponse.odpis().dane().dzial1().danePodmiotu()) ? odpisAktualnyResponse.odpis().dane().dzial1().danePodmiotu().nazwa() : Strings.EMPTY)")
   @Mapping(target = "status", ignore = true)
   @Mapping(target = "email", expression = "java(Objects.nonNull(odpisAktualnyResponse.odpis().dane().dzial1().siedzibaIAdres()) ? odpisAktualnyResponse.odpis().dane().dzial1().siedzibaIAdres().adresPocztyElektronicznej() : Strings.EMPTY)")
-  PodmiotGospodarczyEntity toPodmiotGospodarczyEntity(@MappingTarget PodmiotGospodarczyEntity entity, OdpisAktualnyResponse odpisAktualnyResponse);
-
-  @Named("setDate")
-  default LocalDate setDate(String date) {
-    if (date == null) {
-      return null;
-    }
-    return LocalDate.parse(date);
-  }
+  PodmiotGospodarczyEntity toPodmiotGospodarczyEntity(OdpisAktualnyResponse odpisAktualnyResponse);
 
   @Named("setDateDlaKrs")
   default LocalDate setDateDlaKrs(String date) {
@@ -148,5 +148,27 @@ interface PodmiotyGospodarczeMapper {
           return nazwaPodmiotu.trim();
         })
         .orElse(Strings.EMPTY);
+  }
+
+  @Named("setNip")
+  default String setNip(OdpisAktualnyResponse odpisAktualnyResponse) {
+
+    if (Objects.isNull(odpisAktualnyResponse.odpis().dane().dzial1().danePodmiotu()) ||
+    Objects.isNull(odpisAktualnyResponse.odpis().dane().dzial1().danePodmiotu().identyfikatory())) {
+      return Strings.EMPTY;
+    }
+
+    return odpisAktualnyResponse.odpis().dane().dzial1().danePodmiotu().identyfikatory().nip();
+  }
+
+  @Named("setRegon")
+  default String setRegon(OdpisAktualnyResponse odpisAktualnyResponse) {
+
+    if (Objects.isNull(odpisAktualnyResponse.odpis().dane().dzial1().danePodmiotu()) ||
+    Objects.isNull(odpisAktualnyResponse.odpis().dane().dzial1().danePodmiotu().identyfikatory())) {
+      return Strings.EMPTY;
+    }
+
+    return odpisAktualnyResponse.odpis().dane().dzial1().danePodmiotu().identyfikatory().regon();
   }
 }

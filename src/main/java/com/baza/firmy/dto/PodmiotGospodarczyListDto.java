@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor(force = true)
 @AllArgsConstructor
-public class JdgListDto {
+public class PodmiotGospodarczyListDto {
   
   private String nazwa;
   private String nip;
