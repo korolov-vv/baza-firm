@@ -14,7 +14,7 @@ public enum WojewodztwaRaportyEnum {
   LODZKIE("Zarejestrowane dzialalnosci - wojewodztwo lodzkie.xml"),
   MALOPOLSKIE("Zarejestrowane dzialalnosci - wojewodztwo malopolskie.xml"),
   MAZOWIECKIE("Zarejestrowane dzialalnosci - wojewodztwo mazowieckie.xml"),
-//  OPOLSKIE("Zarejestrowane dzialalnosci - wojewodztwo opolskie.xml"),
+  OPOLSKIE("Zarejestrowane dzialalnosci - wojewodztwo opolskie.xml"),
   PODKARPACKIE("Zarejestrowane dzialalnosci - wojewodztwo podkarpatskie.xml"),
   PODLASKIE("Zarejestrowane dzialalnosci - wojewodztwo podlaskie.xml"),
   POMORSKIE("Zarejestrowane dzialalnosci - wojewodztwo pomorskie.xml"),

@@ -26,6 +26,7 @@ import javax.xml.stream.XMLStreamReader;
 import javax.xml.transform.stream.StreamSource;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 @Slf4j
@@ -38,15 +39,21 @@ public class PobierzDaneZRaportuExecutor {
   private final FileUtills fileUtills;
   private final PodmiotyGospodarczeQueryFacade podmiotyGospodarczeQueryFacade;
 
-//  @Async("pobierzDaneZRaportu")
+  @Async ("pobierzDaneZRaportu")
   CompletableFuture<Void> zapiszDaneDlaWojewodztwa(WojewodztwaRaportyEnum wojewodztwoRaport) {
     try {
       log.info("Zaczynam pobieranie danych z raportu dla województwa: {}", wojewodztwoRaport.name());
 
       List<JdgSzczegolyRaportDto> listaDzialalnosciWojewodztwa = unmarshalRaport(wojewodztwoRaport.getNazwaPlikuRaportu());
 
+      List<JdgSzczegolyRaportDto> listaDzialalnosci = listaDzialalnosciWojewodztwa;
+
+      if (WojewodztwaRaportyEnum.BRAK_WOJEWODZTWA.equals(wojewodztwoRaport)) {
+        listaDzialalnosci = listaDzialalnosciWojewodztwa.subList(0, listaDzialalnosciWojewodztwa.size());
+      }
+
       AtomicLong liczbaZapisanychFirm = new AtomicLong(0L);
-      listaDzialalnosciWojewodztwa.forEach(dzialalnosc -> {
+      listaDzialalnosci.forEach(dzialalnosc -> {
         try {
           if (!czyIstniejeDzialalnoscWBazie(dzialalnosc)) {
             podmiotyGospodarczeFacade.stworzPodmiotGospodarczy(
@@ -109,12 +116,10 @@ public class PobierzDaneZRaportuExecutor {
   private JdgSzczegolyDto stworzJdgSzczegolyDto(JdgSzczegolyRaportDto dzialalnosc, String wojewodztwo) {
     return JdgSzczegolyDto.builder()
         .nazwa(dzialalnosc.getNazwaPodmiotu().map(nazwaPodmiotu -> {
-          String nazwa = ""
-              .trim();
           if (nazwaPodmiotu.substring(0,1).equalsIgnoreCase("-")) {
-            nazwa = nazwaPodmiotu.substring(1);
+            return nazwaPodmiotu.substring(1).trim();
           }
-          return nazwa.trim();
+          return nazwaPodmiotu.trim();
         }).orElse(null))
         .rejestr(Rejestr.CEIDG)
         .adresKorespondencyjny(AdresDto.builder()
