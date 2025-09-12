@@ -7,14 +7,15 @@ import com.baza.firmy.kraje.domain.KrajDto;
 import com.baza.firmy.osoby.domain.dto.StworzWlascicielaDto;
 import com.baza.firmy.podmiotygospodarcze.domain.Rejestr;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 @Data
 @Builder
@@ -40,9 +41,9 @@ public class JdgSzczegolyDto implements JdgSzczegoly {
   @Builder.Default
   private List<KrajDto> obywatelstwa = new ArrayList<>();
 
-  private String pkdGlowny;
+  private Pkd pkdGlowny;
   @Builder.Default
-  private List<String> pkd = new ArrayList<>();
+  private List<Pkd> pkd = new ArrayList<>();
   private String rokPkd;
 
 
@@ -87,7 +88,7 @@ public class JdgSzczegolyDto implements JdgSzczegoly {
   private String link;
 
   @Override
-  public Optional<String> getPkdGlowny() {
+  public Optional<Pkd> getPkdGlowny() {
     return Optional.ofNullable(pkdGlowny);
   }
 }

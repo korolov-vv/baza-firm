@@ -1,8 +1,5 @@
 package com.baza.firmy.integration.ceidg;
 
-import static com.baza.firmy.constants.WebClientConstants.CALL_TO_CEIDG_FAILED_LOG;
-import static org.springframework.http.HttpHeaders.AUTHORIZATION;
-
 import com.baza.firmy.configuration.properties.CeidgProperties;
 import com.baza.firmy.dto.ListaZmienionychWpisowDto;
 import com.baza.firmy.response.Dto;
@@ -12,6 +9,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
+
+import static com.baza.firmy.constants.WebClientConstants.CALL_TO_CEIDG_FAILED_LOG;
+import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
 @Slf4j
 @Component
@@ -25,11 +25,11 @@ public class CeidgClient {
   private final CeidgProperties ceidgProperties;
 
   public ListaJdgDto pobierzListeJdg(String link) {
-    log.info(START_REQUEST_LOG, link);
+    log.info(START_REQUEST_LOG, link.replace("https://dane.biznes.gov.pl/api/ceidg/v2", ceidgProperties.getCeidgPath()));
     final var response =
         webClient
             .get()
-            .uri(link)
+            .uri(link.replace("https://dane.biznes.gov.pl/api/ceidg/v2", ceidgProperties.getCeidgPath()))
             .header(AUTHORIZATION, createAuthorizationHeader())
             .retrieve()
             .bodyToMono(ListaJdgDto.class)
@@ -39,16 +39,16 @@ public class CeidgClient {
                   return Mono.error(throwable);
                 })
             .block();
-    log.info(COMPLETE_REQUEST_LOG, link);
+    log.info(COMPLETE_REQUEST_LOG, link.replace("https://dane.biznes.gov.pl/api/ceidg/v2", ceidgProperties.getCeidgPath()));
     return response;
   }
 
   public ListaZmienionychWpisowDto pobierzListeZmienionychWpisow(String link) {
-    log.info(START_REQUEST_LOG, link);
+    log.info(START_REQUEST_LOG, link.replace("https://dane.biznes.gov.pl/api/ceidg/v2", ceidgProperties.getCeidgPath()));
     final var response =
         webClient
             .get()
-            .uri(link)
+            .uri(link.replace("https://dane.biznes.gov.pl/api/ceidg/v2", ceidgProperties.getCeidgPath()))
             .header(AUTHORIZATION, createAuthorizationHeader())
             .retrieve()
             .bodyToMono(ListaZmienionychWpisowDto.class)
@@ -58,16 +58,16 @@ public class CeidgClient {
                   return Mono.error(throwable);
                 })
             .block();
-    log.info(COMPLETE_REQUEST_LOG, link);
+    log.info(COMPLETE_REQUEST_LOG, link.replace("https://dane.biznes.gov.pl/api/ceidg/v2", ceidgProperties.getCeidgPath()));
     return response;
   }
 
   public Dto pobierzSzczegolyJdg(String link) {
-    log.info(START_REQUEST_LOG, link);
+    log.info(START_REQUEST_LOG, link.replace("https://dane.biznes.gov.pl/api/ceidg/v2", ceidgProperties.getCeidgPath()));
     final var response =
         webClient
             .get()
-            .uri(link)
+            .uri(link.replace("https://dane.biznes.gov.pl/api/ceidg/v2", ceidgProperties.getCeidgPath()))
             .header(AUTHORIZATION, createAuthorizationHeader())
             .retrieve()
             .bodyToMono(Dto.class)
@@ -77,7 +77,7 @@ public class CeidgClient {
                   return Mono.error(throwable);
                 })
             .block();
-    log.info(COMPLETE_REQUEST_LOG, link);
+    log.info(COMPLETE_REQUEST_LOG, link.replace("https://dane.biznes.gov.pl/api/ceidg/v2", ceidgProperties.getCeidgPath()));
     return response;
   }
 

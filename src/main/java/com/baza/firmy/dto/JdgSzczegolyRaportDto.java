@@ -1,18 +1,18 @@
 package com.baza.firmy.dto;
 
-import jakarta.xml.bind.annotation.XmlAccessType;
-import jakarta.xml.bind.annotation.XmlAccessorType;
-import jakarta.xml.bind.annotation.XmlElement;
-import jakarta.xml.bind.annotation.XmlRootElement;
-import jakarta.xml.bind.annotation.XmlType;
-import java.io.Serializable;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import com.baza.firmy.podmiotygospodarcze.domain.dto.Pkd;
+import jakarta.xml.bind.annotation.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.io.Serializable;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+import java.util.function.Function;
 
 @Data
 @Builder
@@ -67,15 +67,19 @@ public class JdgSzczegolyRaportDto implements JdgSzczegoly, Serializable {
   private String dataRozpoczeciaDzialalnosci;
 
   @Override
-  public Optional<String> getPkdGlowny() {
-    return Optional.ofNullable(glownyKodPkd);
+  public Optional<Pkd> getPkdGlowny() {
+    return Optional.ofNullable(glownyKodPkd)
+            .map(buildPkd());
   }
 
   @Override
-  public List<String> getPkd() {
-    return Arrays.asList(Optional.ofNullable(pozostaleKodyPkd)
-        .map(pkd -> pkd.split("\\$##\\$"))
-        .orElse(new String[0]));
+  public List<Pkd> getPkd() {
+      if (pozostaleKodyPkd == null) {
+          return Collections.emptyList();
+      }
+      return Arrays.stream(pozostaleKodyPkd.split("\\$##\\$"))
+              .map(buildPkd())
+              .toList();
   }
 
   public Optional<String> getNip() {
@@ -144,5 +148,12 @@ public class JdgSzczegolyRaportDto implements JdgSzczegoly, Serializable {
 
   public Optional<String> getDataRozpoczeciaDzialalnosci() {
     return Optional.ofNullable(dataRozpoczeciaDzialalnosci);
+  }
+
+  private static Function<String, Pkd> buildPkd() {
+      return pkd -> Pkd.builder()
+              .kod(pkd)
+              .nazwa("")
+              .build();
   }
 }

@@ -14,20 +14,21 @@ import com.baza.firmy.podmiotygospodarcze.query.PodmiotyGospodarczeQueryFacade;
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.JAXBException;
 import jakarta.xml.bind.Unmarshaller;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.stereotype.Component;
+
+import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamReader;
+import javax.xml.transform.stream.StreamSource;
 import java.io.File;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicLong;
-import javax.xml.stream.XMLInputFactory;
-import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamReader;
-import javax.xml.transform.stream.StreamSource;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.scheduling.annotation.Async;
-import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
@@ -139,8 +140,10 @@ public class PobierzDaneZRaportuExecutor {
             .nip(dzialalnosc.getNip().orElse(null))
             .regon(dzialalnosc.getRegon().orElse(null))
             .build())
-        .pkdGlowny(dzialalnosc.getPkdGlowny().orElse(null))
-        .pkd(dzialalnosc.getPkd())
+        .pkdGlowny(dzialalnosc.getPkdGlowny()
+                .orElse(null))
+        .pkd(dzialalnosc.getPkd().stream()
+                .toList())
         .rokPkd(dzialalnosc.getRokPkd().orElse(null))
         .telefon(dzialalnosc.getTelefon().orElse(null))
         .email(dzialalnosc.getEmail().orElse(null))

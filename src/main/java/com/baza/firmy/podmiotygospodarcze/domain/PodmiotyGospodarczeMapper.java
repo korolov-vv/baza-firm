@@ -1,23 +1,18 @@
 package com.baza.firmy.podmiotygospodarcze.domain;
 
 import com.baza.firmy.podmiotygospodarcze.domain.dto.JdgSzczegolyDto;
-import com.baza.firmy.response.krs.DanePodmiotuResponse;
-import com.baza.firmy.response.krs.Dzial1Response;
-import com.baza.firmy.response.krs.Dzial2Response;
-import com.baza.firmy.response.krs.Dzial3Response;
-import com.baza.firmy.response.krs.OdpisAktualnyResponse;
-import com.baza.firmy.response.krs.OdpisResponse;
-import com.baza.firmy.response.krs.SiedzibaIAdresResponse;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.UUID;
+import com.baza.firmy.response.krs.*;
 import org.apache.logging.log4j.util.Strings;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.Named;
+
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.UUID;
 
 @Mapper(componentModel = "spring", imports = { UUID.class, Rejestr.class, Objects.class, Strings.class,
     OdpisAktualnyResponse.class, OdpisResponse.class, OdpisResponse.NaglowekAResponse.class, OdpisResponse.Wpis.class,
@@ -67,7 +62,6 @@ interface PodmiotyGospodarczeMapper {
   @Mapping(target = "dataZakonczenia", source = "dataZakonczenia", qualifiedByName = "setDate")
   @Mapping(target = "dataWykreslenia", source = "dataWykreslenia", qualifiedByName = "setDate")
   @Mapping(target = "dataWznowienia", source = "dataWznowienia", qualifiedByName = "setDate")
-
   @Mapping(target = "nazwa", source = "nazwa", qualifiedByName = "setNazwa")
   PodmiotGospodarczyEntity toPodmiotGospodarczyEntity(@MappingTarget PodmiotGospodarczyEntity entity, JdgSzczegolyDto dto);
 

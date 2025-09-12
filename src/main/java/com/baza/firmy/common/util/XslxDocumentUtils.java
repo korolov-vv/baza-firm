@@ -2,23 +2,19 @@ package com.baza.firmy.common.util;
 
 import com.baza.firmy.adresy.domain.dto.AdresDto;
 import com.baza.firmy.dto.PodmiotGospodarczyListDto;
+import com.baza.firmy.podmiotygospodarcze.domain.dto.Pkd;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.logging.log4j.util.Strings;
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.stereotype.Component;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.List;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.apache.logging.log4j.util.Strings;
-import org.apache.poi.ss.usermodel.BorderStyle;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.CellStyle;
-import org.apache.poi.ss.usermodel.Font;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.ss.usermodel.WorkbookFactory;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.springframework.stereotype.Component;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Component
@@ -55,8 +51,8 @@ public class XslxDocumentUtils {
         createCell(row, 4, jdg.getDataRozpoczecia(), cellStyle);
         createCell(row, 5, jdg.getEmail(), cellStyle);
         createCell(row, 6, jdg.getTelefon(), cellStyle);
-        createCell(row, 7, jdg.getPkdGlowny().orElse(Strings.EMPTY), cellStyle);
-        createCell(row, 8, String.join(", ", jdg.getPkd()), cellStyle);
+        createCell(row, 7, jdg.getPkdGlowny().map(Pkd::getKod).orElse(Strings.EMPTY), cellStyle);
+        createCell(row, 8, jdg.getPkd().stream().map(Pkd::getKod).collect(Collectors.joining()), cellStyle);
         createCell(row, 9, jdg.getAdresKorespondencyjny().toString(), cellStyle);
         createCell(row, 10, jdg.getAdresDzialalnosci().map(AdresDto::toString).orElse(Strings.EMPTY), cellStyle);
       }

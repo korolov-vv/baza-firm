@@ -9,22 +9,18 @@ import com.baza.firmy.response.CeidgListDto;
 import com.baza.firmy.response.Dto;
 import com.baza.firmy.response.ListaJdgDto;
 import jakarta.annotation.Nullable;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.concurrent.atomic.AtomicLong;
-import java.util.function.Consumer;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.util.UriComponentsBuilder;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicLong;
+import java.util.function.Consumer;
 
 @Slf4j
 @Service
@@ -41,7 +37,7 @@ public class PobierzDaneZCeidgService {
     try {
       ListaJdgDto listaJdgDto = null;
       Optional<ListaJdgPobieranie> ostatniaPobranaStrona = listaJdgPobieranieService.znajdzOstatniaZapisanaListe(true);
-      if (ostatniaPobranaStrona == null) {
+      if (ostatniaPobranaStrona.isEmpty()) {
         listaJdgDto = pobierzPierwszaStrone(params, link, ostatniaPobranaStrona, listaJdgDto);
         listaJdgDto = pobierzOstatnaStrone(ostatniaPobranaStrona, listaJdgDto);
         zapiszStrone(listaJdgDto);

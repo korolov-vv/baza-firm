@@ -10,13 +10,11 @@ import com.baza.firmy.pkd.domain.dto.PkdDto;
 import com.baza.firmy.pkd.query.PkdQueryFasade;
 import com.baza.firmy.pkd.query.PkdViewEntity;
 import com.baza.firmy.podmiotygospodarcze.domain.dto.JdgSzczegolyDto;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import com.baza.firmy.podmiotygospodarcze.domain.dto.Pkd;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.*;
 
 @RequiredArgsConstructor
 @Service
@@ -47,7 +45,7 @@ class JdgService {
   }
 
   UUID zaktualizujPkdGlowny(JdgSzczegolyDto jdgSzczegolyDto) {
-    if (jdgSzczegolyDto.getPkdGlowny().isEmpty() || jdgSzczegolyDto.getPkdGlowny().get().isBlank()) {
+    if (jdgSzczegolyDto.getPkdGlowny().isEmpty() || jdgSzczegolyDto.getPkdGlowny().get().getKod().isBlank()) {
       return null;
     }
 
@@ -72,12 +70,13 @@ class JdgService {
     return osobaFacade.stworzOsobe(osobaDto);
   }
 
-  private UUID zaktualizujPkd(String pkd) {
-    return pkdQueryFasade.findByKod(pkd.trim())
+  private UUID zaktualizujPkd(Pkd pkd) {
+    return pkdQueryFasade.findByKod(pkd.getKod().trim())
         .map(PkdViewEntity::getUuid)
         .orElseGet(() -> pkdFasade.stworzPkd(PkdDto.builder()
             .uuid(UUID.randomUUID())
-            .kod(pkd.trim())
+            .kod(pkd.getKod().trim())
+            .nazwa(pkd.getNazwa().trim())
             .build()));
   }
 }

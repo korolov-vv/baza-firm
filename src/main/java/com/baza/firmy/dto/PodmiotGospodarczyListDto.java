@@ -2,13 +2,15 @@ package com.baza.firmy.dto;
 
 import com.baza.firmy.adresy.domain.dto.AdresDto;
 import com.baza.firmy.constants.enums.BusinessStatus;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import com.baza.firmy.podmiotygospodarcze.domain.dto.Pkd;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 @Data
 @Builder
@@ -24,9 +26,9 @@ public class PodmiotGospodarczyListDto {
   private AdresDto adresDzialalnosci;
   private AdresDto adresKorespondencyjny;
 
-  private String pkdGlowny;
+  private Pkd pkdGlowny;
   @Builder.Default
-  private List<String> pkd = new ArrayList<>();
+  private List<Pkd> pkd = new ArrayList<>();
 
   private String dataRozpoczecia;
   private String dataZawieszenia;
@@ -42,7 +44,7 @@ public class PodmiotGospodarczyListDto {
     return Optional.ofNullable(adresDzialalnosci);
   }
 
-  public Optional<String> getPkdGlowny() {
+  public Optional<Pkd> getPkdGlowny() {
     return Optional.ofNullable(pkdGlowny);
   }
 }
