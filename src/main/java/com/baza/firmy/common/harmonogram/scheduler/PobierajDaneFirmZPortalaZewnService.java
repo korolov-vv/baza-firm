@@ -87,9 +87,9 @@ public class PobierajDaneFirmZPortalaZewnService implements BazowySchedulerServi
         if (Objects.isNull(odpis.get())) {
           log.warn("Nie udało się pobrać odpisu aktualnego KRS dla numeru: {}", krs);
           listaNiepobranychFirm.add(firma);
-          return;
+        } else {
+          podmiotyGospodarczeFacade.stworzPodmiotGospodarczy(odpis.get());
         }
-        podmiotyGospodarczeFacade.stworzPodmiotGospodarczy(odpis.get());
       }
   }
 
