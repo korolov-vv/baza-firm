@@ -71,7 +71,7 @@ public class PobierajDaneFirmZPortalaZewnService implements BazowySchedulerServi
       daneZPortaluZewnFacade.zmienStatusDanychZPortaluZewn(
           daneZPortaluZewnDto.getUuid(), StatusPobieraniaEnum.ZAKONCZONE_Z_BLENDAMI, listaNiepobranychFirm);
     } else {
-      log.info("Pobieranie danych z KRS dla zaktualizowanych firm zakończone pomyślnie.");
+      log.info("Pobieranie danych z KRS  dla firm z portalu zewnętrznego zakończone pomyślnie.");
       daneZPortaluZewnFacade.zmienStatusDanychZPortaluZewn(
           daneZPortaluZewnDto.getUuid(), StatusPobieraniaEnum.ZAKONCZONE);
     }
