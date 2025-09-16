@@ -1,5 +1,6 @@
 package com.baza.firmy.common.service;
 
+import com.baza.firmy.configuration.properties.CeidgProperties;
 import com.baza.firmy.integration.ceidg.CeidgClient;
 import com.baza.firmy.response.Dto;
 import com.baza.firmy.response.ListaJdgDto;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 class CeidgService {
   
   private final CeidgClient ceidgClient;
+  private final CeidgProperties ceidgProperties;
 
   public ListaJdgDto pobierzListeJdg(String link) {
     return ceidgClient.pobierzListeJdg(link);
@@ -20,7 +22,10 @@ class CeidgService {
 
   public Dto pobierzSzczegolyJdg(String link) {
     final var response = ceidgClient.pobierzSzczegolyJdg(link);
-    log.info("Pobrano szczegóły JDG link: {},\n response: {}", link, response);
+    log.info("Pobrano szczegóły JDG link: {},\n response: {}",
+        link.replace("https://dane.biznes.gov.pl/api/ceidg/v2", ceidgProperties.getCeidgPath()),
+        response
+    );
     return response;
   }
 }
