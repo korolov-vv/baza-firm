@@ -5,13 +5,14 @@ import com.baza.firmy.osoby.query.OsobaQueryFacade;
 import com.baza.firmy.pkd.query.PkdQueryFasade;
 import com.baza.firmy.podmiotygospodarcze.domain.dto.JdgSzczegolyDto;
 import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
+
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Component;
 
 @Component
 @Slf4j
@@ -65,6 +66,10 @@ class ZaktualizujPodmiotGospodarczyZJdgUseCase {
                 jdgSzczegolyDto.getWlasciciel().getNip(), jdgSzczegolyDto.getDataRozpoczecia())));
 
     podmiotyGospodarczeMapper.toPodmiotGospodarczyEntity(podmiotGospodarczyEntity, jdgSzczegolyDto);
+
+    if (podmiotGospodarczyEntity.getPelneInfo().isPresent()) {
+        podmiotGospodarczyEntity.setPelneInfoArchive(null);
+    }
 
     if (adresDzialalnosciUuid != null) {
       podmiotGospodarczyEntity.setAdresDzialalnosci(adresQueryFacade.getAdresPoUuid(adresDzialalnosciUuid));

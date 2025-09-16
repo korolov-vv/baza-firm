@@ -6,8 +6,10 @@ import com.baza.firmy.osoby.domain.dto.ReprezentacjaDto;
 import com.baza.firmy.osoby.domain.dto.WlascicielDto;
 import com.baza.firmy.osoby.query.OsobaViewEntity;
 import com.baza.firmy.pkd.query.PkdViewEntity;
+import com.baza.firmy.podmiotygospodarcze.domain.dto.JdgSzczegolyArchiveDto;
 import com.baza.firmy.podmiotygospodarcze.domain.dto.JdgSzczegolyDto;
 import com.baza.firmy.podmiotygospodarcze.domain.dto.SpolkaDto;
+import com.baza.firmy.response.krs.OdpisAktualnyResponse;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.JdbcTypeCode;
@@ -116,9 +118,17 @@ class PodmiotGospodarczyEntity {
     private String adresDoreczenElektronicznych;
     private String innaFormaKontaktu;
 
+    @Column(columnDefinition = "jsonb", insertable = false)
+    @JdbcTypeCode(SqlTypes.JSON)
+    private JdgSzczegolyArchiveDto pelneInfoArchive;
+
     @Column(columnDefinition = "jsonb")
     @JdbcTypeCode(SqlTypes.JSON)
     private JdgSzczegolyDto pelneInfo;
+
+    @Column(columnDefinition = "jsonb")
+    @JdbcTypeCode(SqlTypes.JSON)
+    private OdpisAktualnyResponse pelneInfoSpolka;
 
     private String link;
 
@@ -136,5 +146,9 @@ class PodmiotGospodarczyEntity {
 
     public Optional<PkdViewEntity> getPkdEntityGlowny() {
         return Optional.ofNullable(pkdGlowny);
+    }
+
+    public Optional<JdgSzczegolyDto> getPelneInfo() {
+        return Optional.ofNullable(pelneInfo);
     }
 }

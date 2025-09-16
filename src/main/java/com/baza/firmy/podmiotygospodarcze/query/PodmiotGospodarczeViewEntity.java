@@ -5,8 +5,10 @@ import com.baza.firmy.constants.enums.BusinessStatus;
 import com.baza.firmy.osoby.query.OsobaViewEntity;
 import com.baza.firmy.pkd.query.PkdViewEntity;
 import com.baza.firmy.podmiotygospodarcze.domain.Rejestr;
+import com.baza.firmy.podmiotygospodarcze.domain.dto.JdgSzczegolyArchiveDto;
 import com.baza.firmy.podmiotygospodarcze.domain.dto.JdgSzczegolyDto;
 import com.baza.firmy.podmiotygospodarcze.domain.dto.SpolkaDto;
+import com.baza.firmy.response.krs.OdpisAktualnyResponse;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.JdbcTypeCode;
@@ -124,7 +126,15 @@ public class PodmiotGospodarczeViewEntity {
 
     @Column(columnDefinition = "jsonb", insertable = false, updatable = false)
     @JdbcTypeCode(SqlTypes.JSON)
+    private JdgSzczegolyArchiveDto pelneInfoArchive;
+
+    @Column(columnDefinition = "jsonb")
+    @JdbcTypeCode(SqlTypes.JSON)
     private JdgSzczegolyDto pelneInfo;
+
+    @Column(columnDefinition = "jsonb")
+    @JdbcTypeCode(SqlTypes.JSON)
+    private OdpisAktualnyResponse pelneInfoSpolka;
 
     @Column(insertable = false, updatable = false)
     private String link;

@@ -23,9 +23,8 @@ class CeidgService {
   public Dto pobierzSzczegolyJdg(String link) {
     final var response = ceidgClient.pobierzSzczegolyJdg(link);
     log.info("Pobrano szczegóły JDG link: {},\n response: {}",
-        link.replace("https://dane.biznes.gov.pl/api/ceidg/v2", ceidgProperties.getCeidgPath()),
-        response
-    );
+            link.replace("https://dane.biznes.gov.pl/api/ceidg/v2", ceidgProperties.getCeidgPath()),
+            response);
     return response;
   }
 }
