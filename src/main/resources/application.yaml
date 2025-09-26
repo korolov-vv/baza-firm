@@ -30,6 +30,9 @@ ceidg:
 krs:
   krs-path: ${KRS_PATH}
 
+portal-zewn:
+    url: ${PORTAL_ZEW_URL}
+
 smtp:
     host: ${SMTP_HOST}
     port: ${SMTP_PORT:587}

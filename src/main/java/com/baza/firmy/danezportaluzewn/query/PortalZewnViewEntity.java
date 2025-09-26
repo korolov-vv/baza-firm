@@ -2,22 +2,14 @@ package com.baza.firmy.danezportaluzewn.query;
 
 import com.baza.firmy.constants.enums.StatusPobieraniaEnum;
 import com.baza.firmy.danezportaluzewn.domain.dto.FirmaPortalZewnDto;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+import lombok.*;
+import org.springframework.data.annotation.LastModifiedDate;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.LastModifiedDate;
 
 @Data
 @Builder
@@ -59,4 +51,7 @@ class PortalZewnViewEntity {
   @Builder.Default
   @Column(name = "niepobrane_firmy", columnDefinition = "jsonb", insertable = false, updatable = false)
   private List<FirmaPortalZewnDto> niepobraneFirmy = new ArrayList<>();
+
+  @Column(columnDefinition = "text", insertable = false, updatable = false)
+  private String blad;
 }

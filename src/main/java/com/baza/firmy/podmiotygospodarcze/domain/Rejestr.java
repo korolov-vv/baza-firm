@@ -5,7 +5,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum Rejestr {
     CEIDG("CEIDG"),
-    KRS("KRS");
+    KRS("KRS"),
+    REGON("REGON");
 
     private final String value;
 }

@@ -1,10 +1,12 @@
 package com.baza.firmy.danezportaluzewn.domain.dto;
 
-import java.util.Optional;
+import com.baza.firmy.podmiotygospodarcze.domain.Rejestr;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.Optional;
 
 @Data
 @Builder
@@ -12,13 +14,14 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class FirmaPortalZewnDto {
 
+  private String nazwa;
+  private Rejestr rejestr;
   private String krs;
   private String nip;
   private String regon;
   private String link;
   private String adres;
   private String email;
-  private String nazwa;
   private String telefon;
   private String stronaWww;
 

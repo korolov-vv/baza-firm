@@ -8,14 +8,15 @@ import com.baza.firmy.danezportaluzewn.domain.dto.FirmaPortalZewnDto;
 import com.baza.firmy.danezportaluzewn.query.DaneZPortaluZewnQueryFacade;
 import com.baza.firmy.podmiotygospodarcze.domain.PodmiotyGospodarczeFacade;
 import com.baza.firmy.podmiotygospodarcze.query.PodmiotyGospodarczeQueryFacade;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.concurrent.ExecutionException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.quartz.JobExecutionContext;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.concurrent.ExecutionException;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -57,13 +58,14 @@ public class PobierajDaneFirmZPortalaZewnService implements BazowySchedulerServi
              log.error("Błąd podczas pobierania danych z KRS dla firmy: {}", firma.getNazwa(), e);
              listaNiepobranychFirm.add(firma);
            }
-         } else {
-           try {
-             zaktualizujDaneKontaktowe(firma);
-           } catch (Exception e) {
-             log.error("Błąd podczas aktualizacji danych kontaktowych dla firmy: {}", firma.getNazwa(), e);
-           }
          }
+//         else {
+//           try {
+//             zaktualizujDaneKontaktowe(firma);
+//           } catch (Exception e) {
+//             log.error("Błąd podczas aktualizacji danych kontaktowych dla firmy: {}", firma.getNazwa(), e);
+//           }
+//         }
        });
 
     if (!listaNiepobranychFirm.isEmpty()) {

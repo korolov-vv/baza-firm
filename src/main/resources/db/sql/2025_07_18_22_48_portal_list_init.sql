@@ -13,7 +13,7 @@ create table if not exists portal_zewn_list (
     is_completed boolean
 );
 
-create sequence if not exists dane_z_raportu_seq increment 1 start 1;
+create sequence if not exists portal_zewn_list_seq increment 1 start 1;
 
 alter table portal_zewn_list
     drop column if exists is_completed;
@@ -38,9 +38,3 @@ alter table portal_zewn_list
 
 alter table portal_zewn_list
     add column if not exists version integer default 0;
-
-update portal_zewn_list
-set uuid = gen_random_uuid();
-
-update portal_zewn_list
-set status_pobierania = 'NIEPODJETE';
