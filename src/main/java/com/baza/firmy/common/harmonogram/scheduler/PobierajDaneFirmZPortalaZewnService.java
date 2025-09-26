@@ -51,7 +51,7 @@ public class PobierajDaneFirmZPortalaZewnService implements BazowySchedulerServi
         daneZPortaluZewnDto.getUuid(), StatusPobieraniaEnum.W_TRAKCIE);
     daneZPortaluZewnDto.getFirmy()
        .forEach(firma -> {
-         if (firma.getKrs().isPresent()) {
+         if (firma.getKrs().isPresent() && !firma.getKrs().get().isEmpty()) {
            try{
              pobierzDaneZKrs(firma, listaNiepobranychFirm);
            } catch (Exception e) {
