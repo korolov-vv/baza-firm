@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 class CeidgService {
   
   private final CeidgClient ceidgClient;
-
   private final CeidgProperties ceidgProperties;
 
   public ListaJdgDto pobierzListeJdg(String link) {
