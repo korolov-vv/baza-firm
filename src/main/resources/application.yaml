@@ -16,6 +16,28 @@ spring:
       ddl-auto: none
   liquibase:
     change-log: classpath:db/changelog/baza-firmy-changelog.yaml
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: http://keycloak.keycloak.svc.cluster.local/realms/app-business/protocol/openid-connect/certs
+
+application:
+  authorization:
+    disabled:
+      get:
+        - /health
+        - /info
+        - /prometheus
+        - /metrics
+        - /swagger-ui/**
+        - /v3/api-docs/**
+        - /api/v1/internal/**
+      post:
+        - /api/v1/admin/login/**
+        - /api/v1/admin/logout
+        - /api/v1/cust/login/**
+        - /api/v1/cust/logout
 
 aws:
   access-key: ${AWS_ACCESS_KEY}
@@ -38,3 +60,31 @@ smtp:
     port: ${SMTP_PORT:587}
     username: ${SMTP_USERNAME}
     password: ${SMTP_PASSWORD}
+
+keycloak-admin:
+  server-url: ${KEYCLOAK_SERVER_URL}
+  realm: bazafirm_admin
+  auth-url: ${keycloak-admin.server-url}/realms/${keycloak-admin.realm}/protocol/openid-connect/token
+  logout-url: ${keycloak-admin.server-url}/realms/${keycloak-admin.realm}/protocol/openid-connect/logout
+  introspect-token-url: ${keycloak-admin.auth-url}/introspect
+  admin-client-id: bazafirm_admin
+  admin-client-secret: ${KEYCLOAK_ADMIN_CLIENT_ADM_SECRET}
+  clients:
+    -
+      clientName: BAZAFIRM_WEB_APP
+      clientId: bazafirm-admin-web
+      clientSecret: ${KEYCLOAK_APP_WEB_CLIENT_ADM_SECRET}
+
+keycloak-customer:
+  server-url: ${KEYCLOAK_SERVER_URL}
+  realm: bazafirm-customer
+  auth-url: ${keycloak-customer.server-url}/realms/${keycloak-customer.realm}/protocol/openid-connect/token
+  logout-url: ${keycloak-customer.server-url}/realms/${keycloak-customer.realm}/protocol/openid-connect/logout
+  introspect-token-url: ${keycloak-customer.auth-url}/introspect
+  admin-client-id: app-admin
+  admin-client-secret: ${KEYCLOAK_ADMIN_CLIENT_CUST_SECRET}
+  clients:
+    -
+      clientName: BAZAFIRM_WEB_APP
+      clientId: customer-app-web
+      clientSecret: ${KEYCLOAK_APP_WEB_CLIENT_CUST_SECRET}
