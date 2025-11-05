@@ -46,13 +46,13 @@ interface PodmiotyGospodarczeQueryMapper {
 
     @Named("setNip")
     default String setNip(PodmiotGospodarczeViewEntity podmiotGospodarczy) {
-        return podmiotGospodarczy.getRegon();
+        return podmiotGospodarczy.getNip();
     }
 
 
     @Named("setRegon")
     default String setRegon(PodmiotGospodarczeViewEntity podmiotGospodarczy) {
-        return podmiotGospodarczy.getNip();
+        return podmiotGospodarczy.getRegon();
     }
 
     @Named("setKrs")
