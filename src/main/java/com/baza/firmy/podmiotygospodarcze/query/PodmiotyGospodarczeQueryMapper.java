@@ -49,7 +49,6 @@ interface PodmiotyGospodarczeQueryMapper {
         return podmiotGospodarczy.getNip();
     }
 
-
     @Named("setRegon")
     default String setRegon(PodmiotGospodarczeViewEntity podmiotGospodarczy) {
         return podmiotGospodarczy.getRegon();
