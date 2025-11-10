@@ -1,4 +1,4 @@
-package com.baza.firmy.controller;
+package com.baza.firmy.controller.admin;
 
 import com.baza.firmy.dto.PodmiotGospodarczyListDto;
 import com.baza.firmy.podmiotygospodarcze.query.PodmiotGospodarczeViewEntity;

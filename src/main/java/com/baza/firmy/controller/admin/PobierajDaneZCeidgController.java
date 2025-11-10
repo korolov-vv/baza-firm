@@ -1,4 +1,4 @@
-package com.baza.firmy.controller;
+package com.baza.firmy.controller.admin;
 
 import com.baza.firmy.common.harmonogram.scheduler.QuartzManager;
 import com.baza.firmy.common.harmonogram.scheduler.SchedulerSingleEnum;
