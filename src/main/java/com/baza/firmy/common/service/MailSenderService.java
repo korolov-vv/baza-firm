@@ -30,6 +30,8 @@ public class MailSenderService {
     } catch (MessagingException e) {
       log.info("Failed to send an email to: {}, cause: {}", to, e.getMessage());
       throw new RuntimeException(e);
+    } catch (Exception e) {
+        log.info("Failed to send an email to: {}, cause: {}", to, e.getMessage());
     }
   }
 }
