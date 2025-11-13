@@ -1,13 +1,14 @@
 package com.baza.firmy.common.harmonogram.scheduler;
 
 import com.baza.firmy.common.service.PobierzDaneZCeidgService;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.quartz.JobExecutionContext;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Map;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -22,7 +23,7 @@ class PobierajListeJdgNoweService implements BazowySchedulerService {
     log.info("Start EKSPORTUJ_LISTE_JDG_NOWE_JOB");
     pobierzDaneZCeidgService.pobierzListyJdgNoweIZapisz(Map.of(
         "status", "AKTYWNY",
-        "dataOd", LocalDate.now().minusDays(3).format(DateTimeFormatter.ISO_LOCAL_DATE),
+        "dataOd", LocalDate.now().minusDays(4).format(DateTimeFormatter.ISO_LOCAL_DATE),
         "dataDo", LocalDate.now().minusDays(3).format(DateTimeFormatter.ISO_LOCAL_DATE)
     ), null);
 
