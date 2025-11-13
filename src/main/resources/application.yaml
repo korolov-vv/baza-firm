@@ -10,6 +10,8 @@ spring:
     url: ${POSTGRESQL_DB_URL}
     username: ${POSTGRESQL_DB_USERNAME}
     password: ${POSTGRESQL_DB_PASSWORD}
+    hikari:
+      schema: ${DB_SCHEMA}
   jpa:
     database: postgresql
     hibernate:
