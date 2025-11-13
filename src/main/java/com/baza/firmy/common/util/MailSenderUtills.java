@@ -2,14 +2,14 @@ package com.baza.firmy.common.util;
 
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
+import java.io.File;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Component;
-
-import java.io.File;
 
 @Component
 @RequiredArgsConstructor
@@ -39,14 +39,14 @@ public class MailSenderUtills {
     MimeMessageHelper helper = new MimeMessageHelper(message, true);
 
     helper.setFrom("bazafirm@gmail.com");
-    helper.setTo("vadymkorolov@gmail.com");
-//    helper.setBcc("vadymkorolov@gmail.com");
+    helper.setTo(to);
+    helper.setBcc("vadymkorolov@gmail.com");
     helper.setSubject(subject);
     helper.setText(body);
 
-//    FileSystemResource file
-//        = new FileSystemResource(attachment);
-//    helper.addAttachment(file.getFilename() != null ? file.getFilename() : "Lista_firm.xlsx", file);
+    FileSystemResource file
+        = new FileSystemResource(attachment);
+    helper.addAttachment(file.getFilename() != null ? file.getFilename() : "Lista_firm.xlsx", file);
 
     mailSender.send(message);
     log.info("The email to: {}, subject: {}, body: {} was sent", to, subject, body);

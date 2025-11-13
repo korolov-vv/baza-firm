@@ -9,6 +9,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
+
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -23,10 +25,10 @@ public class MailSenderService {
     FileEntity fileEntity = fileRepository.findFirstByOrderByIdDesc()
         .orElseThrow(() -> new RuntimeException("File not found found"));
 
-//    File attachment = fileUtills.getFile(fileEntity.getPath(), fileEntity.getFileName());
+    File attachment = fileUtills.getFile(fileEntity.getPath(), fileEntity.getFileName());
 
     try {
-      mailSenderUtills.sendMessageWithAttachment(to, subject, body, null);
+      mailSenderUtills.sendMessageWithAttachment(to, subject, body, attachment);
     } catch (MessagingException e) {
       log.info("Failed to send an email to: {}, cause: {}", to, e.getMessage());
       throw new RuntimeException(e);
