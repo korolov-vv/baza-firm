@@ -8,13 +8,16 @@ COPY gradlew ./
 COPY gradle gradle
 COPY build.gradle settings.gradle ./
 
+# Make the Gradle wrapper executable
+RUN chmod +x gradlew
+
 # Download dependencies (this layer will be cached)
 RUN ./gradlew dependencies --no-daemon || return 0
 
 # Copy the rest of the source code
 COPY src src
 
-# Build the Spring Boot JAR (no tests to speed up)
+# Build the Spring Boot JAR (skip tests for faster build)
 RUN ./gradlew bootJar --no-daemon -x test
 
 # ---- Stage 2: Run ----
