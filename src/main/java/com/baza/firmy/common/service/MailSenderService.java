@@ -5,7 +5,6 @@ import com.baza.firmy.common.util.MailSenderUtills;
 import com.baza.firmy.entity.FileEntity;
 import com.baza.firmy.repository.FileRepository;
 import jakarta.mail.MessagingException;
-import java.io.File;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -24,10 +23,10 @@ public class MailSenderService {
     FileEntity fileEntity = fileRepository.findFirstByOrderByIdDesc()
         .orElseThrow(() -> new RuntimeException("File not found found"));
 
-    File attachment = fileUtills.getFile(fileEntity.getPath(), fileEntity.getFileName());
+//    File attachment = fileUtills.getFile(fileEntity.getPath(), fileEntity.getFileName());
 
     try {
-      mailSenderUtills.sendMessageWithAttachment(to, subject, body, attachment);
+      mailSenderUtills.sendMessageWithAttachment(to, subject, body, null);
     } catch (MessagingException e) {
       log.info("Failed to send an email to: {}, cause: {}", to, e.getMessage());
       throw new RuntimeException(e);
