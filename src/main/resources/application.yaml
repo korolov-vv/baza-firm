@@ -16,6 +16,9 @@ spring:
       ddl-auto: none
   liquibase:
     change-log: classpath:db/changelog/baza-firmy-changelog.yaml
+  sql:
+    init:
+      schema-locations: ${DB_SCHEMA}
 
 aws:
   access-key: ${AWS_ACCESS_KEY}
