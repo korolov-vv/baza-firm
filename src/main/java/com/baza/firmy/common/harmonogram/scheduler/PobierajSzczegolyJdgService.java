@@ -15,8 +15,8 @@ class PobierajSzczegolyJdgService implements BazowySchedulerService {
 
   @Override
   public void executeScheduler(JobExecutionContext jobExecutionContext) {
-    pobierzDaneZCeidgService.pobierajSzczegolyNowychJdg();
-    pobierzDaneZCeidgService.pobierajSzczegolyStareDaneJdg();
+//    pobierzDaneZCeidgService.pobierajSzczegolyNowychJdg();
+//    pobierzDaneZCeidgService.pobierajSzczegolyStareDaneJdg();
   }
 }
 
