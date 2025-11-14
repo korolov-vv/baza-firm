@@ -7,9 +7,9 @@ kill_timeout = '5m0s'
 [build]
 
 [http_service]
-  internal_port = 8082
+  internal_port = 8080
   force_https = true
-auto_start_machines = true
+  auto_start_machines = true
   processes = ['app']
 
   [[http_service.checks]]
