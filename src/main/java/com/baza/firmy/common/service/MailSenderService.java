@@ -5,10 +5,11 @@ import com.baza.firmy.common.util.MailSenderUtills;
 import com.baza.firmy.entity.FileEntity;
 import com.baza.firmy.repository.FileRepository;
 import jakarta.mail.MessagingException;
-import java.io.File;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+
+import java.io.File;
 
 @Service
 @RequiredArgsConstructor
@@ -31,6 +32,8 @@ public class MailSenderService {
     } catch (MessagingException e) {
       log.info("Failed to send an email to: {}, cause: {}", to, e.getMessage());
       throw new RuntimeException(e);
+    } catch (Exception e) {
+        log.info("Failed to send an email to: {}, cause: {}", to, e.getMessage());
     }
   }
 }

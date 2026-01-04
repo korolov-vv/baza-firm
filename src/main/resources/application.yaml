@@ -1,5 +1,5 @@
 server:
-  port: 8080
+  port: ${BE_PORT}
 
 spring:
   application:
@@ -14,6 +14,9 @@ spring:
     database: postgresql
     hibernate:
       ddl-auto: none
+    properties:
+      hibernate:
+        default_schema: ${DB_SCHEMA}
   liquibase:
     change-log: classpath:db/changelog/baza-firmy-changelog.yaml
   security:
