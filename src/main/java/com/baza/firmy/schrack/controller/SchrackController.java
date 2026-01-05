@@ -4,7 +4,6 @@ import com.baza.firmy.common.harmonogram.scheduler.QuartzManager;
 import com.baza.firmy.common.harmonogram.scheduler.SchedulerSingleEnum;
 import com.baza.firmy.dto.ParametryWyszukiwaniaDto;
 import io.swagger.v3.oas.annotations.Operation;
-import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -12,9 +11,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Map;
+
 @RestController
 @RequiredArgsConstructor
-@RequestMapping ("/api/schrack")
+@RequestMapping ("/api/v1/schrack")
 class SchrackController {
 
   private final QuartzManager quartzManager;

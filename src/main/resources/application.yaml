@@ -2,6 +2,8 @@ server:
   port: ${BE_PORT}
 
 spring:
+  main:
+    web-application-type: servlet
   application:
     name: firms
     profiles:
@@ -17,8 +19,6 @@ spring:
     properties:
       hibernate:
         default_schema: ${DB_SCHEMA}
-  liquibase:
-    change-log: classpath:db/changelog/baza-firmy-changelog.yaml
   security:
     oauth2:
       resourceserver:
@@ -36,11 +36,6 @@ application:
         - /swagger-ui/**
         - /v3/api-docs/**
         - /api/v1/internal/**
-      post:
-        - /api/v1/admin/login/**
-        - /api/v1/admin/logout
-        - /api/v1/cust/login/**
-        - /api/v1/cust/logout
 
 aws:
   access-key: ${AWS_ACCESS_KEY}

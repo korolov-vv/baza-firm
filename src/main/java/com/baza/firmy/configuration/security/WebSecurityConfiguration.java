@@ -27,7 +27,7 @@ import org.springframework.security.web.SecurityFilterChain;
 public class WebSecurityConfiguration {
 
   @Bean
-  public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+  public SecurityFilterChain filterChain(HttpSecurity http) {
     http.authorizeHttpRequests(authorize -> authorize
         .dispatcherTypeMatchers(DispatcherType.ERROR).permitAll()
         .anyRequest().authenticated());
@@ -43,8 +43,7 @@ public class WebSecurityConfiguration {
       AuthorizationDisabledEndpoints authorizationDisabledEndpoints
   ) {
     return web -> web.ignoring()
-        .requestMatchers(HttpMethod.GET, authorizationDisabledEndpoints.get())
-            .requestMatchers(HttpMethod.POST, authorizationDisabledEndpoints.post());
+        .requestMatchers(HttpMethod.GET, authorizationDisabledEndpoints.get());
   }
 
   @Bean
