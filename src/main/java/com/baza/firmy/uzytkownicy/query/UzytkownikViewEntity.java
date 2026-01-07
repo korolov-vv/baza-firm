@@ -14,6 +14,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Data
@@ -22,11 +23,18 @@ import java.util.UUID;
 @AllArgsConstructor
 @Entity
 @Table (name = "uzytkownicy")
-class UzytkownikViewEntity {
+public class UzytkownikViewEntity {
 
   @Id
   @EqualsAndHashCode.Include
   private Long id;
+  @Column(updatable = false)
+  private LocalDateTime createDate;
+  @Column(updatable = false)
+  private LocalDateTime lastModifiedDate;
+  @EqualsAndHashCode.Include
+  @Column(updatable = false)
+  private int version;
   @EqualsAndHashCode.Include
   @Column(insertable = false, updatable = false)
   private UUID uuid;

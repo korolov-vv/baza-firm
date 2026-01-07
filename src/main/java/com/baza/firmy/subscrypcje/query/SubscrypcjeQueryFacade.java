@@ -1,6 +1,5 @@
 package com.baza.firmy.subscrypcje.query;
 
-import com.baza.firmy.subscrypcje.domain.dto.SubscrypcjaDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -14,14 +13,11 @@ public class SubscrypcjeQueryFacade {
   private final SubscrypcjeQueryRepository subscrypcjeQueryRepository;
   private final SubscrypcjeQueryMapper subscrypcjeQueryMapper;
 
-  public SubscrypcjaDto findByUuid(UUID uuid) {
-    return subscrypcjeQueryRepository.findByUuid(uuid)
-            .map(subscrypcjeQueryMapper::toSubscrypcjaDto)
-        .orElseThrow(() -> new RuntimeException("Nie znaleziono subscrypcji o UUID: " + uuid));
+  public Optional<SubscrypcjaViewEntity> findByUuid(UUID uuid) {
+    return subscrypcjeQueryRepository.findByUuid(uuid);
   }
 
-  public Optional<SubscrypcjaDto> findByNazwa(String email) {
-      return subscrypcjeQueryRepository.findByNazwa(email)
-              .map(subscrypcjeQueryMapper::toSubscrypcjaDto);
+  public Optional<SubscrypcjaViewEntity> findByNazwa(String email) {
+      return subscrypcjeQueryRepository.findByNazwa(email);
   }
 }

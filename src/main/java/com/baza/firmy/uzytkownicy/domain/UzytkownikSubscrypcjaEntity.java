@@ -1,6 +1,7 @@
 package com.baza.firmy.uzytkownicy.domain;
 
-import com.baza.firmy.podmiotygospodarcze.query.PodmiotGospodarczeViewEntity;
+import com.baza.firmy.subscrypcje.query.SubscrypcjaViewEntity;
+import com.baza.firmy.uzytkownicy.query.UzytkownikViewEntity;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -20,6 +21,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -28,15 +30,15 @@ import java.util.UUID;
 @NoArgsConstructor(force = true)
 @AllArgsConstructor
 @Entity
-@Table (name = "uzytkownicy")
-class UzytkownikEntity {
+@Table (name = "uzytkownicy_subscrypcje")
+class UzytkownikSubscrypcjaEntity {
 
   @Id
   @SequenceGenerator(
-          name = "uzytkownicy_seq",
+          name = "uzytkownicy_subscrypcje_seq",
           allocationSize = 1,
-          sequenceName = "uzytkownicy_seq")
-  @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "uzytkownicy_seq")
+          sequenceName = "uzytkownicy_subscrypcje_seq")
+  @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "uzytkownicy_subscrypcje_seq")
   @EqualsAndHashCode.Include
   private Long id;
   @CreatedDate
@@ -49,9 +51,13 @@ class UzytkownikEntity {
   private int version;
   @EqualsAndHashCode.Include
   private UUID uuid;
-  @EqualsAndHashCode.Include
-  private String email;
   @OneToOne(cascade = CascadeType.ALL)
-  @JoinColumn(name = "podmiot_gosp_id", referencedColumnName = "id")
-  private PodmiotGospodarczeViewEntity firma;
+  @JoinColumn(name = "uzytkownik_id", referencedColumnName = "id")
+  private UzytkownikViewEntity uzytkownik;
+  @OneToOne(cascade = CascadeType.ALL)
+  @JoinColumn(name = "subscrypcja_id", referencedColumnName = "id")
+  private SubscrypcjaViewEntity subscrypcja;
+  private LocalDate aktywnaOd;
+  private LocalDate aktywnaDo;
+  private boolean czyOplacona;
 }

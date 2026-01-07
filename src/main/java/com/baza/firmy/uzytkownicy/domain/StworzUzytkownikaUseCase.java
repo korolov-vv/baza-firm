@@ -12,10 +12,14 @@ class StworzUzytkownikaUseCase {
 
   private final UzytkownicyRepository uzytkownicyRepository;
   private final UzytkownicyMapper uzytkownicyMapper;
+  private final StworzTrialUzytkownikaUseCase stworzTrialUzytkownikaUseCase;
 
   public UUID stworzUzytkownika(StworzUzytkownikaDto stworzUzytkownikaDto) {
     UzytkownikEntity uzytkownikEntity = uzytkownicyMapper.toUzytkownikEntity(stworzUzytkownikaDto);
+    UUID uuidZapisanegoUzytkownika = uzytkownicyRepository.save(uzytkownikEntity).getUuid();
 
-    return uzytkownicyRepository.save(uzytkownikEntity).getUuid();
+    stworzTrialUzytkownikaUseCase.stworzTrialUzytkownika(uuidZapisanegoUzytkownika);
+
+    return uuidZapisanegoUzytkownika;
   }
 }
