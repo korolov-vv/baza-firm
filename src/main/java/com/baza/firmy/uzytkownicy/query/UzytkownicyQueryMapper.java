@@ -8,5 +8,5 @@ import java.util.UUID;
 @Mapper(componentModel = "spring", imports = { UUID.class })
 interface UzytkownicyQueryMapper {
 
-  UzytkownikDto toUzytkownikDto(UzytkownikViewEntity dto);
+  UzytkownikDto toUzytkownikDto(UzytkownikViewEntity entity);
 }

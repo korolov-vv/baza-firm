@@ -15,6 +15,7 @@ class StworzUzytkownikaUseCase {
 
   public UUID stworzUzytkownika(StworzUzytkownikaDto stworzUzytkownikaDto) {
     UzytkownikEntity uzytkownikEntity = uzytkownicyMapper.toUzytkownikEntity(stworzUzytkownikaDto);
+
     return uzytkownicyRepository.save(uzytkownikEntity).getUuid();
   }
 }
