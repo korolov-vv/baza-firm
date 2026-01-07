@@ -19,6 +19,8 @@ spring:
     properties:
       hibernate:
         default_schema: ${DB_SCHEMA}
+  liquibase:
+    change-log: classpath:db/changelog/baza-firmy-changelog.yaml
   security:
     oauth2:
       resourceserver:
