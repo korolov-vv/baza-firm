@@ -1,6 +1,7 @@
 package com.baza.firmy.uzytkownicy.domain;
 
-import com.baza.firmy.uzytkownicy.domain.dto.StworzUzytkownikaDto;
+import com.baza.firmy.subscrypcje.domain.SubscrypcjeFacade;
+import com.baza.firmy.uzytkownicy.domain.dto.UzytkownikDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -12,13 +13,13 @@ class StworzUzytkownikaUseCase {
 
   private final UzytkownicyRepository uzytkownicyRepository;
   private final UzytkownicyMapper uzytkownicyMapper;
-  private final StworzTrialUzytkownikaUseCase stworzTrialUzytkownikaUseCase;
+  private final SubscrypcjeFacade subscrypcjeFacade;
 
-  public UUID stworzUzytkownika(StworzUzytkownikaDto stworzUzytkownikaDto) {
-    UzytkownikEntity uzytkownikEntity = uzytkownicyMapper.toUzytkownikEntity(stworzUzytkownikaDto);
+  public UUID stworzUzytkownika(UzytkownikDto uzytkownikDto) {
+    UzytkownikEntity uzytkownikEntity = uzytkownicyMapper.toUzytkownikEntity(uzytkownikDto);
     UUID uuidZapisanegoUzytkownika = uzytkownicyRepository.save(uzytkownikEntity).getUuid();
 
-    stworzTrialUzytkownikaUseCase.stworzTrialUzytkownika(uuidZapisanegoUzytkownika);
+    subscrypcjeFacade.stworzTrialUzytkownika(uuidZapisanegoUzytkownika);
 
     return uuidZapisanegoUzytkownika;
   }

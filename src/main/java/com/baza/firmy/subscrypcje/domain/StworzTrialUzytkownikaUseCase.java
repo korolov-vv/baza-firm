@@ -1,4 +1,4 @@
-package com.baza.firmy.uzytkownicy.domain;
+package com.baza.firmy.subscrypcje.domain;
 
 import com.baza.firmy.subscrypcje.query.SubscrypcjaViewEntity;
 import com.baza.firmy.subscrypcje.query.SubscrypcjeQueryFacade;
@@ -21,6 +21,6 @@ class StworzTrialUzytkownikaUseCase {
     SubscrypcjaViewEntity subscrypcja = subscrypcjeQueryFacade.findByNazwa(TRIAL)
             .orElseThrow(() -> new IllegalArgumentException("Subscrypcja o nazwie: " + TRIAL + " nie istnieje"));
 
-    return stworzSubscrypcjeUzytkownikaUseCase.stworzSubscrypcjeUzytkownika(new StworzSubscrypcjeUzytkownikaDto(uzytkownikUuid, subscrypcja.getUuid()));
+    return stworzSubscrypcjeUzytkownikaUseCase.stworzSubscrypcjeUzytkownika(new StworzSubscrypcjeUzytkownikaDto(uzytkownikUuid, subscrypcja.getUuid(), StatusSubscrypcji.AKTYWNA));
   }
 }

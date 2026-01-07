@@ -16,7 +16,7 @@ create table if not exists uzytkownicy_subscrypcje (
                                            subscrypcja_id bigint references subscrypcje(id),
                                            aktywna_od timestamp,
                                            aktywna_do timestamp,
-                                           czy_oplacona boolean
+                                           status_subscrypcji varchar(25)
 );
 
 create sequence if not exists uzytkownicy_subscrypcje_seq increment 1 start 1;

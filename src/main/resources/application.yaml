@@ -25,7 +25,7 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          jwk-set-uri: http://keycloak.keycloak.svc.cluster.local/realms/app-business/protocol/openid-connect/certs
+          jwk-set-uri: ${keycloak-customer.server-url}/realms/${keycloak-customer.realm}/protocol/openid-connect/certs
 
 application:
   authorization:

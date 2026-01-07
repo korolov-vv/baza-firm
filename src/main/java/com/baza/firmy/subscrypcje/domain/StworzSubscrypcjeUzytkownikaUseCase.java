@@ -1,4 +1,4 @@
-package com.baza.firmy.uzytkownicy.domain;
+package com.baza.firmy.subscrypcje.domain;
 
 import com.baza.firmy.subscrypcje.query.SubscrypcjaViewEntity;
 import com.baza.firmy.subscrypcje.query.SubscrypcjeQueryFacade;
@@ -36,7 +36,7 @@ class StworzSubscrypcjeUzytkownikaUseCase {
             .subscrypcja(subscrypcja)
             .aktywnaOd(LocalDate.now())
             .aktywnaDo(LocalDate.now().plusDays(subscrypcja.getOkresTrwaniaWDniach()))
-            .czyOplacona(false)
+            .statusSubscrypcji(StatusSubscrypcji.OCZEKUJE_NA_PLATNOSC)
             .build();
   }
 }

@@ -1,10 +1,12 @@
-package com.baza.firmy.uzytkownicy.domain;
+package com.baza.firmy.subscrypcje.domain;
 
 import com.baza.firmy.subscrypcje.query.SubscrypcjaViewEntity;
 import com.baza.firmy.uzytkownicy.query.UzytkownikViewEntity;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -59,5 +61,6 @@ class UzytkownikSubscrypcjaEntity {
   private SubscrypcjaViewEntity subscrypcja;
   private LocalDate aktywnaOd;
   private LocalDate aktywnaDo;
-  private boolean czyOplacona;
+  @Enumerated(EnumType.STRING)
+  private StatusSubscrypcji statusSubscrypcji;
 }

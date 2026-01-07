@@ -11,7 +11,6 @@ import java.util.UUID;
 public class UzytkownicyQueryFacade {
 
   private final UzytkownicyQueryRepository uzytkownicyQueryRepository;
-  private final UzytkownicyQueryMapper uzytkownicyQueryMapper;
 
   public Optional<UzytkownikViewEntity> findByUuid(UUID uuid) {
     return uzytkownicyQueryRepository.findByUuid(uuid);
