@@ -12,9 +12,9 @@ import java.util.UUID;
 @Builder
 @NoArgsConstructor(force = true)
 @AllArgsConstructor
-public class StworzSubscrypcjeUzytkownikaDto {
+public class StworzSubscrypcjeDlaFirmyKlientaDto {
 
-  private UUID uzytkownikId;
+  private UUID firmaUuid;
   private UUID subscrypcjaId;
   private StatusSubscrypcji statusSubscrypcji;
 }

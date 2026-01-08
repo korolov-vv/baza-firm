@@ -36,11 +36,11 @@ class StworzUzytkownikaUseCase {
     UzytkownikEntity uzytkownikEntity = uzytkownicyMapper.toUzytkownikEntity(stworzUzytkownikaDto);
     uzytkownikEntity.setFirma(pobierzDaneFirmy(stworzUzytkownikaDto.getNip()));
 
-    UUID uuidZapisanegoUzytkownika = uzytkownicyRepository.save(uzytkownikEntity).getUuid();
+    UzytkownikEntity zapisanyUzytkownik = uzytkownicyRepository.save(uzytkownikEntity);
 
-    subscrypcjeFacade.stworzTrialUzytkownika(uuidZapisanegoUzytkownika);
+    subscrypcjeFacade.stworzTrialDlaFirmyKlienta(zapisanyUzytkownik.getFirma().getUuid());
 
-    return uuidZapisanegoUzytkownika;
+    return zapisanyUzytkownik.getUuid();
   }
 
   private PodmiotGospodarczeViewEntity pobierzDaneFirmy(String nip) {

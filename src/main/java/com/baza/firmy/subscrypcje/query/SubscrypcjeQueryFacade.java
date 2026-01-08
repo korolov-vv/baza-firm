@@ -23,8 +23,8 @@ public class SubscrypcjeQueryFacade {
       return subscrypcjeQueryRepository.findByNazwa(email);
   }
 
-  public Optional<SubscrypcjaUzytkownikaDto> znajdzAktywnaSubscrypcjeUzytkownika(UUID uuidUzytkownika) {
-    return uzytkownicySubscrypcjeQueryRepository.findByUzytkownikUuidAndStatusSubscrypcji(uuidUzytkownika, StatusSubscrypcji.AKTYWNA)
+  public Optional<SubscrypcjaUzytkownikaDto> znajdzAktywnaSubscrypcjeDlaFirmy(UUID uuidFirmyKlienta) {
+    return uzytkownicySubscrypcjeQueryRepository.findByFirmaKlientaUuidAndStatusSubscrypcji(uuidFirmyKlienta, StatusSubscrypcji.AKTYWNA)
             .map(uzytkownikSubscrypcja -> SubscrypcjaUzytkownikaDto.builder()
                     .uuid(uzytkownikSubscrypcja.getUuid())
                     .nazwa(uzytkownikSubscrypcja.getSubscrypcja().getNazwa())

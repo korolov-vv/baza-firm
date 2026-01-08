@@ -6,6 +6,8 @@ import com.baza.firmy.podmiotygospodarcze.query.PodmiotGospodarczeViewEntity;
 import com.baza.firmy.podmiotygospodarcze.query.PodmiotyGospodarczeFilterSpecification;
 import com.baza.firmy.podmiotygospodarcze.query.PodmiotyGospodarczeQueryFacade;
 import com.baza.firmy.subscrypcje.query.SubscrypcjeQueryFacade;
+import com.baza.firmy.uzytkownicy.query.UzytkownicyQueryFacade;
+import com.baza.firmy.uzytkownicy.query.UzytkownikViewEntity;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -35,6 +37,7 @@ import java.util.UUID;
 class FirmyController {
 
   private final PodmiotyGospodarczeQueryFacade podmiotyGospodarczeQueryFacade;
+  private final UzytkownicyQueryFacade uzytkownicyQueryFacade;
   private final SubscrypcjeQueryFacade subscrypcjeQueryFacade;
 
   @GetMapping (produces = MediaType.APPLICATION_JSON_VALUE)
@@ -50,8 +53,11 @@ class FirmyController {
           Pageable pageable,
           @AuthenticationPrincipal UserPrincipal userPrincipal
   ) {
-    subscrypcjeQueryFacade.znajdzAktywnaSubscrypcjeUzytkownika(UUID.fromString(userPrincipal.userId()))
-        .orElseThrow(() -> new ResponseStatusException(HttpStatus.FORBIDDEN, "Użytkownik nie posiada aktywnej subskrypcji"));
+    UzytkownikViewEntity uzytkownik = uzytkownicyQueryFacade.findByUuid(UUID.fromString(userPrincipal.userId()))
+        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Użytkownik nie istnieje"));
+
+    subscrypcjeQueryFacade.znajdzAktywnaSubscrypcjeDlaFirmy(uzytkownik.getFirma().getUuid())
+        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Użytkownik nie posiada aktywnej subskrypcji"));
 
     Specification<PodmiotGospodarczeViewEntity> specification = SpecificationBuilder.specification(
             PodmiotyGospodarczeFilterSpecification.class)

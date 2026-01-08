@@ -1,7 +1,7 @@
 package com.baza.firmy.subscrypcje.domain;
 
 import com.baza.firmy.subscrypcje.dto.StworzSubscrypcjeDto;
-import com.baza.firmy.uzytkownicy.dto.StworzSubscrypcjeUzytkownikaDto;
+import com.baza.firmy.uzytkownicy.dto.StworzSubscrypcjeDlaFirmyKlientaDto;
 import jakarta.transaction.Transactional;
 import jakarta.transaction.Transactional.TxType;
 import lombok.RequiredArgsConstructor;
@@ -14,8 +14,8 @@ import java.util.UUID;
 public class SubscrypcjeFacade {
 
   private final StworzSubscrypcjeUseCase stworzSubscrypcjeUseCase;
-  private final StworzTrialUzytkownikaUseCase stworzTrialUzytkownikaUseCase;
-  private final StworzSubscrypcjeUzytkownikaUseCase stworzSubscrypcjeUzytkownikaUseCase;
+  private final StworzTrialDlaFirmyKlientaUseCase stworzTrialDlaFirmyKlientaUseCase;
+  private final StworzSubscrypcjeDlaFirmyKlientaUseCase stworzSubscrypcjeDlaFirmyKlientaUseCase;
 
   @Transactional(TxType.MANDATORY)
   public UUID stworzSubscrypcje(StworzSubscrypcjeDto stworzSubscrypcjeDto) {
@@ -23,12 +23,12 @@ public class SubscrypcjeFacade {
   }
 
   @Transactional(TxType.MANDATORY)
-  public UUID stworzTrialUzytkownika(UUID uuidUzytkownika) {
-    return stworzTrialUzytkownikaUseCase.stworzTrialUzytkownika(uuidUzytkownika);
+  public UUID stworzTrialDlaFirmyKlienta(UUID uuidFirmyKlienta) {
+    return stworzTrialDlaFirmyKlientaUseCase.stworzTrialDlaFirmyKlienta(uuidFirmyKlienta);
   }
 
   @Transactional(TxType.MANDATORY)
-  public UUID stworzSubscrypcjeUzytkownika(StworzSubscrypcjeUzytkownikaDto stworzSubscrypcjeUzytkownikaDto) {
-    return stworzSubscrypcjeUzytkownikaUseCase.stworzSubscrypcjeUzytkownika(stworzSubscrypcjeUzytkownikaDto);
+  public UUID stworzSubscrypcjeDlaFirmyKlienta(StworzSubscrypcjeDlaFirmyKlientaDto stworzSubscrypcjeDlaFirmyKlientaDto) {
+    return stworzSubscrypcjeDlaFirmyKlientaUseCase.stworzSubscrypcjeDlaFirmyKlienta(stworzSubscrypcjeDlaFirmyKlientaDto);
   }
 }

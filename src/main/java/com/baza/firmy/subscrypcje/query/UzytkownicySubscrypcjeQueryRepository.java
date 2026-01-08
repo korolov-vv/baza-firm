@@ -10,5 +10,5 @@ import java.util.UUID;
 @Repository
 interface UzytkownicySubscrypcjeQueryRepository extends JpaRepository<UzytkownikSubscrypcjaViewEntity, Long> {
 
-    Optional<UzytkownikSubscrypcjaViewEntity> findByUzytkownikUuidAndStatusSubscrypcji(UUID uuidUzytkownika, StatusSubscrypcji statusSubscrypcji);
+    Optional<UzytkownikSubscrypcjaViewEntity> findByFirmaKlientaUuidAndStatusSubscrypcji(UUID uuidUzytkownika, StatusSubscrypcji statusSubscrypcji);
 }
