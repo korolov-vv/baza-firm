@@ -1,7 +1,7 @@
 package com.baza.firmy.subscrypcje.query;
 
 import com.baza.firmy.subscrypcje.domain.StatusSubscrypcji;
-import com.baza.firmy.subscrypcje.domain.dto.SubscrypcjaUzytkownikaDto;
+import com.baza.firmy.subscrypcje.dto.SubscrypcjaUzytkownikaDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

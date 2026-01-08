@@ -1,7 +1,7 @@
 package com.baza.firmy.subscrypcje.domain;
 
-import com.baza.firmy.subscrypcje.domain.dto.StworzSubscrypcjeDto;
-import com.baza.firmy.uzytkownicy.domain.dto.StworzSubscrypcjeUzytkownikaDto;
+import com.baza.firmy.subscrypcje.dto.StworzSubscrypcjeDto;
+import com.baza.firmy.uzytkownicy.dto.StworzSubscrypcjeUzytkownikaDto;
 import jakarta.transaction.Transactional;
 import jakarta.transaction.Transactional.TxType;
 import lombok.RequiredArgsConstructor;

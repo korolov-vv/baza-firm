@@ -1,6 +1,6 @@
 package com.baza.firmy.subscrypcje.domain;
 
-import com.baza.firmy.subscrypcje.domain.dto.StworzSubscrypcjeDto;
+import com.baza.firmy.subscrypcje.dto.StworzSubscrypcjeDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 

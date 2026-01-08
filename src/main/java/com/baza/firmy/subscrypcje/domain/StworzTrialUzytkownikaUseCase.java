@@ -2,7 +2,7 @@ package com.baza.firmy.subscrypcje.domain;
 
 import com.baza.firmy.subscrypcje.query.SubscrypcjaViewEntity;
 import com.baza.firmy.subscrypcje.query.SubscrypcjeQueryFacade;
-import com.baza.firmy.uzytkownicy.domain.dto.StworzSubscrypcjeUzytkownikaDto;
+import com.baza.firmy.uzytkownicy.dto.StworzSubscrypcjeUzytkownikaDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

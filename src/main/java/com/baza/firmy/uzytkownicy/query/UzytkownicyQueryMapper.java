@@ -1,6 +1,6 @@
 package com.baza.firmy.uzytkownicy.query;
 
-import com.baza.firmy.uzytkownicy.domain.dto.UzytkownikDto;
+import com.baza.firmy.uzytkownicy.dto.UzytkownikDto;
 import org.mapstruct.Mapper;
 
 import java.util.UUID;

@@ -1,4 +1,4 @@
-package com.baza.firmy.subscrypcje.domain.dto;
+package com.baza.firmy.subscrypcje.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

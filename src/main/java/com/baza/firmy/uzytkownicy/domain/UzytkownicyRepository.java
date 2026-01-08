@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 interface UzytkownicyRepository extends JpaRepository<UzytkownikEntity, Long> {
 
+    boolean existsByFirmaNip(String nip);
 }

@@ -1,6 +1,6 @@
 package com.baza.firmy.subscrypcje.query;
 
-import com.baza.firmy.subscrypcje.domain.dto.SubscrypcjaDto;
+import com.baza.firmy.subscrypcje.dto.SubscrypcjaDto;
 import org.mapstruct.Mapper;
 
 import java.util.UUID;

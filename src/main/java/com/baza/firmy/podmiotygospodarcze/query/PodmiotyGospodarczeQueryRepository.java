@@ -1,11 +1,14 @@
 package com.baza.firmy.podmiotygospodarcze.query;
 
-import java.time.LocalDate;
-import java.util.List;
-import java.util.UUID;
+import com.baza.firmy.constants.enums.BusinessStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
+
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 @Repository
 interface PodmiotyGospodarczeQueryRepository extends JpaRepository<PodmiotGospodarczeViewEntity, Long>, JpaSpecificationExecutor<PodmiotGospodarczeViewEntity> {
@@ -17,4 +20,10 @@ interface PodmiotyGospodarczeQueryRepository extends JpaRepository<PodmiotGospod
   List<PodmiotGospodarczeViewEntity> findAllByWlascicielNipIsNull();
 
   boolean existsByNumerKrs(String krs);
+
+  List<PodmiotGospodarczeViewEntity> findAllByNipAndStatus(String nip, BusinessStatus status);
+
+  boolean existsByNipAndStatus(String nip, BusinessStatus status);
+
+  Optional<PodmiotGospodarczeViewEntity> findByUuid(UUID uuid);
 }

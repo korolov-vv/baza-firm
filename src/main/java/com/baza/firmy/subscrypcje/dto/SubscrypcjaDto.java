@@ -1,4 +1,4 @@
-package com.baza.firmy.uzytkownicy.domain.dto;
+package com.baza.firmy.subscrypcje.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,9 +11,11 @@ import java.util.UUID;
 @Builder
 @NoArgsConstructor(force = true)
 @AllArgsConstructor
-public class UzytkownikDto {
+public class SubscrypcjaDto {
 
   private UUID uuid;
-  private String email;
-  private String podmiotGospodarcyId;
+  private String nazwa;
+  private String opis;
+  private int iloscDostepnychFirm;
+  private int okresTrwaniaWDniach;
 }
