@@ -15,6 +15,8 @@ import java.util.UUID;
 @RequiredArgsConstructor
 class StworzSubscrypcjeDlaFirmyKlientaUseCase {
 
+  private static final String TRIAL = "TRIAL";
+
   private final UzytkownicySubscrypcjeRepository uzytkownicySubscrypcjeRepository;
   private final PodmiotyGospodarczeQueryFacade podmiotyGospodarczeQueryFacade;
   private final SubscrypcjeQueryFacade subscrypcjeQueryFacade;
@@ -37,7 +39,7 @@ class StworzSubscrypcjeDlaFirmyKlientaUseCase {
             .subscrypcja(subscrypcja)
             .aktywnaOd(LocalDate.now())
             .aktywnaDo(LocalDate.now().plusDays(subscrypcja.getOkresTrwaniaWDniach()))
-            .statusSubscrypcji(StatusSubscrypcji.OCZEKUJE_NA_PLATNOSC)
+            .statusSubscrypcji(TRIAL.equals(subscrypcja.getNazwa()) ? StatusSubscrypcji.AKTYWNA : StatusSubscrypcji.OCZEKUJE_NA_PLATNOSC)
             .build();
   }
 }

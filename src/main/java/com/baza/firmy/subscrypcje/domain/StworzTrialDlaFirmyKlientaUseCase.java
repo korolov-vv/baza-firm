@@ -12,7 +12,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 class StworzTrialDlaFirmyKlientaUseCase {
 
-  public static final String TRIAL = "TRIAL";
+  private static final String TRIAL = "TRIAL";
 
   private final StworzSubscrypcjeDlaFirmyKlientaUseCase stworzSubscrypcjeDlaFirmyKlientaUseCase;
   private final SubscrypcjeQueryFacade subscrypcjeQueryFacade;
