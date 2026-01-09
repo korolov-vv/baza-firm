@@ -4,6 +4,8 @@ import com.baza.firmy.danezportaluzewn.domain.dto.FirmaPortalZewnDto;
 import com.baza.firmy.podmiotygospodarcze.domain.dto.GusSzczegolyDto;
 import com.baza.firmy.podmiotygospodarcze.domain.dto.JdgSzczegolyDto;
 import com.baza.firmy.response.krs.OdpisAktualnyResponse;
+import jakarta.transaction.Transactional;
+import jakarta.transaction.Transactional.TxType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -49,6 +51,7 @@ public class PodmiotyGospodarczeFacade {
     zaktualizujDaneKontaktoweUseCase.zaktualizujDaneKontaktowe(firma);
   }
 
+  @Transactional(TxType.REQUIRES_NEW)
   public UUID pobierzOrazZapiszDaneFirmyZGus(String nip) {
     // TODO do implementacji, na razie zapisuje się tylko NIP
     return stworzPodmiotGospodarczyZGusUseCase.stworzPodmiotGospodarczy(

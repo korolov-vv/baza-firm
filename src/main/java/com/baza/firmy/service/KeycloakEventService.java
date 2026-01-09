@@ -41,16 +41,40 @@ public class KeycloakEventService {
             case "update_profile":
                 handleProfileUpdate(event);
                 break;
+            case "access.VERIFY_EMAIL":
+            case "access.verify_email":
+                handleEmailVerification(event);
+                break;
             default:
                 log.debug("Unhandled event type: {}", event.getType());
         }
+    }
+
+    private void handleEmailVerification(KeycloakEventDto event) {
+        // Pobierz username z eventu (email)
+        String email = event.getDetails() != null
+                ? event.getDetails().get("username")
+                : null;
+
+        if (email == null || email.isBlank()) {
+            log.warn("No email found for Keycloak user: {}", event.getUserId());
+            return;
+        }
+
+        // Sprawdź czy użytkownik już istnieje w bazie
+        if (!uzytkownicyQueryFacade.existsByEmail(email)) {
+            log.warn("Użytkownik z email: {} nie istnieje w bazie", email);
+            return;
+        }
+
+        uzytkownicyFacade.ustawEmailPotwierdzony(event.getDetails().get("username"));
     }
 
     private void handleUserRegistration(KeycloakEventDto event) {
         log.info("Handling user registration for userId: {}", event.getUserId());
 
         try {
-            // Pobierz username z eventu (może być email lub inna wartość)
+            // Pobierz username z eventu (email)
             String email = event.getDetails() != null
                     ? event.getDetails().get("username")
                     : null;

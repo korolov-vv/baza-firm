@@ -18,6 +18,11 @@ class StworzTrialDlaFirmyKlientaUseCase {
   private final SubscrypcjeQueryFacade subscrypcjeQueryFacade;
 
   public UUID stworzTrialDlaFirmyKlienta(UUID uuidFirmyKlienta) {
+    subscrypcjeQueryFacade.znajdzAktywnaSubscrypcjeDlaFirmy(uuidFirmyKlienta)
+            .ifPresent(_ -> {
+                throw new IllegalArgumentException("Firma ma już aktywną subscrypcję");
+            });
+
     SubscrypcjaViewEntity subscrypcja = subscrypcjeQueryFacade.findByNazwa(TRIAL)
             .orElseThrow(() -> new IllegalArgumentException("Subscrypcja o nazwie: " + TRIAL + " nie istnieje"));
 
