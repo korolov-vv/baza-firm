@@ -19,4 +19,8 @@ public class UzytkownicyQueryFacade {
   public Optional<UzytkownikViewEntity> findByEmail(String email) {
       return uzytkownicyQueryRepository.findByEmail(email);
   }
+
+  public boolean existsByEmail(String email) {
+      return uzytkownicyQueryRepository.existsByEmail(email);
+  }
 }

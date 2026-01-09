@@ -44,4 +44,6 @@ public class UzytkownikViewEntity {
   @OneToOne(cascade = CascadeType.ALL)
   @JoinColumn(name = "podmiot_gosp_id", referencedColumnName = "id")
   private PodmiotGospodarczeViewEntity firma;
+  @Column(insertable = false, updatable = false)
+  private boolean czyEmailPotwierdzony;
 }

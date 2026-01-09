@@ -43,7 +43,8 @@ public class WebSecurityConfiguration {
       AuthorizationDisabledEndpoints authorizationDisabledEndpoints
   ) {
     return web -> web.ignoring()
-        .requestMatchers(HttpMethod.GET, authorizationDisabledEndpoints.get());
+        .requestMatchers(HttpMethod.GET, authorizationDisabledEndpoints.get())
+            .requestMatchers(HttpMethod.POST, authorizationDisabledEndpoints.post());
   }
 
   @Bean

@@ -38,6 +38,8 @@ application:
         - /swagger-ui/**
         - /v3/api-docs/**
         - /api/v1/internal/**
+      post:
+        - /api/v1/internal/keycloak/**
 
 aws:
   access-key: ${AWS_ACCESS_KEY}

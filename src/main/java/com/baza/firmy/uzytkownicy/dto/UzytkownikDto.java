@@ -17,4 +17,5 @@ public class UzytkownikDto {
   private String email;
   private String podmiotGospodarcyId;
   private String nip;
+  private boolean czyEmailPotwierdzony;
 }

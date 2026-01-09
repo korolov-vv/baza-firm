@@ -12,4 +12,6 @@ interface UzytkownicyQueryRepository extends JpaRepository<UzytkownikViewEntity,
     Optional<UzytkownikViewEntity> findByUuid(UUID uuid);
 
     Optional<UzytkownikViewEntity> findByEmail(String email);
+
+    boolean existsByEmail(String email);
 }

@@ -18,6 +18,7 @@ class StworzPodmiotGospodarczyZGusUseCase {
   public UUID stworzPodmiotGospodarczy(GusSzczegolyDto gusSzczegolyDto) {
     PodmiotGospodarczyEntity podmiotGospodarczyEntity = PodmiotGospodarczyEntity.builder()
             .uuid(UUID.randomUUID())
+            .nazwa("")
             .nip(gusSzczegolyDto.getNip())
             .status(BusinessStatus.AKTYWNY)
             .build();

@@ -38,10 +38,15 @@ public class PodmiotyGospodarczeQueryFacade {
 
   public Optional<PodmiotGospodarczeViewEntity> pobierzAktywnaFirmePoNip(String nip) {
     List<PodmiotGospodarczeViewEntity> podmiotGospodarczeList = podmiotyGospodarczeQueryRepository.findAllByNipAndStatus(nip, BusinessStatus.AKTYWNY);
+
+    if (podmiotGospodarczeList.isEmpty()) {
+      return Optional.empty();
+    }
+
     if (podmiotGospodarczeList.size() > 1) {
       log.info("Znaleziono więcej niż jedną aktywna firmę z NIP: {}", nip);
     }
-    return Optional.of(podmiotGospodarczeList.get(0));
+    return Optional.of(podmiotGospodarczeList.getFirst());
   }
 
   public Optional<PodmiotGospodarczeViewEntity> pobierzPoUuid(UUID uuid) {

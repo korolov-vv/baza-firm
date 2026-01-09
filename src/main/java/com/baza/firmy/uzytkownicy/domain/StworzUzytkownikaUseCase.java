@@ -34,6 +34,7 @@ class StworzUzytkownikaUseCase {
     }
 
     UzytkownikEntity uzytkownikEntity = uzytkownicyMapper.toUzytkownikEntity(stworzUzytkownikaDto);
+    uzytkownikEntity.setCzyEmailPotwierdzony(false);
     uzytkownikEntity.setFirma(pobierzDaneFirmy(stworzUzytkownikaDto.getNip()));
 
     UzytkownikEntity zapisanyUzytkownik = uzytkownicyRepository.save(uzytkownikEntity);

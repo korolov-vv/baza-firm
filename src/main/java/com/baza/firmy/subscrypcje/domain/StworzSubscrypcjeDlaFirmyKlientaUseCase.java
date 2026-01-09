@@ -32,6 +32,7 @@ class StworzSubscrypcjeDlaFirmyKlientaUseCase {
 
   private UzytkownikSubscrypcjaEntity stworzSubscrypcjeDlaFirmyKlienta(PodmiotGospodarczeViewEntity firma, SubscrypcjaViewEntity subscrypcja) {
     return UzytkownikSubscrypcjaEntity.builder()
+            .uuid(UUID.randomUUID())
             .firmaKlient(firma)
             .subscrypcja(subscrypcja)
             .aktywnaOd(LocalDate.now())
