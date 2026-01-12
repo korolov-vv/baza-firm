@@ -1,10 +1,10 @@
 package com.baza.firmy.controller.customer;
 
-import com.baza.firmy.dto.PodmiotGospodarczyListDto;
 import com.baza.firmy.dto.UserPrincipal;
-import com.baza.firmy.podmiotygospodarcze.query.PodmiotGospodarczeViewEntity;
-import com.baza.firmy.podmiotygospodarcze.query.PodmiotyGospodarczeFilterSpecification;
-import com.baza.firmy.podmiotygospodarcze.query.PodmiotyGospodarczeQueryFacade;
+import com.baza.firmy.firmycrm.dto.FirmaCrmListDto;
+import com.baza.firmy.firmycrm.query.FirmaCrmViewEntity;
+import com.baza.firmy.firmycrm.query.FirmyCrmFilterSpecification;
+import com.baza.firmy.firmycrm.query.FirmyCrmQueryFacade;
 import com.baza.firmy.firmysubscrypcje.dto.FirmaSubscrypcjaDto;
 import com.baza.firmy.firmysubscrypcje.query.FirmySubscrypcjeQueryFacade;
 import com.baza.firmy.uzytkownicy.query.UzytkownicyQueryFacade;
@@ -34,22 +34,22 @@ import java.util.UUID;
 @Tag (name = "FIRMY API", description = "Dostęp do firm")
 class FirmyController {
 
-  private final PodmiotyGospodarczeQueryFacade podmiotyGospodarczeQueryFacade;
+  private final FirmyCrmQueryFacade firmyCrmQueryFacade;
   private final UzytkownicyQueryFacade uzytkownicyQueryFacade;
   private final FirmySubscrypcjeQueryFacade firmySubscrypcjeQueryFacade;
 
   @GetMapping (produces = MediaType.APPLICATION_JSON_VALUE)
   @Operation (summary = "Usługa pobierająca listę firm")
-  public ResponseEntity<Page<PodmiotGospodarczyListDto>> pobierzListeJdg(Pageable pageable,
-                                                                         @AuthenticationPrincipal UserPrincipal userPrincipal) {
+  public ResponseEntity<Page<FirmaCrmListDto>> pobierzListeJdg(Pageable pageable,
+                                                               @AuthenticationPrincipal UserPrincipal userPrincipal) {
     UzytkownikViewEntity uzytkownik = uzytkownicyQueryFacade.findByUuid(UUID.fromString(userPrincipal.userId()))
         .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Użytkownik nie istnieje"));
 
     FirmaSubscrypcjaDto firmaSubscrypcjaDto = firmySubscrypcjeQueryFacade.znajdzAktywnaSubscrypcjeDlaFirmy(uzytkownik.getFirma().getUuid())
         .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Użytkownik nie posiada aktywnej subskrypcji"));
 
-    Specification<PodmiotGospodarczeViewEntity> specification = SpecificationBuilder.specification(
-            PodmiotyGospodarczeFilterSpecification.class)
+    Specification<FirmaCrmViewEntity> specification = SpecificationBuilder.specification(
+            FirmyCrmFilterSpecification.class)
         .withParam("pkd", firmaSubscrypcjaDto.getParametrySubscrypcji().getPkd().orElse(""))
         .withParam("dataRozpoczeciaOd",
             firmaSubscrypcjaDto.getParametrySubscrypcji().getDataRozpoczeciaOd().map(DateTimeFormatter.ISO_DATE::format).orElse(null))
@@ -58,6 +58,6 @@ class FirmyController {
         .withParam("powiat", firmaSubscrypcjaDto.getParametrySubscrypcji().getPowiat().orElse(null))
         .withParam("gmina", firmaSubscrypcjaDto.getParametrySubscrypcji().getGmina().orElse(null))
         .build();
-    return ResponseEntity.ok(podmiotyGospodarczeQueryFacade.pobierzListeJdg(specification, pageable));
+    return ResponseEntity.ok(firmyCrmQueryFacade.pobierzListeFirm(specification, pageable));
   }
 }
