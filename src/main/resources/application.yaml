@@ -40,6 +40,24 @@ application:
         - /api/v1/internal/**
       post:
         - /api/v1/internal/keycloak/**
+  cors:
+    allowed-origins:
+      - ${FRONTEND_URL:http://localhost:4200}
+    allowed-methods:
+      - GET
+      - POST
+      - PUT
+      - PATCH
+      - DELETE
+      - OPTIONS
+    allowed-headers:
+      - "*"
+    exposed-headers:
+      - Authorization
+      - Content-Type
+      - X-Total-Count
+    allow-credentials: true
+    max-age: 3600
 
 aws:
   access-key: ${AWS_ACCESS_KEY}
