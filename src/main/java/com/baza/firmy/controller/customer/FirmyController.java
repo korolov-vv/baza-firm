@@ -5,7 +5,7 @@ import com.baza.firmy.dto.UserPrincipal;
 import com.baza.firmy.podmiotygospodarcze.query.PodmiotGospodarczeViewEntity;
 import com.baza.firmy.podmiotygospodarcze.query.PodmiotyGospodarczeFilterSpecification;
 import com.baza.firmy.podmiotygospodarcze.query.PodmiotyGospodarczeQueryFacade;
-import com.baza.firmy.subscrypcje.query.SubscrypcjeQueryFacade;
+import com.baza.firmy.subscrypcjeuzytkownika.query.UzytkownicySubscrypcjeQueryFacade;
 import com.baza.firmy.uzytkownicy.query.UzytkownicyQueryFacade;
 import com.baza.firmy.uzytkownicy.query.UzytkownikViewEntity;
 import io.swagger.v3.oas.annotations.Operation;
@@ -38,7 +38,7 @@ class FirmyController {
 
   private final PodmiotyGospodarczeQueryFacade podmiotyGospodarczeQueryFacade;
   private final UzytkownicyQueryFacade uzytkownicyQueryFacade;
-  private final SubscrypcjeQueryFacade subscrypcjeQueryFacade;
+  private final UzytkownicySubscrypcjeQueryFacade uzytkownicySubscrypcjeQueryFacade;
 
   @GetMapping (produces = MediaType.APPLICATION_JSON_VALUE)
   @Operation (summary = "Usługa pobierająca listę firm")
@@ -56,7 +56,7 @@ class FirmyController {
     UzytkownikViewEntity uzytkownik = uzytkownicyQueryFacade.findByUuid(UUID.fromString(userPrincipal.userId()))
         .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Użytkownik nie istnieje"));
 
-    subscrypcjeQueryFacade.znajdzAktywnaSubscrypcjeDlaFirmy(uzytkownik.getFirma().getUuid())
+    uzytkownicySubscrypcjeQueryFacade.znajdzAktywnaSubscrypcjeDlaFirmy(uzytkownik.getFirma().getUuid())
         .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Użytkownik nie posiada aktywnej subskrypcji"));
 
     Specification<PodmiotGospodarczeViewEntity> specification = SpecificationBuilder.specification(

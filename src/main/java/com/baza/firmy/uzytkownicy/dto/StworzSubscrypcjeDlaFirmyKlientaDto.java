@@ -15,6 +15,6 @@ import java.util.UUID;
 public class StworzSubscrypcjeDlaFirmyKlientaDto {
 
   private UUID firmaUuid;
-  private UUID subscrypcjaId;
+  private UUID subscrypcjaUuid;
   private StatusSubscrypcji statusSubscrypcji;
 }

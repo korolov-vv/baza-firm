@@ -1,7 +1,8 @@
-package com.baza.firmy.subscrypcje.domain;
+package com.baza.firmy.subscrypcjeuzytkownika.domain;
 
 import com.baza.firmy.podmiotygospodarcze.query.PodmiotGospodarczeViewEntity;
 import com.baza.firmy.podmiotygospodarcze.query.PodmiotyGospodarczeQueryFacade;
+import com.baza.firmy.subscrypcje.domain.StatusSubscrypcji;
 import com.baza.firmy.subscrypcje.query.SubscrypcjaViewEntity;
 import com.baza.firmy.subscrypcje.query.SubscrypcjeQueryFacade;
 import com.baza.firmy.uzytkownicy.dto.StworzSubscrypcjeDlaFirmyKlientaDto;
@@ -24,15 +25,15 @@ class StworzSubscrypcjeDlaFirmyKlientaUseCase {
   public UUID stworzSubscrypcjeDlaFirmyKlienta(StworzSubscrypcjeDlaFirmyKlientaDto stworzSubscrypcjeDlaFirmyKlientaDto) {
     PodmiotGospodarczeViewEntity firma = podmiotyGospodarczeQueryFacade.pobierzPoUuid(stworzSubscrypcjeDlaFirmyKlientaDto.getFirmaUuid())
             .orElseThrow(() -> new IllegalArgumentException("Firma o UUID: " + stworzSubscrypcjeDlaFirmyKlientaDto.getFirmaUuid() + " nie istnieje"));
-    SubscrypcjaViewEntity subscrypcja = subscrypcjeQueryFacade.findByUuid(stworzSubscrypcjeDlaFirmyKlientaDto.getSubscrypcjaId())
-            .orElseThrow(() -> new IllegalArgumentException("Subscrypcja o UUID: " + stworzSubscrypcjeDlaFirmyKlientaDto.getSubscrypcjaId() + " nie istnieje"));
+    SubscrypcjaViewEntity subscrypcja = subscrypcjeQueryFacade.findByUuid(stworzSubscrypcjeDlaFirmyKlientaDto.getSubscrypcjaUuid())
+            .orElseThrow(() -> new IllegalArgumentException("Subscrypcja o UUID: " + stworzSubscrypcjeDlaFirmyKlientaDto.getSubscrypcjaUuid() + " nie istnieje"));
 
-    UzytkownikSubscrypcjaEntity uzytkownikEntity = stworzSubscrypcjeDlaFirmyKlienta(firma, subscrypcja);
+    UzytkownikSubscrypcjaEntity uzytkownikEntity = stworzSubscrypcjeDlaFirmyKlientaEntity(firma, subscrypcja);
 
     return uzytkownicySubscrypcjeRepository.save(uzytkownikEntity).getUuid();
   }
 
-  private UzytkownikSubscrypcjaEntity stworzSubscrypcjeDlaFirmyKlienta(PodmiotGospodarczeViewEntity firma, SubscrypcjaViewEntity subscrypcja) {
+  private UzytkownikSubscrypcjaEntity stworzSubscrypcjeDlaFirmyKlientaEntity(PodmiotGospodarczeViewEntity firma, SubscrypcjaViewEntity subscrypcja) {
     return UzytkownikSubscrypcjaEntity.builder()
             .uuid(UUID.randomUUID())
             .firmaKlient(firma)

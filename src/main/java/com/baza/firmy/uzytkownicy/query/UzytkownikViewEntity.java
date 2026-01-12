@@ -42,7 +42,7 @@ public class UzytkownikViewEntity {
   @Column(insertable = false, updatable = false)
   private String email;
   @OneToOne(cascade = CascadeType.ALL)
-  @JoinColumn(name = "podmiot_gosp_id", referencedColumnName = "id")
+  @JoinColumn(name = "podmiot_gosp_id", referencedColumnName = "id", insertable = false, updatable = false)
   private PodmiotGospodarczeViewEntity firma;
   @Column(insertable = false, updatable = false)
   private boolean czyEmailPotwierdzony;
