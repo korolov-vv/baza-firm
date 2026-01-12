@@ -1,7 +1,7 @@
-package com.baza.firmy.subscrypcjeuzytkownika.domain;
+package com.baza.firmy.firmysubscrypcje.domain;
 
 import com.baza.firmy.subscrypcje.domain.StatusSubscrypcji;
-import com.baza.firmy.subscrypcjeuzytkownika.query.ParametrySubscrypcjiViewEntity;
+import com.baza.firmy.firmysubscrypcje.query.ParametrySubscrypcjiViewEntity;
 import com.baza.firmy.podmiotygospodarcze.query.PodmiotGospodarczeViewEntity;
 import com.baza.firmy.subscrypcje.query.SubscrypcjaViewEntity;
 import jakarta.persistence.CascadeType;
@@ -38,7 +38,7 @@ import java.util.UUID;
 @Entity
 @Table (name = "firmy_subscrypcje")
 @EntityListeners(AuditingEntityListener.class)
-class UzytkownikSubscrypcjaEntity {
+class FirmaSubscrypcjaEntity {
 
   @Id
   @SequenceGenerator(

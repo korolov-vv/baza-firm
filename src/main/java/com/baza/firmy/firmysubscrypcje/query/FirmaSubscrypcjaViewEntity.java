@@ -1,4 +1,4 @@
-package com.baza.firmy.subscrypcjeuzytkownika.query;
+package com.baza.firmy.firmysubscrypcje.query;
 
 import com.baza.firmy.podmiotygospodarcze.query.PodmiotGospodarczeViewEntity;
 import com.baza.firmy.subscrypcje.domain.StatusSubscrypcji;
@@ -31,7 +31,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @Entity
 @Table (name = "firmy_subscrypcje")
-class UzytkownikSubscrypcjaViewEntity {
+class FirmaSubscrypcjaViewEntity {
 
   @Id
   @EqualsAndHashCode.Include
@@ -49,10 +49,10 @@ class UzytkownikSubscrypcjaViewEntity {
   @EqualsAndHashCode.Include
   @Column(insertable = false, updatable = false)
   private UUID uuid;
-  @OneToOne(cascade = CascadeType.ALL)
+  @OneToOne
   @JoinColumn(name = "podmiot_gosp_id", referencedColumnName = "id", insertable = false, updatable = false)
   private PodmiotGospodarczeViewEntity firmaKlienta;
-  @OneToOne(cascade = CascadeType.ALL)
+  @OneToOne
   @JoinColumn(name = "subscrypcja_id", referencedColumnName = "id", insertable = false, updatable = false)
   private SubscrypcjaViewEntity subscrypcja;
   @OneToOne(cascade = CascadeType.ALL)

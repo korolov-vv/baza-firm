@@ -1,4 +1,4 @@
-package com.baza.firmy.subscrypcjeuzytkownika.domain;
+package com.baza.firmy.firmysubscrypcje.domain;
 
 import com.baza.firmy.uzytkownicy.dto.StworzSubscrypcjeDlaFirmyKlientaDto;
 import jakarta.transaction.Transactional;
@@ -11,7 +11,7 @@ import java.util.UUID;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class UzytkownicySubscrypcjeFacade {
+public class FirmySubscrypcjeFacade {
 
     private final StworzTrialDlaFirmyKlientaUseCase stworzTrialDlaFirmyKlientaUseCase;
     private final StworzSubscrypcjeDlaFirmyKlientaUseCase stworzSubscrypcjeDlaFirmyKlientaUseCase;

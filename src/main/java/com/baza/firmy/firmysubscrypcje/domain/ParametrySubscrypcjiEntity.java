@@ -1,9 +1,12 @@
-package com.baza.firmy.subscrypcjeuzytkownika.query;
+package com.baza.firmy.firmysubscrypcje.domain;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import jakarta.persistence.Version;
 import lombok.AllArgsConstructor;
@@ -27,40 +30,38 @@ import java.util.UUID;
 @Entity
 @Table(name = "parametry_subscrypcji")
 @EntityListeners(AuditingEntityListener.class)
-public class ParametrySubscrypcjiViewEntity {
+class ParametrySubscrypcjiEntity {
 
   @Id
+  @SequenceGenerator(
+          name = "parametry_subscrypcji_seq",
+          allocationSize = 1,
+          sequenceName = "parametry_subscrypcji_seq")
+  @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "parametry_subscrypcji_seq")
   @EqualsAndHashCode.Include
   private Long id;
   @EqualsAndHashCode.Include
-  @Column(insertable = false, updatable = false)
   private UUID uuid;
   @CreatedDate
-  @Column(insertable = false, updatable = false)
+  @Column(updatable = false)
   private LocalDateTime createDate;
   @CreatedBy
-  @Column(insertable = false, updatable = false)
+  @Column(updatable = false)
   private Long createdBy;
   @LastModifiedDate
-  @Column(insertable = false, updatable = false)
   private LocalDateTime lastModifiedDate;
   @LastModifiedBy
-  @Column(insertable = false, updatable = false)
   private Long lastModifiedBy;
   @Version
-  @Column(insertable = false, updatable = false)
   private int version;
-  @Column(insertable = false, updatable = false)
   private String pkd;
-  @Column(insertable = false, updatable = false)
   private LocalDateTime dataRozpoczeciaOd;
-  @Column(insertable = false, updatable = false)
   private LocalDateTime dataRozpoczeciaDo;
-  @Column(insertable = false, updatable = false)
+  @Column(length = 50)
   private String wojewodztwo;
-  @Column(insertable = false, updatable = false)
+  @Column(length = 50)
   private String powiat;
-  @Column(insertable = false, updatable = false)
+  @Column(length = 50)
   private String gmina;
 }
 

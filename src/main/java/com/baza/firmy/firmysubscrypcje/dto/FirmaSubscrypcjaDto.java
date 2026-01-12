@@ -1,4 +1,4 @@
-package com.baza.firmy.subscrypcjeuzytkownika.dto;
+package com.baza.firmy.firmysubscrypcje.dto;
 
 import com.baza.firmy.subscrypcje.domain.StatusSubscrypcji;
 import lombok.AllArgsConstructor;
@@ -13,7 +13,7 @@ import java.util.UUID;
 @Builder
 @NoArgsConstructor(force = true)
 @AllArgsConstructor
-public class SubscrypcjaUzytkownikaDto {
+public class FirmaSubscrypcjaDto {
 
   private UUID uuid;
   private String nazwa;
@@ -22,4 +22,5 @@ public class SubscrypcjaUzytkownikaDto {
   private LocalDate aktywnaOd;
   private LocalDate aktywnaDo;
   private StatusSubscrypcji statusSubscrypcji;
+  private ParametrySubscrypcjiDto parametrySubscrypcji;
 }

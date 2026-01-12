@@ -5,7 +5,8 @@ import com.baza.firmy.dto.UserPrincipal;
 import com.baza.firmy.podmiotygospodarcze.query.PodmiotGospodarczeViewEntity;
 import com.baza.firmy.podmiotygospodarcze.query.PodmiotyGospodarczeFilterSpecification;
 import com.baza.firmy.podmiotygospodarcze.query.PodmiotyGospodarczeQueryFacade;
-import com.baza.firmy.subscrypcjeuzytkownika.query.UzytkownicySubscrypcjeQueryFacade;
+import com.baza.firmy.firmysubscrypcje.dto.FirmaSubscrypcjaDto;
+import com.baza.firmy.firmysubscrypcje.query.FirmySubscrypcjeQueryFacade;
 import com.baza.firmy.uzytkownicy.query.UzytkownicyQueryFacade;
 import com.baza.firmy.uzytkownicy.query.UzytkownikViewEntity;
 import io.swagger.v3.oas.annotations.Operation;
@@ -18,15 +19,12 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.lang.Nullable;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.UUID;
 
@@ -38,38 +36,27 @@ class FirmyController {
 
   private final PodmiotyGospodarczeQueryFacade podmiotyGospodarczeQueryFacade;
   private final UzytkownicyQueryFacade uzytkownicyQueryFacade;
-  private final UzytkownicySubscrypcjeQueryFacade uzytkownicySubscrypcjeQueryFacade;
+  private final FirmySubscrypcjeQueryFacade firmySubscrypcjeQueryFacade;
 
   @GetMapping (produces = MediaType.APPLICATION_JSON_VALUE)
   @Operation (summary = "Usługa pobierająca listę firm")
-  public ResponseEntity<Page<PodmiotGospodarczyListDto>> pobierzListeJdg(
-          @Nullable @RequestParam String nazwa,
-          @Nullable @RequestParam String pkd,
-          @Nullable @RequestParam LocalDate dataRozpoczeciaOd,
-          @Nullable @RequestParam LocalDate dataRozpoczeciaDo,
-          @Nullable @RequestParam String wojewodztwo,
-          @Nullable @RequestParam String powiat,
-          @Nullable @RequestParam String gmina,
-          Pageable pageable,
-          @AuthenticationPrincipal UserPrincipal userPrincipal
-  ) {
+  public ResponseEntity<Page<PodmiotGospodarczyListDto>> pobierzListeJdg(Pageable pageable,
+                                                                         @AuthenticationPrincipal UserPrincipal userPrincipal) {
     UzytkownikViewEntity uzytkownik = uzytkownicyQueryFacade.findByUuid(UUID.fromString(userPrincipal.userId()))
         .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Użytkownik nie istnieje"));
 
-    uzytkownicySubscrypcjeQueryFacade.znajdzAktywnaSubscrypcjeDlaFirmy(uzytkownik.getFirma().getUuid())
+    FirmaSubscrypcjaDto firmaSubscrypcjaDto = firmySubscrypcjeQueryFacade.znajdzAktywnaSubscrypcjeDlaFirmy(uzytkownik.getFirma().getUuid())
         .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Użytkownik nie posiada aktywnej subskrypcji"));
 
     Specification<PodmiotGospodarczeViewEntity> specification = SpecificationBuilder.specification(
             PodmiotyGospodarczeFilterSpecification.class)
-        .withParam("nazwa", nazwa)
-        .withParam("pkd", pkd != null ? pkd : "")
+        .withParam("pkd", firmaSubscrypcjaDto.getParametrySubscrypcji().getPkd().orElse(""))
         .withParam("dataRozpoczeciaOd",
-            dataRozpoczeciaOd != null ? dataRozpoczeciaOd.format(DateTimeFormatter.ISO_DATE) : null)
-        .withParam("dataRozpoczeciaDo",
-            dataRozpoczeciaDo != null ? dataRozpoczeciaDo.format(DateTimeFormatter.ISO_DATE) : null)
-        .withParam("wojewodztwo", wojewodztwo)
-        .withParam("powiat", powiat)
-        .withParam("gmina", gmina)
+            firmaSubscrypcjaDto.getParametrySubscrypcji().getDataRozpoczeciaOd().map(DateTimeFormatter.ISO_DATE::format).orElse(null))
+        .withParam("dataRozpoczeciaDo", firmaSubscrypcjaDto.getParametrySubscrypcji().getDataRozpoczeciaDo().map(DateTimeFormatter.ISO_DATE::format).orElse(null))
+        .withParam("wojewodztwo", firmaSubscrypcjaDto.getParametrySubscrypcji().getWojewodztwo().orElse(null))
+        .withParam("powiat", firmaSubscrypcjaDto.getParametrySubscrypcji().getPowiat().orElse(null))
+        .withParam("gmina", firmaSubscrypcjaDto.getParametrySubscrypcji().getGmina().orElse(null))
         .build();
     return ResponseEntity.ok(podmiotyGospodarczeQueryFacade.pobierzListeJdg(specification, pageable));
   }

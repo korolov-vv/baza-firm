@@ -1,5 +1,5 @@
 --liquibase formatted sql
---changeset vkorolov:2026_01_08_19_00_firmy_subscrypcje_init.sql
+--changeset vkorolov:2026_01_12_17_24_parametry_subscrypcji_init.sql
 
 create table if not exists parametry_subscrypcji (
                                            id BIGINT
@@ -12,8 +12,8 @@ create table if not exists parametry_subscrypcji (
                                            last_modified_by bigint,
                                            version integer NOT NULL DEFAULT 0,
                                            pkd varchar,
-                                           dataRozpoczeciaOd timestamp,
-                                           dataRozpoczeciaDo timestamp,
+                                           data_rozpoczecia_od timestamp,
+                                           data_rozpoczecia_do timestamp,
                                            wojewodztwo varchar(50),
                                            powiat varchar(50),
                                            gmina varchar(50)

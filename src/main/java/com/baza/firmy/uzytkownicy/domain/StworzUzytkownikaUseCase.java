@@ -4,7 +4,7 @@ import com.baza.firmy.common.util.MailSenderUtills;
 import com.baza.firmy.podmiotygospodarcze.domain.PodmiotyGospodarczeFacade;
 import com.baza.firmy.podmiotygospodarcze.query.PodmiotGospodarczeViewEntity;
 import com.baza.firmy.podmiotygospodarcze.query.PodmiotyGospodarczeQueryFacade;
-import com.baza.firmy.subscrypcjeuzytkownika.domain.UzytkownicySubscrypcjeFacade;
+import com.baza.firmy.firmysubscrypcje.domain.FirmySubscrypcjeFacade;
 import com.baza.firmy.uzytkownicy.dto.StworzUzytkownikaDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -17,7 +17,7 @@ class StworzUzytkownikaUseCase {
 
   private final UzytkownicyRepository uzytkownicyRepository;
   private final UzytkownicyMapper uzytkownicyMapper;
-  private final UzytkownicySubscrypcjeFacade uzytkownicySubscrypcjeFacade;
+  private final FirmySubscrypcjeFacade firmySubscrypcjeFacade;
   private final PodmiotyGospodarczeQueryFacade podmiotyGospodarczeQueryFacade;
   private final PodmiotyGospodarczeFacade podmiotyGospodarczeFacade;
   private final MailSenderUtills mailSenderUtills;
@@ -39,7 +39,7 @@ class StworzUzytkownikaUseCase {
 
     UzytkownikEntity zapisanyUzytkownik = uzytkownicyRepository.save(uzytkownikEntity);
 
-    uzytkownicySubscrypcjeFacade.stworzTrialDlaFirmyKlienta(zapisanyUzytkownik.getFirma().getUuid());
+    firmySubscrypcjeFacade.stworzTrialDlaFirmyKlienta(zapisanyUzytkownik.getFirma().getUuid());
 
     return zapisanyUzytkownik.getUuid();
   }
