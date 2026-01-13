@@ -1,5 +1,6 @@
 package com.baza.firmy.firmysubscrypcje.domain;
 
+import com.baza.firmy.request.ZmienStatusSubscrypcjiRequest;
 import com.baza.firmy.uzytkownicy.dto.StworzSubscrypcjeDlaFirmyKlientaDto;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +16,7 @@ public class FirmySubscrypcjeFacade {
 
     private final StworzTrialDlaFirmyKlientaUseCase stworzTrialDlaFirmyKlientaUseCase;
     private final StworzSubscrypcjeDlaFirmyKlientaUseCase stworzSubscrypcjeDlaFirmyKlientaUseCase;
+    private final ZaktualizujStatusSubscrypcjiFirmyUseCase zaktualizujStatusSubscrypcjiFirmyUseCase;
 
     @Transactional(Transactional.TxType.REQUIRES_NEW)
     public UUID stworzTrialDlaFirmyKlienta(UUID uuidFirmyKlienta) {
@@ -24,5 +26,13 @@ public class FirmySubscrypcjeFacade {
     @Transactional(Transactional.TxType.REQUIRES_NEW)
     public UUID stworzSubscrypcjeDlaFirmyKlienta(StworzSubscrypcjeDlaFirmyKlientaDto stworzSubscrypcjeDlaFirmyKlientaDto) {
         return stworzSubscrypcjeDlaFirmyKlientaUseCase.stworzSubscrypcjeDlaFirmyKlienta(stworzSubscrypcjeDlaFirmyKlientaDto);
+    }
+
+    @Transactional
+    public UUID zaktualizujStatusSubscrypcjiFirmy(ZmienStatusSubscrypcjiRequest request) {
+        return zaktualizujStatusSubscrypcjiFirmyUseCase.zaktualizujStatusSubscrypcjiFirmy(
+            request.uuidSubscrypcji(),
+            request.nowyStatus()
+        );
     }
 }
