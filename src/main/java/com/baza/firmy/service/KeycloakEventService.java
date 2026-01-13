@@ -1,11 +1,13 @@
 package com.baza.firmy.service;
 
 import com.baza.firmy.dto.KeycloakEventDto;
+import com.baza.firmy.firmysubscrypcje.domain.FirmySubscrypcjeFacade;
 import com.baza.firmy.integration.keycloak.KeycloakUserClient;
 import com.baza.firmy.integration.keycloak.KeycloakUserData;
 import com.baza.firmy.uzytkownicy.domain.UzytkownicyFacade;
 import com.baza.firmy.uzytkownicy.dto.StworzUzytkownikaDto;
 import com.baza.firmy.uzytkownicy.query.UzytkownicyQueryFacade;
+import com.baza.firmy.uzytkownicy.query.UzytkownikViewEntity;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -21,6 +23,7 @@ public class KeycloakEventService {
     private final UzytkownicyFacade uzytkownicyFacade;
     private final UzytkownicyQueryFacade uzytkownicyQueryFacade;
     private final KeycloakUserClient keycloakUserClient;
+    private final FirmySubscrypcjeFacade firmySubscrypcjeFacade;
 
     @Transactional
     public void processEvent(KeycloakEventDto event) {
@@ -67,7 +70,11 @@ public class KeycloakEventService {
             return;
         }
 
-        uzytkownicyFacade.ustawEmailPotwierdzony(event.getDetails().get("username"));
+        uzytkownicyFacade.ustawEmailPotwierdzony(email);
+
+        UzytkownikViewEntity zaktualizowanyUzytkownik = uzytkownicyQueryFacade.findByEmail(email).orElseThrow();
+
+        firmySubscrypcjeFacade.stworzTrialDlaFirmyKlienta(zaktualizowanyUzytkownik.getFirma().getUuid());
     }
 
     private void handleUserRegistration(KeycloakEventDto event) {

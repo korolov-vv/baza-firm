@@ -37,11 +37,7 @@ class StworzUzytkownikaUseCase {
     uzytkownikEntity.setCzyEmailPotwierdzony(false);
     uzytkownikEntity.setFirma(pobierzDaneFirmy(stworzUzytkownikaDto.getNip()));
 
-    UzytkownikEntity zapisanyUzytkownik = uzytkownicyRepository.save(uzytkownikEntity);
-
-    firmySubscrypcjeFacade.stworzTrialDlaFirmyKlienta(zapisanyUzytkownik.getFirma().getUuid());
-
-    return zapisanyUzytkownik.getUuid();
+    return uzytkownicyRepository.save(uzytkownikEntity).getUuid();
   }
 
   private PodmiotGospodarczyViewEntity pobierzDaneFirmy(String nip) {
