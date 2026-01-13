@@ -1,6 +1,6 @@
 package com.baza.firmy.uzytkownicy.query;
 
-import com.baza.firmy.podmiotygospodarcze.query.PodmiotGospodarczeViewEntity;
+import com.baza.firmy.podmiotygospodarcze.query.PodmiotGospodarczyViewEntity;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -43,7 +43,7 @@ public class UzytkownikViewEntity {
   private String email;
   @OneToOne(cascade = CascadeType.ALL)
   @JoinColumn(name = "podmiot_gosp_id", referencedColumnName = "id", insertable = false, updatable = false)
-  private PodmiotGospodarczeViewEntity firma;
+  private PodmiotGospodarczyViewEntity firma;
   @Column(insertable = false, updatable = false)
   private boolean czyEmailPotwierdzony;
 }

@@ -1,7 +1,7 @@
 package com.baza.firmy.controller.admin;
 
 import com.baza.firmy.dto.PodmiotGospodarczyListDto;
-import com.baza.firmy.podmiotygospodarcze.query.PodmiotGospodarczeViewEntity;
+import com.baza.firmy.podmiotygospodarcze.query.PodmiotGospodarczyViewEntity;
 import com.baza.firmy.podmiotygospodarcze.query.PodmiotyGospodarczeFilterSpecification;
 import com.baza.firmy.podmiotygospodarcze.query.PodmiotyGospodarczeQueryFacade;
 import io.swagger.v3.oas.annotations.Hidden;
@@ -45,7 +45,7 @@ class JdgController {
       @Nullable @RequestParam String gmina,
       Pageable pageable
   ) {
-    Specification<PodmiotGospodarczeViewEntity> specification = SpecificationBuilder.specification(
+    Specification<PodmiotGospodarczyViewEntity> specification = SpecificationBuilder.specification(
             PodmiotyGospodarczeFilterSpecification.class)
         .withParam("nazwa", nazwa)
         .withParam("pkd", pkd != null ? pkd : "")

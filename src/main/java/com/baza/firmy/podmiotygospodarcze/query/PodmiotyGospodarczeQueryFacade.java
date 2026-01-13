@@ -25,19 +25,23 @@ public class PodmiotyGospodarczeQueryFacade {
   private final PodmiotyGospodarczeQueryMapper podmiotyGospodarczeQueryMapper;
   private final ExportujDaneDoXlsxUseCase exportujDaneDoXlsxUseCase;
 
-  public Page<PodmiotGospodarczyListDto> pobierzListeJdg(Specification<PodmiotGospodarczeViewEntity> specification, Pageable pageable) {
-    return podmiotyGospodarczeQueryRepository.findAll(specification, pageable)
+  public Page<PodmiotGospodarczyListDto> pobierzListeJdg(Specification<PodmiotGospodarczyViewEntity> specification, Pageable pageable) {
+    return pobierzListePodmiotowGospodarczych(specification, pageable)
         .map(podmiotyGospodarczeQueryMapper::toJdgListDtoList);
+  }
+
+  public Page<PodmiotGospodarczyViewEntity> pobierzListePodmiotowGospodarczych(Specification<PodmiotGospodarczyViewEntity> specification, Pageable pageable) {
+    return podmiotyGospodarczeQueryRepository.findAll(specification, pageable);
   }
 
   public List<String> pobierzLinkiDoJdgBezNipow() {
     return podmiotyGospodarczeQueryRepository.findAllByWlascicielNipIsNull().stream()
-        .map(PodmiotGospodarczeViewEntity::getLink)
+        .map(PodmiotGospodarczyViewEntity::getLink)
         .toList();
   }
 
-  public Optional<PodmiotGospodarczeViewEntity> pobierzAktywnaFirmePoNip(String nip) {
-    List<PodmiotGospodarczeViewEntity> podmiotGospodarczeList = podmiotyGospodarczeQueryRepository.findAllByNipAndStatus(nip, BusinessStatus.AKTYWNY);
+  public Optional<PodmiotGospodarczyViewEntity> pobierzAktywnaFirmePoNip(String nip) {
+    List<PodmiotGospodarczyViewEntity> podmiotGospodarczeList = podmiotyGospodarczeQueryRepository.findAllByNipAndStatus(nip, BusinessStatus.AKTYWNY);
 
     if (podmiotGospodarczeList.isEmpty()) {
       return Optional.empty();
@@ -49,7 +53,7 @@ public class PodmiotyGospodarczeQueryFacade {
     return Optional.of(podmiotGospodarczeList.getFirst());
   }
 
-  public Optional<PodmiotGospodarczeViewEntity> pobierzPoUuid(UUID uuid) {
+  public Optional<PodmiotGospodarczyViewEntity> pobierzPoUuid(UUID uuid) {
     return podmiotyGospodarczeQueryRepository.findByUuid(uuid);
   }
 

@@ -1,6 +1,6 @@
 package com.baza.firmy.firmycrm.domain;
 
-import com.baza.firmy.podmiotygospodarcze.query.PodmiotGospodarczeViewEntity;
+import com.baza.firmy.podmiotygospodarcze.query.PodmiotGospodarczyViewEntity;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -56,10 +56,10 @@ class FirmaCrmEntity {
   private UUID uuid;
   @OneToOne(cascade = CascadeType.ALL)
   @JoinColumn(name = "firma_klient_id", referencedColumnName = "id")
-  private PodmiotGospodarczeViewEntity firmaKlient;
+  private PodmiotGospodarczyViewEntity firmaKlient;
   @OneToOne(cascade = CascadeType.ALL)
   @JoinColumn(name = "firma_id", referencedColumnName = "id")
-  private PodmiotGospodarczeViewEntity firmaCrm;
+  private PodmiotGospodarczyViewEntity firmaCrm;
   @Enumerated(EnumType.STRING)
   private StatusKontaktu statusKontaktu;
   @Enumerated(EnumType.STRING)

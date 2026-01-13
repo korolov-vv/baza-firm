@@ -1,5 +1,7 @@
 package com.baza.firmy.firmysubscrypcje.domain;
 
+import com.baza.firmy.common.harmonogram.scheduler.QuartzManager;
+import com.baza.firmy.common.harmonogram.scheduler.SchedulerSingleEnum;
 import com.baza.firmy.subscrypcje.domain.StatusSubscrypcji;
 import com.baza.firmy.subscrypcje.query.SubscrypcjaViewEntity;
 import com.baza.firmy.subscrypcje.query.SubscrypcjeQueryFacade;
@@ -8,6 +10,7 @@ import com.baza.firmy.uzytkownicy.dto.StworzSubscrypcjeDlaFirmyKlientaDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.Map;
 import java.util.UUID;
 
 @Component
@@ -19,9 +22,10 @@ class StworzTrialDlaFirmyKlientaUseCase {
   private final StworzSubscrypcjeDlaFirmyKlientaUseCase stworzSubscrypcjeDlaFirmyKlientaUseCase;
   private final FirmySubscrypcjeQueryFacade firmySubscrypcjeQueryFacade;
   private final SubscrypcjeQueryFacade subscrypcjeQueryFacade;
+  private final QuartzManager quartzManager;
 
   public UUID stworzTrialDlaFirmyKlienta(UUID uuidFirmyKlienta) {
-      firmySubscrypcjeQueryFacade.znajdzAktywnaSubscrypcjeDlaFirmy(uuidFirmyKlienta)
+    firmySubscrypcjeQueryFacade.znajdzAktywnaSubscrypcjeDlaFirmy(uuidFirmyKlienta)
             .ifPresent(_ -> {
                 throw new IllegalArgumentException("Firma ma już aktywną subscrypcję");
             });
@@ -29,6 +33,17 @@ class StworzTrialDlaFirmyKlientaUseCase {
     SubscrypcjaViewEntity subscrypcja = subscrypcjeQueryFacade.findByNazwa(TRIAL)
             .orElseThrow(() -> new IllegalArgumentException("Subscrypcja o nazwie: " + TRIAL + " nie istnieje"));
 
-    return stworzSubscrypcjeDlaFirmyKlientaUseCase.stworzSubscrypcjeDlaFirmyKlienta(new StworzSubscrypcjeDlaFirmyKlientaDto(uuidFirmyKlienta, subscrypcja.getUuid(), StatusSubscrypcji.AKTYWNA));
+    // This will automatically trigger the scheduler to create FirmaCrm list
+      UUID uuidZapisaneSubscrypcjiFirmy = stworzSubscrypcjeDlaFirmyKlientaUseCase.stworzSubscrypcjeDlaFirmyKlienta(
+            new StworzSubscrypcjeDlaFirmyKlientaDto(uuidFirmyKlienta, subscrypcja.getUuid(), StatusSubscrypcji.AKTYWNA)
+    );
+
+      // Trigger scheduler to create FirmaCrm list
+      quartzManager.stworzZadanieScheduleraRaportu(
+              SchedulerSingleEnum.STWORZ_LISTE_FIRM_CRM_DLA_KLIENTA_SCHEDULER,
+              Map.of("firmaSubscrypcjaUuid", uuidZapisaneSubscrypcjiFirmy)
+      );
+
+      return uuidZapisaneSubscrypcjiFirmy;
   }
 }

@@ -26,7 +26,7 @@ import java.util.*;
 @AllArgsConstructor
 @Entity
 @Table(name = "podmioty_gospodarcze")
-public class PodmiotGospodarczeViewEntity {
+public class PodmiotGospodarczyViewEntity {
 
     @Id
     @EqualsAndHashCode.Include

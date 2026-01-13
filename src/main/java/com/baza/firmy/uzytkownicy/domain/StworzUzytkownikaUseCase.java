@@ -2,7 +2,7 @@ package com.baza.firmy.uzytkownicy.domain;
 
 import com.baza.firmy.common.util.MailSenderUtills;
 import com.baza.firmy.podmiotygospodarcze.domain.PodmiotyGospodarczeFacade;
-import com.baza.firmy.podmiotygospodarcze.query.PodmiotGospodarczeViewEntity;
+import com.baza.firmy.podmiotygospodarcze.query.PodmiotGospodarczyViewEntity;
 import com.baza.firmy.podmiotygospodarcze.query.PodmiotyGospodarczeQueryFacade;
 import com.baza.firmy.firmysubscrypcje.domain.FirmySubscrypcjeFacade;
 import com.baza.firmy.uzytkownicy.dto.StworzUzytkownikaDto;
@@ -44,7 +44,7 @@ class StworzUzytkownikaUseCase {
     return zapisanyUzytkownik.getUuid();
   }
 
-  private PodmiotGospodarczeViewEntity pobierzDaneFirmy(String nip) {
+  private PodmiotGospodarczyViewEntity pobierzDaneFirmy(String nip) {
     return podmiotyGospodarczeQueryFacade.pobierzAktywnaFirmePoNip(nip)
             .orElseGet(() -> {
               UUID uuidNowegoPodmiotu = podmiotyGospodarczeFacade.pobierzOrazZapiszDaneFirmyZGus(nip);

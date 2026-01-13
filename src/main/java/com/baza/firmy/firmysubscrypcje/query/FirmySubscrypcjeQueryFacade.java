@@ -49,4 +49,8 @@ public class FirmySubscrypcjeQueryFacade {
                 .gmina(parametrySubscrypcji.getGmina().orElse(null))
                 .build();
     }
+
+    public Optional<FirmaSubscrypcjaViewEntity> findByUuid(UUID uuid) {
+        return firmySubscrypcjeQueryRepository.findByUuid(uuid);
+    }
 }

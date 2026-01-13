@@ -1,6 +1,6 @@
 package com.baza.firmy.firmysubscrypcje.domain;
 
-import com.baza.firmy.podmiotygospodarcze.query.PodmiotGospodarczeViewEntity;
+import com.baza.firmy.podmiotygospodarcze.query.PodmiotGospodarczyViewEntity;
 import com.baza.firmy.podmiotygospodarcze.query.PodmiotyGospodarczeQueryFacade;
 import com.baza.firmy.subscrypcje.domain.StatusSubscrypcji;
 import com.baza.firmy.subscrypcje.query.SubscrypcjaViewEntity;
@@ -23,7 +23,7 @@ class StworzSubscrypcjeDlaFirmyKlientaUseCase {
   private final SubscrypcjeQueryFacade subscrypcjeQueryFacade;
 
   public UUID stworzSubscrypcjeDlaFirmyKlienta(StworzSubscrypcjeDlaFirmyKlientaDto stworzSubscrypcjeDlaFirmyKlientaDto) {
-    PodmiotGospodarczeViewEntity firma = podmiotyGospodarczeQueryFacade.pobierzPoUuid(stworzSubscrypcjeDlaFirmyKlientaDto.getFirmaUuid())
+    PodmiotGospodarczyViewEntity firma = podmiotyGospodarczeQueryFacade.pobierzPoUuid(stworzSubscrypcjeDlaFirmyKlientaDto.getFirmaUuid())
             .orElseThrow(() -> new IllegalArgumentException("Firma o UUID: " + stworzSubscrypcjeDlaFirmyKlientaDto.getFirmaUuid() + " nie istnieje"));
     SubscrypcjaViewEntity subscrypcja = subscrypcjeQueryFacade.findByUuid(stworzSubscrypcjeDlaFirmyKlientaDto.getSubscrypcjaUuid())
             .orElseThrow(() -> new IllegalArgumentException("Subscrypcja o UUID: " + stworzSubscrypcjeDlaFirmyKlientaDto.getSubscrypcjaUuid() + " nie istnieje"));
@@ -33,7 +33,7 @@ class StworzSubscrypcjeDlaFirmyKlientaUseCase {
     return firmySubscrypcjeRepository.save(uzytkownikEntity).getUuid();
   }
 
-  private FirmaSubscrypcjaEntity stworzSubscrypcjeDlaFirmyKlientaEntity(PodmiotGospodarczeViewEntity firma, SubscrypcjaViewEntity subscrypcja) {
+  private FirmaSubscrypcjaEntity stworzSubscrypcjeDlaFirmyKlientaEntity(PodmiotGospodarczyViewEntity firma, SubscrypcjaViewEntity subscrypcja) {
     return FirmaSubscrypcjaEntity.builder()
             .uuid(UUID.randomUUID())
             .firmaKlient(firma)

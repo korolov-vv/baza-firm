@@ -2,7 +2,7 @@ package com.baza.firmy.firmysubscrypcje.domain;
 
 import com.baza.firmy.subscrypcje.domain.StatusSubscrypcji;
 import com.baza.firmy.firmysubscrypcje.query.ParametrySubscrypcjiViewEntity;
-import com.baza.firmy.podmiotygospodarcze.query.PodmiotGospodarczeViewEntity;
+import com.baza.firmy.podmiotygospodarcze.query.PodmiotGospodarczyViewEntity;
 import com.baza.firmy.subscrypcje.query.SubscrypcjaViewEntity;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -60,7 +60,7 @@ class FirmaSubscrypcjaEntity {
   private UUID uuid;
   @OneToOne(cascade = CascadeType.ALL)
   @JoinColumn(name = "podmiot_gosp_id", referencedColumnName = "id")
-  private PodmiotGospodarczeViewEntity firmaKlient;
+  private PodmiotGospodarczyViewEntity firmaKlient;
   @OneToOne(cascade = CascadeType.ALL)
   @JoinColumn(name = "subscrypcja_id", referencedColumnName = "id")
   private SubscrypcjaViewEntity subscrypcja;
