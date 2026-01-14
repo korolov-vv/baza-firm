@@ -14,8 +14,10 @@ import java.util.UUID;
 public class UzytkownikDto {
 
   private UUID uuid;
+  private int version;
   private String email;
-  private String podmiotGospodarcyId;
+  private String podmiotGospodarczyUuid;
+  private String nazwaFirmy;
   private String nip;
   private boolean czyEmailPotwierdzony;
 }
