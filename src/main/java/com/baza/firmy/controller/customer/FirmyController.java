@@ -1,6 +1,7 @@
 package com.baza.firmy.controller.customer;
 
 import com.baza.firmy.constants.enums.BusinessStatus;
+import com.baza.firmy.dto.PageResponseDto;
 import com.baza.firmy.dto.UserPrincipal;
 import com.baza.firmy.firmycrm.dto.FirmaCrmListDto;
 import com.baza.firmy.firmycrm.query.FirmaCrmViewEntity;
@@ -42,7 +43,7 @@ class FirmyController {
 
   @GetMapping (produces = MediaType.APPLICATION_JSON_VALUE)
   @Operation (summary = "Usługa pobierająca listę firm")
-  public ResponseEntity<Page<FirmaCrmListDto>> pobierzListeJdg(Pageable pageable,
+  public ResponseEntity<PageResponseDto<FirmaCrmListDto>> pobierzListeJdg(Pageable pageable,
                                                                @AuthenticationPrincipal UserPrincipal userPrincipal) {
     UzytkownikViewEntity uzytkownik = uzytkownicyQueryFacade.findByUuid(UUID.fromString(userPrincipal.userId()))
         .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Użytkownik nie istnieje"));
@@ -51,7 +52,8 @@ class FirmyController {
         .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Użytkownik nie posiada aktywnej subskrypcji"));
 
     Specification<FirmaCrmViewEntity> specification = createSpecification(firmaSubscrypcjaDto);
-    return ResponseEntity.ok(firmyCrmQueryFacade.pobierzListeFirm(specification, pageable));
+    Page<FirmaCrmListDto> page = firmyCrmQueryFacade.pobierzListeFirm(specification, pageable);
+    return ResponseEntity.ok(PageResponseDto.from(page));
   }
 
   private Specification<FirmaCrmViewEntity> createSpecification(FirmaSubscrypcjaDto firmaSubscrypcja) {
