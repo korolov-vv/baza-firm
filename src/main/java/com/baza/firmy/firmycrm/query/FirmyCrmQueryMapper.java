@@ -14,6 +14,10 @@ interface FirmyCrmQueryMapper {
 
     @Mapping(target = "pkdGlowny", source = ".", qualifiedByName = "setPkdGlowny")
     @Mapping(target = "nip", source = ".", qualifiedByName = "setNip")
+    @Mapping(target = "nazwa", source = "firmaCrm.nazwa")
+    @Mapping(target = "wojewodztwo", source = "firmaCrm.adresKorespondencyjny.wojewodztwo")
+    @Mapping(target = "telefon", source = "firmaCrm.telefon")
+    @Mapping(target = "email", source = "firmaCrm.email")
     FirmaCrmListDto toFirmaCrmListDto(FirmaCrmViewEntity entity);
 
     @Named("setPkdGlowny")

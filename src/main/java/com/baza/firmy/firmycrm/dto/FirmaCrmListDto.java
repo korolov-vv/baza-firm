@@ -18,12 +18,12 @@ public class FirmaCrmListDto {
   
   private String nazwa;
   private String nip;
+  private String wojewodztwo;
 
   private Pkd pkdGlowny;
 
   private String telefon;
   private String email;
-  private String www;
 
   private StatusKontaktu statusKontaktu;
   private LocalDateTime dataOstatniegoKontaktu;
@@ -31,5 +31,9 @@ public class FirmaCrmListDto {
 
   public Optional<Pkd> getPkdGlowny() {
     return Optional.ofNullable(pkdGlowny);
+  }
+
+  public Optional<String> getWojewodztwo() {
+    return Optional.ofNullable(wojewodztwo);
   }
 }
