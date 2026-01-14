@@ -1,6 +1,8 @@
 package com.baza.firmy.controller.customer;
 
 import com.baza.firmy.dto.UserPrincipal;
+import com.baza.firmy.firmysubscrypcje.dto.FirmaSubscrypcjaDto;
+import com.baza.firmy.firmysubscrypcje.query.FirmySubscrypcjeQueryFacade;
 import com.baza.firmy.uzytkownicy.dto.UzytkownikDto;
 import com.baza.firmy.uzytkownicy.query.UzytkownicyQueryFacade;
 import com.baza.firmy.uzytkownicy.query.UzytkownicyQueryMapper;
@@ -27,6 +29,7 @@ class UzytkownicyController {
 
   private final UzytkownicyQueryFacade uzytkownicyQueryFacade;
   private final UzytkownicyQueryMapper uzytkownicyQueryMapper;
+  private final FirmySubscrypcjeQueryFacade firmySubscrypcjeQueryFacade;
 
   @GetMapping(value = "/me", produces = MediaType.APPLICATION_JSON_VALUE)
   @Operation(summary = "Usługa pobierająca dane zalogowanego użytkownika")
@@ -35,6 +38,13 @@ class UzytkownicyController {
         .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Użytkownik nie istnieje"));
 
     UzytkownikDto uzytkownikDto = uzytkownicyQueryMapper.toUzytkownikDto(uzytkownik);
+    uzytkownikDto.setAktywnaSubscrypcja(pobierzInformacjeOSubsycjiUzytkownika(uzytkownik));
+
     return ResponseEntity.ok(uzytkownikDto);
+  }
+
+  private FirmaSubscrypcjaDto pobierzInformacjeOSubsycjiUzytkownika(UzytkownikViewEntity uzytkownik) {
+    return firmySubscrypcjeQueryFacade.znajdzAktywnaSubscrypcjeDlaFirmy(uzytkownik.getFirma().getUuid())
+            .orElse(null);
   }
 }

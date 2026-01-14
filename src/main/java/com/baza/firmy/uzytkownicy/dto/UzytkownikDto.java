@@ -1,10 +1,12 @@
 package com.baza.firmy.uzytkownicy.dto;
 
+import com.baza.firmy.firmysubscrypcje.dto.FirmaSubscrypcjaDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Optional;
 import java.util.UUID;
 
 @Data
@@ -20,4 +22,10 @@ public class UzytkownikDto {
   private String nazwaFirmy;
   private String nip;
   private boolean czyEmailPotwierdzony;
+  private FirmaSubscrypcjaDto aktywnaSubscrypcja;
+
+  public Optional<FirmaSubscrypcjaDto> getAktywnaSubscrypcja() {
+    return Optional.ofNullable(aktywnaSubscrypcja);
+  }
+
 }

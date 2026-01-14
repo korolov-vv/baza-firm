@@ -10,6 +10,7 @@ import java.util.UUID;
 public interface UzytkownicyQueryMapper {
 
   @Mapping(target = "podmiotGospodarczyUuid", source = "firma.uuid")
+  @Mapping(target = "nazwaFirmy", source = "firma.nazwa")
   @Mapping(target = "nip", source = "firma.nip")
   UzytkownikDto toUzytkownikDto(UzytkownikViewEntity entity);
 }
