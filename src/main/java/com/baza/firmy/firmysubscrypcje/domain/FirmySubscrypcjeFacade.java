@@ -18,12 +18,12 @@ public class FirmySubscrypcjeFacade {
     private final StworzSubscrypcjeDlaFirmyKlientaUseCase stworzSubscrypcjeDlaFirmyKlientaUseCase;
     private final ZaktualizujStatusSubscrypcjiFirmyUseCase zaktualizujStatusSubscrypcjiFirmyUseCase;
 
-    @Transactional(Transactional.TxType.REQUIRES_NEW)
+    @Transactional
     public UUID stworzTrialDlaFirmyKlienta(UUID uuidFirmyKlienta) {
         return stworzTrialDlaFirmyKlientaUseCase.stworzTrialDlaFirmyKlienta(uuidFirmyKlienta);
     }
 
-    @Transactional(Transactional.TxType.REQUIRES_NEW)
+    @Transactional
     public UUID stworzSubscrypcjeDlaFirmyKlienta(StworzSubscrypcjeDlaFirmyKlientaDto stworzSubscrypcjeDlaFirmyKlientaDto) {
         return stworzSubscrypcjeDlaFirmyKlientaUseCase.stworzSubscrypcjeDlaFirmyKlienta(stworzSubscrypcjeDlaFirmyKlientaDto);
     }

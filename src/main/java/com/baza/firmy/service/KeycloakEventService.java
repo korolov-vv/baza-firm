@@ -11,7 +11,6 @@ import com.baza.firmy.uzytkownicy.query.UzytkownikViewEntity;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
@@ -25,7 +24,7 @@ public class KeycloakEventService {
     private final KeycloakUserClient keycloakUserClient;
     private final FirmySubscrypcjeFacade firmySubscrypcjeFacade;
 
-    @Transactional
+
     public void processEvent(KeycloakEventDto event) {
         if (event == null || event.getType() == null) {
             log.warn("Received null event or event type");

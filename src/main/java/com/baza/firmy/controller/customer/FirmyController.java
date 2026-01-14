@@ -1,11 +1,13 @@
 package com.baza.firmy.controller.customer;
 
+import com.baza.firmy.constants.enums.BusinessStatus;
 import com.baza.firmy.dto.UserPrincipal;
 import com.baza.firmy.firmycrm.dto.FirmaCrmListDto;
 import com.baza.firmy.firmycrm.query.FirmaCrmViewEntity;
 import com.baza.firmy.firmycrm.query.FirmyCrmFilterSpecification;
 import com.baza.firmy.firmycrm.query.FirmyCrmQueryFacade;
 import com.baza.firmy.firmysubscrypcje.dto.FirmaSubscrypcjaDto;
+import com.baza.firmy.firmysubscrypcje.dto.ParametrySubscrypcjiDto;
 import com.baza.firmy.firmysubscrypcje.query.FirmySubscrypcjeQueryFacade;
 import com.baza.firmy.uzytkownicy.query.UzytkownicyQueryFacade;
 import com.baza.firmy.uzytkownicy.query.UzytkownikViewEntity;
@@ -48,16 +50,32 @@ class FirmyController {
     FirmaSubscrypcjaDto firmaSubscrypcjaDto = firmySubscrypcjeQueryFacade.znajdzAktywnaSubscrypcjeDlaFirmy(uzytkownik.getFirma().getUuid())
         .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Użytkownik nie posiada aktywnej subskrypcji"));
 
-    Specification<FirmaCrmViewEntity> specification = SpecificationBuilder.specification(
-            FirmyCrmFilterSpecification.class)
-        .withParam("pkd", firmaSubscrypcjaDto.getParametrySubscrypcji().getPkd().orElse(""))
-        .withParam("dataRozpoczeciaOd",
-            firmaSubscrypcjaDto.getParametrySubscrypcji().getDataRozpoczeciaOd().map(DateTimeFormatter.ISO_DATE::format).orElse(null))
-        .withParam("dataRozpoczeciaDo", firmaSubscrypcjaDto.getParametrySubscrypcji().getDataRozpoczeciaDo().map(DateTimeFormatter.ISO_DATE::format).orElse(null))
-        .withParam("wojewodztwo", firmaSubscrypcjaDto.getParametrySubscrypcji().getWojewodztwo().orElse(null))
-        .withParam("powiat", firmaSubscrypcjaDto.getParametrySubscrypcji().getPowiat().orElse(null))
-        .withParam("gmina", firmaSubscrypcjaDto.getParametrySubscrypcji().getGmina().orElse(null))
-        .build();
+    Specification<FirmaCrmViewEntity> specification = createSpecification(firmaSubscrypcjaDto);
     return ResponseEntity.ok(firmyCrmQueryFacade.pobierzListeFirm(specification, pageable));
+  }
+
+  private Specification<FirmaCrmViewEntity> createSpecification(FirmaSubscrypcjaDto firmaSubscrypcja) {
+    SpecificationBuilder<FirmyCrmFilterSpecification> builder = SpecificationBuilder.specification(
+            FirmyCrmFilterSpecification.class);
+    ParametrySubscrypcjiDto parametry = firmaSubscrypcja.getParametrySubscrypcji();
+
+    if (parametry != null) {
+      parametry.getPkd().ifPresent(pkd -> builder.withParam("pkd", pkd));
+
+      parametry.getDataRozpoczeciaOd().ifPresent(data ->
+              builder.withParam("dataRozpoczeciaOd", data.format(DateTimeFormatter.ISO_DATE)));
+
+      parametry.getDataRozpoczeciaDo().ifPresent(data ->
+              builder.withParam("dataRozpoczeciaDo", data.format(DateTimeFormatter.ISO_DATE)));
+
+      parametry.getWojewodztwo().ifPresent(woj -> builder.withParam("wojewodztwo", woj));
+
+      parametry.getPowiat().ifPresent(pow -> builder.withParam("powiat", pow));
+
+      parametry.getGmina().ifPresent(gm -> builder.withParam("gmina", gm));
+    }
+
+    builder.withParam("status", BusinessStatus.AKTYWNY.name());
+    return builder.build();
   }
 }

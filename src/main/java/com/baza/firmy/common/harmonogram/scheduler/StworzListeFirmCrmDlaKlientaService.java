@@ -2,8 +2,8 @@ package com.baza.firmy.common.harmonogram.scheduler;
 
 import com.baza.firmy.constants.enums.BusinessStatus;
 import com.baza.firmy.firmycrm.domain.FirmyCrmFacade;
-import com.baza.firmy.firmysubscrypcje.query.FirmySubscrypcjeQueryFacade;
 import com.baza.firmy.firmysubscrypcje.query.FirmaSubscrypcjaViewEntity;
+import com.baza.firmy.firmysubscrypcje.query.FirmySubscrypcjeQueryFacade;
 import com.baza.firmy.firmysubscrypcje.query.ParametrySubscrypcjiViewEntity;
 import com.baza.firmy.podmiotygospodarcze.query.PodmiotGospodarczyViewEntity;
 import com.baza.firmy.podmiotygospodarcze.query.PodmiotyGospodarczeFilterSpecification;
@@ -15,6 +15,7 @@ import org.quartz.JobExecutionContext;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
@@ -57,7 +58,7 @@ class StworzListeFirmCrmDlaKlientaService implements BazowySchedulerService {
 
         try {
             // 2. Get FirmaSubscrypcja
-            FirmaSubscrypcjaViewEntity firmaSubscrypcja = firmySubscrypcjeQueryFacade.findByUuid(firmaSubscrypcjaUuid)
+            FirmaSubscrypcjaViewEntity firmaSubscrypcja = firmySubscrypcjeQueryFacade.findByUuidPelneInfo(firmaSubscrypcjaUuid)
                     .orElseThrow(() -> new IllegalArgumentException("Nie znaleziono FirmaSubscrypcja o UUID: " + firmaSubscrypcjaUuid));
 
             // 3. Get number of firms from Subscription
@@ -78,7 +79,7 @@ class StworzListeFirmCrmDlaKlientaService implements BazowySchedulerService {
 
             // 5. Create specification and process pages
             Specification<PodmiotGospodarczyViewEntity> specification = createSpecification(firmaSubscrypcja);
-            int totalCreated = processPages(firmaKlient, specification, iloscDostepnychFirm);
+            int totalCreated = processPages(firmaKlient.getUuid(), specification, iloscDostepnychFirm);
 
             log.info("Zakończono tworzenie listy firm CRM. Utworzono łącznie {} firm dla klienta: {}",
                     totalCreated, firmaKlient.getUuid());
@@ -88,7 +89,7 @@ class StworzListeFirmCrmDlaKlientaService implements BazowySchedulerService {
         }
     }
 
-    private int processPages(PodmiotGospodarczyViewEntity firmaKlient,
+    private int processPages(UUID firmaKlientUuid,
                              Specification<PodmiotGospodarczyViewEntity> specification,
                              int iloscDostepnychFirm) {
         int pageNumber = 0;
@@ -97,22 +98,23 @@ class StworzListeFirmCrmDlaKlientaService implements BazowySchedulerService {
 
         while (remainingFirms > 0 && totalCreated < iloscDostepnychFirm) {
             int currentPageSize = Math.min(PAGE_SIZE, remainingFirms);
-            Pageable pageable = PageRequest.of(pageNumber, currentPageSize);
+            Pageable pageable = PageRequest.of(pageNumber, currentPageSize, Sort.by(Sort.Direction.DESC, "dataRozpoczecia"));
 
             log.debug("Pobieranie strony {} z {} rekordami", pageNumber, currentPageSize);
 
-            Page<PodmiotGospodarczyViewEntity> firmyPage =
-                    podmiotyGospodarczeQueryFacade.pobierzListePodmiotowGospodarczych(specification, pageable);
+            Page<UUID> firmyUuidPage =
+                    podmiotyGospodarczeQueryFacade.pobierzListePodmiotowGospodarczych(specification, pageable)
+                            .map(PodmiotGospodarczyViewEntity::getUuid);
 
-            List<PodmiotGospodarczyViewEntity> firmy = firmyPage.getContent();
+            List<UUID> firmyUuids = firmyUuidPage.getContent();
 
-            if (firmy.isEmpty()) {
+            if (firmyUuids.isEmpty()) {
                 log.warn("Brak więcej firm spełniających kryteria. Pobrano łącznie: {}", totalCreated);
                 break;
             }
 
             // Create FirmaCrm for current page
-            List<UUID> utworzoneFirmyCrm = firmyCrmFacade.stworzFirmyCrm(firmaKlient, firmy);
+            List<UUID> utworzoneFirmyCrm = firmyCrmFacade.stworzFirmyCrm(firmaKlientUuid, firmyUuids);
             totalCreated += utworzoneFirmyCrm.size();
             remainingFirms -= utworzoneFirmyCrm.size();
 
@@ -122,7 +124,7 @@ class StworzListeFirmCrmDlaKlientaService implements BazowySchedulerService {
             pageNumber++;
 
             // Safety break if no more pages
-            if (!firmyPage.hasNext()) {
+            if (!firmyUuidPage.hasNext()) {
                 log.info("Osiągnięto ostatnią stronę wyników");
                 break;
             }

@@ -1,6 +1,5 @@
 package com.baza.firmy.firmycrm.domain;
 
-import com.baza.firmy.podmiotygospodarcze.query.PodmiotGospodarczyViewEntity;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,10 +16,10 @@ public class FirmyCrmFacade {
 
     private final StworzFirmaCrmUseCase stworzFirmaCrmUseCase;
 
-    @Transactional(Transactional.TxType.REQUIRES_NEW)
-    public List<UUID> stworzFirmyCrm(PodmiotGospodarczyViewEntity firmaKlient, List<PodmiotGospodarczyViewEntity> firmyCrm) {
-        return firmyCrm.stream()
-                .map(firma -> stworzFirmaCrmUseCase.stworzFirmaCrm(firmaKlient, firma))
+    @Transactional
+    public List<UUID> stworzFirmyCrm(UUID firmaKlientUuid, List<UUID> firmyCrmUuids) {
+        return firmyCrmUuids.stream()
+                .map(uuid -> stworzFirmaCrmUseCase.stworzFirmaCrm(firmaKlientUuid, uuid))
                 .filter(Objects::nonNull)
                 .toList();
     }

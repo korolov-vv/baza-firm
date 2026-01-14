@@ -1,6 +1,7 @@
 package com.baza.firmy.firmycrm.domain;
 
 import com.baza.firmy.podmiotygospodarcze.query.PodmiotGospodarczyViewEntity;
+import com.baza.firmy.podmiotygospodarcze.query.PodmiotyGospodarczeQueryFacade;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -13,14 +14,21 @@ import java.util.UUID;
 class StworzFirmaCrmUseCase {
 
   private final FirmyCrmRepository firmyCrmRepository;
+  private final PodmiotyGospodarczeQueryFacade podmiotyGospodarczeQueryFacade;
 
-  public UUID stworzFirmaCrm(PodmiotGospodarczyViewEntity firmaKlient, PodmiotGospodarczyViewEntity firmaCrm) {
+  public UUID stworzFirmaCrm(UUID firmaKlientUuid, UUID firmaCrmUuid) {
     // Check if FirmaCrm already exists for this client-firm pair
-    if (firmyCrmRepository.existsByFirmaKlientAndFirmaCrm(firmaKlient, firmaCrm)) {
+    if (firmyCrmRepository.existsByFirmaKlientUuidAndFirmaCrmUuid(firmaKlientUuid, firmaCrmUuid)) {
       log.debug("FirmaCrm już istnieje aktywna Subscrypcja dla klienta: {} i firmy: {}. Pomijam tworzenie.",
-              firmaKlient.getUuid(), firmaCrm.getUuid());
+              firmaKlientUuid, firmaCrmUuid);
       return null;
     }
+
+    PodmiotGospodarczyViewEntity firmaKlient = podmiotyGospodarczeQueryFacade.pobierzPoUuid(firmaKlientUuid)
+            .orElseThrow(() -> new IllegalStateException("Nie udało się pobrać firmy klienta o UUID: " + firmaKlientUuid));
+
+    PodmiotGospodarczyViewEntity firmaCrm = podmiotyGospodarczeQueryFacade.pobierzPoUuid(firmaCrmUuid)
+            .orElseThrow(() -> new IllegalStateException("Nie udało się pobrać firmy CRM o UUID: " + firmaCrmUuid));
 
     FirmaCrmEntity firmaCrmEntity = FirmaCrmEntity.builder()
             .uuid(UUID.randomUUID())

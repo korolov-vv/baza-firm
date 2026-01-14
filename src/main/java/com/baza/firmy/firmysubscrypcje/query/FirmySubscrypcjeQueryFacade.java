@@ -39,6 +39,9 @@ public class FirmySubscrypcjeQueryFacade {
     }
 
     private ParametrySubscrypcjiDto stworzParametrySubscrypcjiDto(ParametrySubscrypcjiViewEntity parametrySubscrypcji) {
+        if (parametrySubscrypcji == null) {
+            return null;
+        }
         return ParametrySubscrypcjiDto.builder()
                 .uuid(parametrySubscrypcji.getUuid())
                 .pkd(parametrySubscrypcji.getPkd().orElse(null))
@@ -50,7 +53,7 @@ public class FirmySubscrypcjeQueryFacade {
                 .build();
     }
 
-    public Optional<FirmaSubscrypcjaViewEntity> findByUuid(UUID uuid) {
-        return firmySubscrypcjeQueryRepository.findByUuid(uuid);
+    public Optional<FirmaSubscrypcjaViewEntity> findByUuidPelneInfo(UUID uuid) {
+        return firmySubscrypcjeQueryRepository.findByUuidPelneInfo(uuid);
     }
 }
