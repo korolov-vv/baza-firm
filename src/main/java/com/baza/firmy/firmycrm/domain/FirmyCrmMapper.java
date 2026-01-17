@@ -1,4 +1,4 @@
-package com.baza.firmy.firmycrm.query;
+package com.baza.firmy.firmycrm.domain;
 
 import com.baza.firmy.adresy.query.AdresViewEntity;
 import com.baza.firmy.firmycrm.dto.FirmaCrmDto;
@@ -13,7 +13,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Mapper(componentModel = "spring", imports = { UUID.class })
-interface FirmyCrmQueryMapper {
+interface FirmyCrmMapper {
 
     @Mapping(target = "pkdGlowny", source = ".", qualifiedByName = "setPkdGlowny")
     @Mapping(target = "nip", source = ".", qualifiedByName = "setNip")
@@ -22,7 +22,7 @@ interface FirmyCrmQueryMapper {
     @Mapping(target = "telefon", source = "firmaCrm.telefon")
     @Mapping(target = "email", source = "firmaCrm.email")
     @Mapping(target = "statusKontaktu", source = "statusKontaktu.label")
-    FirmaCrmListDto toFirmaCrmListDto(FirmaCrmViewEntity entity);
+    FirmaCrmListDto toFirmaCrmListDto(FirmaCrmEntity entity);
 
     @Mapping(target = "uuid", source = "uuid")
     @Mapping(target = "nazwa", source = "firmaCrm.nazwa")
@@ -35,10 +35,10 @@ interface FirmyCrmQueryMapper {
     @Mapping(target = "telefon", source = "firmaCrm.telefon")
     @Mapping(target = "email", source = "firmaCrm.email")
     @Mapping(target = "stronaWww", source = "firmaCrm.www")
-    FirmaCrmDto toFirmaCrmDto(FirmaCrmViewEntity entity);
+    FirmaCrmDto toFirmaCrmDto(FirmaCrmEntity entity);
 
     @Named("setPkdGlowny")
-    default Pkd setPkdGlowny(FirmaCrmViewEntity entity) {
+    default Pkd setPkdGlowny(FirmaCrmEntity entity) {
         return entity.getFirmaCrm().getPkdGlowny()
                 .map(pkd -> Pkd.builder()
                         .kod(pkd.getKod())
@@ -48,12 +48,12 @@ interface FirmyCrmQueryMapper {
     }
 
     @Named("setNip")
-    default String setNip(FirmaCrmViewEntity firmaCrmViewEntity) {
+    default String setNip(FirmaCrmEntity firmaCrmViewEntity) {
         return firmaCrmViewEntity.getFirmaCrm().getNip();
     }
 
     @Named("setPkdGlownyString")
-    default String setPkdGlownyString(FirmaCrmViewEntity entity) {
+    default String setPkdGlownyString(FirmaCrmEntity entity) {
         return entity.getFirmaCrm().getPkdGlowny()
                 .map(pkd -> pkd.getKod() + pkd.getNazwa()
                         .map(nazwa -> " - " + nazwa)
@@ -63,7 +63,7 @@ interface FirmyCrmQueryMapper {
     }
 
     @Named("setPozostalePkd")
-    default String setPozostalePkd(FirmaCrmViewEntity entity) {
+    default String setPozostalePkd(FirmaCrmEntity entity) {
         return entity.getFirmaCrm().getPkd().stream()
                 .filter(pkd -> entity.getFirmaCrm().getPkdGlowny()
                         .map(glowny -> !glowny.getKod().equals(pkd.getKod()))
@@ -76,12 +76,12 @@ interface FirmyCrmQueryMapper {
     }
 
     @Named("setAdresKorespondencyjny")
-    default String setAdresKorespondencyjny(FirmaCrmViewEntity entity) {
+    default String setAdresKorespondencyjny(FirmaCrmEntity entity) {
         return entity.getFirmaCrm().getAdresKorespondencyjny().toString();
     }
 
     @Named("setAdresDzialalnosci")
-    default String setAdresDzialalnosci(FirmaCrmViewEntity entity) {
+    default String setAdresDzialalnosci(FirmaCrmEntity entity) {
         return entity.getFirmaCrm().getAdresDzialalnosci()
                 .map(AdresViewEntity::toString)
                 .orElse(null);

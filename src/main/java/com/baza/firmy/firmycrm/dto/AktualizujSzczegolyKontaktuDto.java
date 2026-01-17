@@ -18,7 +18,7 @@ import java.util.UUID;
 public class AktualizujSzczegolyKontaktuDto {
 
   @NotNull(message = "UUID firmy jest obowiązkowe")
-  private UUID uuidFirmy;
+  private UUID uuid;
 
   @NotNull(message = "Wersja jest obowiązkowa")
   private Integer version;

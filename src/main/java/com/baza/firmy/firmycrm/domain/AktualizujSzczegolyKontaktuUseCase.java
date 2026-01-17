@@ -1,6 +1,7 @@
 package com.baza.firmy.firmycrm.domain;
 
 import com.baza.firmy.firmycrm.dto.AktualizujSzczegolyKontaktuDto;
+import com.baza.firmy.firmycrm.dto.FirmaCrmDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -15,12 +16,13 @@ import java.util.UUID;
 class AktualizujSzczegolyKontaktuUseCase {
 
     private final FirmyCrmRepository firmyCrmRepository;
+    private final FirmyCrmMapper firmyCrmMapper;
 
-    public void zaktualizujInformacjeOKontakcie(UUID firmaKlientUuid, AktualizujSzczegolyKontaktuDto dto) {
+    public FirmaCrmDto zaktualizujInformacjeOKontakcie(UUID firmaKlientUuid, AktualizujSzczegolyKontaktuDto dto) {
         FirmaCrmEntity firmaCrm = firmyCrmRepository
-                .findByFirmaKlientUuidAndUuid(firmaKlientUuid, dto.getUuidFirmy())
+                .findByFirmaKlientUuidAndUuid(firmaKlientUuid, dto.getUuid())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.FORBIDDEN,
-                        "Brak uprawnień do aktualizacji firmy CRM o UUID: " + dto.getUuidFirmy() + " dla klienta: " + firmaKlientUuid));
+                        "Brak uprawnień do aktualizacji firmy CRM o UUID: " + dto.getUuid() + " dla klienta: " + firmaKlientUuid));
 
         if (firmaCrm.getVersion() != dto.getVersion()) {
             throw new IllegalStateException("Wersja danych jest nieaktualna. Proszę odświeżyć dane i spróbować ponownie.");
@@ -28,9 +30,10 @@ class AktualizujSzczegolyKontaktuUseCase {
 
         zaktualizujDaneOKontakcie(dto, firmaCrm);
 
-        firmyCrmRepository.save(firmaCrm);
+        FirmaCrmEntity zaktualizowanaFirmaCrm = firmyCrmRepository.save(firmaCrm);
         log.debug("Zaktualizowano szczegóły kontaktu dla firmy CRM: {}, klient: {}",
-                dto.getUuidFirmy(), firmaKlientUuid);
+                dto.getUuid(), firmaKlientUuid);
+        return  firmyCrmMapper.toFirmaCrmDto(zaktualizowanaFirmaCrm);
     }
 
     private void zaktualizujDaneOKontakcie(AktualizujSzczegolyKontaktuDto dto, FirmaCrmEntity firmaCrm) {

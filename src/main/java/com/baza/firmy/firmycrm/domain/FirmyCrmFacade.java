@@ -1,6 +1,7 @@
 package com.baza.firmy.firmycrm.domain;
 
 import com.baza.firmy.firmycrm.dto.AktualizujSzczegolyKontaktuDto;
+import com.baza.firmy.firmycrm.dto.FirmaCrmDto;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,7 +28,7 @@ public class FirmyCrmFacade {
     }
 
     @Transactional
-    public void aktualizujSzczegolyKontaktu(UUID firmaKlientUuid, AktualizujSzczegolyKontaktuDto dto) {
-        aktualizujSzczegolyKontaktuUseCase.zaktualizujInformacjeOKontakcie(firmaKlientUuid, dto);
+    public FirmaCrmDto aktualizujSzczegolyKontaktu(UUID firmaKlientUuid, AktualizujSzczegolyKontaktuDto dto) {
+        return aktualizujSzczegolyKontaktuUseCase.zaktualizujInformacjeOKontakcie(firmaKlientUuid, dto);
     }
 }

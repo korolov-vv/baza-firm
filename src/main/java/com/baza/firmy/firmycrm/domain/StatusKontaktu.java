@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 public enum StatusKontaktu {
     DO_KONTAKTU("Do kontaktu"),
     BRAK_ODPOWIEDZI("Brak odpowiedzi - zaplanowano następny kontakt"),
+    ZAPLANOWANO_NASTEPNY_KONTAKT("Zaplanowano następny kontakt"),
     PRZEKAZANO_DO_DALSZEJ_OBSLUGI("Przekazano do dalszej obsługi");
 
     private final String label;

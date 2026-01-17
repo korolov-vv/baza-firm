@@ -66,13 +66,13 @@ class FirmyController {
 
     @PutMapping(value = "/kontakt", consumes = MediaType.APPLICATION_JSON_VALUE)
     @Operation(summary = "Usługa aktualizująca szczegóły kontaktu z firmą")
-    public ResponseEntity<Void> aktualizujSzczegolyKontaktu(
+    public ResponseEntity<FirmaCrmDto> aktualizujSzczegolyKontaktu(
             @Valid @RequestBody AktualizujSzczegolyKontaktuDto dto,
             @AuthenticationPrincipal UserPrincipal userPrincipal) {
         UzytkownikViewEntity uzytkownik = sprawdzUzytkownikaOrazSubscrypcje(userPrincipal);
 
-        firmyCrmFacade.aktualizujSzczegolyKontaktu(uzytkownik.getFirma().getUuid(), dto);
-        return ResponseEntity.noContent().build();
+        FirmaCrmDto zaktualizowanaFirma = firmyCrmFacade.aktualizujSzczegolyKontaktu(uzytkownik.getFirma().getUuid(), dto);
+        return ResponseEntity.ok(zaktualizowanaFirma);
     }
 
     @GetMapping(value = "/{firmaCrmUuid}", produces = MediaType.APPLICATION_JSON_VALUE)
