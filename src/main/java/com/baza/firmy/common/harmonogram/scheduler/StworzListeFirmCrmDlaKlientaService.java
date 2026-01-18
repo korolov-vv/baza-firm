@@ -17,6 +17,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.time.format.DateTimeFormatter;
@@ -45,6 +46,7 @@ class StworzListeFirmCrmDlaKlientaService implements BazowySchedulerService {
      * @param jobExecutionContext kontekst wykonania zadania Quartz zawierający UUID subskrypcji
      */
     @Override
+    @Async("stworzListeFirmCrmDlaKlienta")
     public void executeScheduler(JobExecutionContext jobExecutionContext) {
         // 1. Get UUID FirmaSubscrypcja from JobDataMap
         UUID firmaSubscrypcjaUuid = (UUID) jobExecutionContext.getMergedJobDataMap().get(FIRMA_SUBSCRYPCJA_UUID_KEY);

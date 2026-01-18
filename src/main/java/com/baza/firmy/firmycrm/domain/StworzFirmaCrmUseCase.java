@@ -17,6 +17,10 @@ class StworzFirmaCrmUseCase {
   private final PodmiotyGospodarczeQueryFacade podmiotyGospodarczeQueryFacade;
 
   public UUID stworzFirmaCrm(UUID firmaKlientUuid, UUID firmaCrmUuid) {
+    if (firmaKlientUuid == firmaCrmUuid) {
+      log.debug("FirmaCrm jest ta sama co firma klienta: {} == {}. Pomijam tworzenie.",
+              firmaKlientUuid, firmaCrmUuid);
+    }
     // Check if FirmaCrm already exists for this client-firm pair
     if (firmyCrmRepository.existsByFirmaKlientUuidAndFirmaCrmUuid(firmaKlientUuid, firmaCrmUuid)) {
       log.debug("FirmaCrm już istnieje aktywna Subscrypcja dla klienta: {} i firmy: {}. Pomijam tworzenie.",

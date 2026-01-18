@@ -17,7 +17,7 @@ import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/clienci/subscrypcje")
+@RequestMapping("/api/v1/admin/clienci/subscrypcje")
 @Tag(name = "Firmy Subscrypcje API", description = "Dostęp Subscrypcji klientów")
 public class FirmySubscrypcjeController {
 
