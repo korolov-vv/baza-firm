@@ -31,4 +31,6 @@ public class FirmyCrmFacade {
     public FirmaCrmDto aktualizujSzczegolyKontaktu(UUID firmaKlientUuid, AktualizujSzczegolyKontaktuDto dto) {
         return aktualizujSzczegolyKontaktuUseCase.zaktualizujInformacjeOKontakcie(firmaKlientUuid, dto);
     }
+
+
 }

@@ -1,27 +1,20 @@
 package com.baza.firmy.common.harmonogram.scheduler;
 
 import com.baza.firmy.constants.enums.BusinessStatus;
-import com.baza.firmy.firmycrm.domain.FirmyCrmFacade;
 import com.baza.firmy.firmysubscrypcje.query.FirmaSubscrypcjaViewEntity;
 import com.baza.firmy.firmysubscrypcje.query.FirmySubscrypcjeQueryFacade;
 import com.baza.firmy.firmysubscrypcje.query.ParametrySubscrypcjiViewEntity;
 import com.baza.firmy.podmiotygospodarcze.query.PodmiotGospodarczyViewEntity;
 import com.baza.firmy.podmiotygospodarcze.query.PodmiotyGospodarczeFilterSpecification;
-import com.baza.firmy.podmiotygospodarcze.query.PodmiotyGospodarczeQueryFacade;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.kaczmarzyk.spring.data.jpa.utils.SpecificationBuilder;
 import org.quartz.JobExecutionContext;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.time.format.DateTimeFormatter;
-import java.util.List;
 import java.util.UUID;
 
 /**
@@ -33,12 +26,10 @@ import java.util.UUID;
 @Service
 class StworzListeFirmCrmDlaKlientaService implements BazowySchedulerService {
 
-    private static final int PAGE_SIZE = 10;
     private static final String FIRMA_SUBSCRYPCJA_UUID_KEY = "firmaSubscrypcjaUuid";
 
     private final FirmySubscrypcjeQueryFacade firmySubscrypcjeQueryFacade;
-    private final PodmiotyGospodarczeQueryFacade podmiotyGospodarczeQueryFacade;
-    private final FirmyCrmFacade firmyCrmFacade;
+    private final ListeFirmCrmDlaKlientaPageProcessor listeFirmCrmDlaKlientaPageProcessor;
 
     /**
      * Główna metoda wykonująca proces tworzenia listy firm CRM dla klienta.
@@ -81,7 +72,7 @@ class StworzListeFirmCrmDlaKlientaService implements BazowySchedulerService {
 
             // 5. Create specification and process pages
             Specification<PodmiotGospodarczyViewEntity> specification = createSpecification(firmaSubscrypcja);
-            int totalCreated = processPages(firmaKlient.getUuid(), specification, iloscDostepnychFirm);
+            int totalCreated = listeFirmCrmDlaKlientaPageProcessor.processPages(firmaKlient.getUuid(), specification, iloscDostepnychFirm);
 
             log.info("Zakończono tworzenie listy firm CRM. Utworzono łącznie {} firm dla klienta: {}",
                     totalCreated, firmaKlient.getUuid());
@@ -89,50 +80,6 @@ class StworzListeFirmCrmDlaKlientaService implements BazowySchedulerService {
             log.error("Błąd podczas tworzenia listy firm CRM dla subscrypcji: {}", firmaSubscrypcjaUuid, e);
             throw e;
         }
-    }
-
-    private int processPages(UUID firmaKlientUuid,
-                             Specification<PodmiotGospodarczyViewEntity> specification,
-                             int iloscDostepnychFirm) {
-        int pageNumber = 0;
-        int totalCreated = 0;
-        int remainingFirms = iloscDostepnychFirm;
-
-        while (remainingFirms > 0 && totalCreated < iloscDostepnychFirm) {
-            int currentPageSize = Math.min(PAGE_SIZE, remainingFirms);
-            Pageable pageable = PageRequest.of(pageNumber, currentPageSize, Sort.by(Sort.Direction.DESC, "dataRozpoczecia"));
-
-            log.debug("Pobieranie strony {} z {} rekordami", pageNumber, currentPageSize);
-
-            Page<UUID> firmyUuidPage =
-                    podmiotyGospodarczeQueryFacade.pobierzListePodmiotowGospodarczych(specification, pageable)
-                            .map(PodmiotGospodarczyViewEntity::getUuid);
-
-            List<UUID> firmyUuids = firmyUuidPage.getContent();
-
-            if (firmyUuids.isEmpty()) {
-                log.warn("Brak więcej firm spełniających kryteria. Pobrano łącznie: {}", totalCreated);
-                break;
-            }
-
-            // Create FirmaCrm for current page
-            List<UUID> utworzoneFirmyCrm = firmyCrmFacade.stworzFirmyCrm(firmaKlientUuid, firmyUuids);
-            totalCreated += utworzoneFirmyCrm.size();
-            remainingFirms -= utworzoneFirmyCrm.size();
-
-            log.info("Utworzono {} firm CRM na stronie {}. Łącznie utworzono: {}/{}",
-                    utworzoneFirmyCrm.size(), pageNumber, totalCreated, iloscDostepnychFirm);
-
-            pageNumber++;
-
-            // Safety break if no more pages
-            if (!firmyUuidPage.hasNext()) {
-                log.info("Osiągnięto ostatnią stronę wyników");
-                break;
-            }
-        }
-
-        return totalCreated;
     }
 
     private Specification<PodmiotGospodarczyViewEntity> createSpecification(FirmaSubscrypcjaViewEntity firmaSubscrypcja) {
