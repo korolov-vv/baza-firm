@@ -1,0 +1,110 @@
+server:
+  port: ${BE_PORT}
+
+spring:
+  main:
+    web-application-type: servlet
+  application:
+    name: firms
+    profiles:
+      active: ${DEPLOY_ENV}
+  datasource:
+    url: ${POSTGRESQL_DB_URL}
+    username: ${POSTGRESQL_DB_USERNAME}
+    password: ${POSTGRESQL_DB_PASSWORD}
+  jpa:
+    database: postgresql
+    hibernate:
+      ddl-auto: none
+    properties:
+      hibernate:
+        default_schema: ${DB_SCHEMA}
+  liquibase:
+    change-log: classpath:db/changelog/baza-firmy-changelog.yaml
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: ${keycloak-customer.server-url}/realms/${keycloak-customer.realm}/protocol/openid-connect/certs
+
+application:
+  authorization:
+    disabled:
+      get:
+        - /health
+        - /info
+        - /prometheus
+        - /metrics
+        - /swagger-ui/**
+        - /v3/api-docs/**
+        - /api/v1/internal/**
+      post:
+        - /api/v1/internal/keycloak/**
+  cors:
+    allowed-origins:
+      - ${FRONTEND_URL:http://localhost:4200}
+    allowed-methods:
+      - GET
+      - POST
+      - PUT
+      - PATCH
+      - DELETE
+      - OPTIONS
+    allowed-headers:
+      - "*"
+    exposed-headers:
+      - Authorization
+      - Content-Type
+      - X-Total-Count
+    allow-credentials: true
+    max-age: 3600
+
+aws:
+  access-key: ${AWS_ACCESS_KEY}
+  secret-key: ${AWS_SECRET_KEY}
+  endpoint: ${AWS_SERVICE_ENDPOINT}
+  temp-dir-path: ${TEMP_DIR_PATH}
+
+ceidg:
+  ceidg-path: ${CEIDG_PATH}
+  token: ${CEIDG_TOKEN}
+
+krs:
+  krs-path: ${KRS_PATH}
+
+portal-zewn:
+    url: ${PORTAL_ZEW_URL}
+
+smtp:
+    host: ${SMTP_HOST}
+    port: ${SMTP_PORT:587}
+    username: ${SMTP_USERNAME}
+    password: ${SMTP_PASSWORD}
+
+keycloak-admin:
+  server-url: ${KEYCLOAK_SERVER_URL}
+  realm: bazafirm_admin
+  auth-url: ${keycloak-admin.server-url}/realms/${keycloak-admin.realm}/protocol/openid-connect/token
+  logout-url: ${keycloak-admin.server-url}/realms/${keycloak-admin.realm}/protocol/openid-connect/logout
+  introspect-token-url: ${keycloak-admin.auth-url}/introspect
+  admin-client-id: bazafirm_admin
+  admin-client-secret: ${KEYCLOAK_ADMIN_CLIENT_ADM_SECRET}
+  clients:
+    -
+      clientName: BAZAFIRM_WEB_APP
+      clientId: bazafirm-admin-web
+      clientSecret: ${KEYCLOAK_APP_WEB_CLIENT_ADM_SECRET}
+
+keycloak-customer:
+  server-url: ${KEYCLOAK_SERVER_URL}
+  realm: bazafirm-customer
+  auth-url: ${keycloak-customer.server-url}/realms/${keycloak-customer.realm}/protocol/openid-connect/token
+  logout-url: ${keycloak-customer.server-url}/realms/${keycloak-customer.realm}/protocol/openid-connect/logout
+  introspect-token-url: ${keycloak-customer.auth-url}/introspect
+  admin-client-id: app-admin
+  admin-client-secret: ${KEYCLOAK_ADMIN_CLIENT_CUST_SECRET}
+  clients:
+    -
+      clientName: BAZAFIRM_WEB_APP
+      clientId: customer-app-web
+      clientSecret: ${KEYCLOAK_APP_WEB_CLIENT_CUST_SECRET}

@@ -1,0 +1,4 @@
+databaseChangeLog:
+  # Jednorazowe pliki SQL
+  - includeAll:
+      path: "db/sql/"
