@@ -1,13 +1,12 @@
 package com.baza.firmy.controller.admin;
 
 import com.baza.firmy.dto.PodmiotGospodarczyListDto;
-import com.baza.firmy.podmiotygospodarcze.query.PodmiotGospodarczeViewEntity;
+import com.baza.firmy.podmiotygospodarcze.query.PodmiotGospodarczyViewEntity;
 import com.baza.firmy.podmiotygospodarcze.query.PodmiotyGospodarczeFilterSpecification;
 import com.baza.firmy.podmiotygospodarcze.query.PodmiotyGospodarczeQueryFacade;
+import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import lombok.RequiredArgsConstructor;
 import net.kaczmarzyk.spring.data.jpa.utils.SpecificationBuilder;
 import org.springframework.data.domain.Page;
@@ -21,9 +20,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+
 @RestController
 @RequiredArgsConstructor
-@RequestMapping ("/api/jdg")
+@RequestMapping ("/api/v1/jdg")
 @Tag (name = "JDG API", description = "Dostęp do JDG")
 class JdgController {
 
@@ -31,6 +33,7 @@ class JdgController {
 
   @GetMapping (produces = MediaType.APPLICATION_JSON_VALUE)
   @Operation (summary = "Usługa pobierająca listę JDG")
+  @Hidden
   public ResponseEntity<Page<PodmiotGospodarczyListDto>> pobierzListeJdg(
       @Nullable @RequestParam String nazwa,
       @Nullable @RequestParam String pkd,
@@ -42,7 +45,7 @@ class JdgController {
       @Nullable @RequestParam String gmina,
       Pageable pageable
   ) {
-    Specification<PodmiotGospodarczeViewEntity> specification = SpecificationBuilder.specification(
+    Specification<PodmiotGospodarczyViewEntity> specification = SpecificationBuilder.specification(
             PodmiotyGospodarczeFilterSpecification.class)
         .withParam("nazwa", nazwa)
         .withParam("pkd", pkd != null ? pkd : "")

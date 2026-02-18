@@ -11,17 +11,19 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping ("/api/dane-ceidg")
+@RequestMapping ("/api/v1/dane-ceidg")
 @Tag (name = "JDG API", description = "Dostęp do JDG")
 class PobierajDaneZCeidgController {
 
   private final QuartzManager quartzManager;
 
+  @Hidden
   @PostMapping ("/pobierz-listy-aktywnych-jdg-wstecz")
   public void pobierajListyAktywnychJdgWsteczIZapisz() {
     quartzManager.stworzZadanieSchedulera(SchedulerSingleEnum.POBIERAJ_LISTE_JDG_SCHEDULER);
   }
 
+  @Hidden
   @PostMapping ("/pobierz-szczegoly-jdg")
   public void pobierajSzczegolyJdg() {
     quartzManager.stworzZadanieSchedulera(SchedulerSingleEnum.POBIERAJ_SZCZEGOLY_JDG_SCHEDULER);
@@ -33,6 +35,7 @@ class PobierajDaneZCeidgController {
     quartzManager.stworzZadanieSchedulera(SchedulerSingleEnum.POBIERAJ_BRAKUJACE_DANE);
   }
 
+  @Hidden
   @PostMapping("/pobierz-dane-z-raportu")
   public void pobierajDaneZRaportu() {
     quartzManager.stworzZadanieSchedulera(SchedulerSingleEnum.POBIERAJ_DANE_Z_RAPORTU);

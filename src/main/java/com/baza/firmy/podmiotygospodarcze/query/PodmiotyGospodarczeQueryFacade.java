@@ -1,17 +1,20 @@
 package com.baza.firmy.podmiotygospodarcze.query;
 
-import com.baza.firmy.dto.PodmiotGospodarczyListDto;
+import com.baza.firmy.constants.enums.BusinessStatus;
 import com.baza.firmy.dto.ParametryWyszukiwaniaDto;
+import com.baza.firmy.dto.PodmiotGospodarczyListDto;
 import jakarta.transaction.Transactional;
-import java.time.LocalDate;
-import java.util.List;
-import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @Slf4j
@@ -22,15 +25,36 @@ public class PodmiotyGospodarczeQueryFacade {
   private final PodmiotyGospodarczeQueryMapper podmiotyGospodarczeQueryMapper;
   private final ExportujDaneDoXlsxUseCase exportujDaneDoXlsxUseCase;
 
-  public Page<PodmiotGospodarczyListDto> pobierzListeJdg(Specification<PodmiotGospodarczeViewEntity> specification, Pageable pageable) {
-    return podmiotyGospodarczeQueryRepository.findAll(specification, pageable)
+  public Page<PodmiotGospodarczyListDto> pobierzListeJdg(Specification<PodmiotGospodarczyViewEntity> specification, Pageable pageable) {
+    return pobierzListePodmiotowGospodarczych(specification, pageable)
         .map(podmiotyGospodarczeQueryMapper::toJdgListDtoList);
+  }
+
+  public Page<PodmiotGospodarczyViewEntity> pobierzListePodmiotowGospodarczych(Specification<PodmiotGospodarczyViewEntity> specification, Pageable pageable) {
+    return podmiotyGospodarczeQueryRepository.findAll(specification, pageable);
   }
 
   public List<String> pobierzLinkiDoJdgBezNipow() {
     return podmiotyGospodarczeQueryRepository.findAllByWlascicielNipIsNull().stream()
-        .map(PodmiotGospodarczeViewEntity::getLink)
+        .map(PodmiotGospodarczyViewEntity::getLink)
         .toList();
+  }
+
+  public Optional<PodmiotGospodarczyViewEntity> pobierzAktywnaFirmePoNip(String nip) {
+    List<PodmiotGospodarczyViewEntity> podmiotGospodarczeList = podmiotyGospodarczeQueryRepository.findAllByNipAndStatus(nip, BusinessStatus.AKTYWNY);
+
+    if (podmiotGospodarczeList.isEmpty()) {
+      return Optional.empty();
+    }
+
+    if (podmiotGospodarczeList.size() > 1) {
+      log.info("Znaleziono więcej niż jedną aktywna firmę z NIP: {}", nip);
+    }
+    return Optional.of(podmiotGospodarczeList.getFirst());
+  }
+
+  public Optional<PodmiotGospodarczyViewEntity> pobierzPoUuid(UUID uuid) {
+    return podmiotyGospodarczeQueryRepository.findByUuid(uuid);
   }
 
   public boolean czyIstniejePoCeidgId(UUID ceidgId) {

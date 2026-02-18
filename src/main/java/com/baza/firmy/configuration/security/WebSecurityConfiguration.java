@@ -2,6 +2,7 @@ package com.baza.firmy.configuration.security;
 
 import com.baza.firmy.dto.UserPrincipal;
 import jakarta.servlet.DispatcherType;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -18,16 +19,20 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.cors.CorsConfigurationSource;
 
 @Slf4j
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity(securedEnabled = true)
 @EnableConfigurationProperties(AuthorizationDisabledEndpoints.class)
+@RequiredArgsConstructor
 public class WebSecurityConfiguration {
 
+  private final CorsConfigurationSource corsConfigurationSource;
+
   @Bean
-  public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+  public SecurityFilterChain filterChain(HttpSecurity http) {
     http.authorizeHttpRequests(authorize -> authorize
         .dispatcherTypeMatchers(DispatcherType.ERROR).permitAll()
         .anyRequest().authenticated());
@@ -35,6 +40,7 @@ public class WebSecurityConfiguration {
         oauth2.jwt(jwt ->
             jwt.jwtAuthenticationConverter(customJwtAuthenticationConverter())
         ));
+    http.cors(cors -> cors.configurationSource(corsConfigurationSource));
     return http.csrf(AbstractHttpConfigurer::disable).build();
   }
 

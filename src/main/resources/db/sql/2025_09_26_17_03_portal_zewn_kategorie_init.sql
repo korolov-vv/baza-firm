@@ -4,7 +4,7 @@
 
 create table if not exists portal_zewn_kategorie (
     id BIGINT
-        constraint portal_list_pk
+        constraint portal_kat_list_pk
             primary key,
     uuid uuid not null unique,
     create_date timestamp,

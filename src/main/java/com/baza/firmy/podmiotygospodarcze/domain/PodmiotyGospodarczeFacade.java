@@ -1,12 +1,16 @@
 package com.baza.firmy.podmiotygospodarcze.domain;
 
 import com.baza.firmy.danezportaluzewn.domain.dto.FirmaPortalZewnDto;
+import com.baza.firmy.podmiotygospodarcze.domain.dto.GusSzczegolyDto;
 import com.baza.firmy.podmiotygospodarcze.domain.dto.JdgSzczegolyDto;
 import com.baza.firmy.response.krs.OdpisAktualnyResponse;
-import java.util.UUID;
+import jakarta.transaction.Transactional;
+import jakarta.transaction.Transactional.TxType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+
+import java.util.UUID;
 
 @Service
 @Slf4j
@@ -15,6 +19,7 @@ public class PodmiotyGospodarczeFacade {
 
   private final StworzPodmiotGospodarczyZJdgUseCase stworzPodmiotGospodarczyZJdgUseCase;
   private final StworzPodmiotGospodarczyZKrsOdpisAktualnyUseCase stworzPodmiotGospodarczyZKrsOdpisAktualnyUseCase;
+  private final StworzPodmiotGospodarczyZGusUseCase stworzPodmiotGospodarczyZGusUseCase;
   private final ZaktualizujPodmiotGospodarczyZKrsOdpisAktualnyUseCase zaktualizujPodmiotGospodarczyZKrsOdpisAktualnyUseCase;
   private final ZaktualizujPodmiotGospodarczyZJdgUseCase zaktualizujPodmiotGospodarczyZJdgUseCase;
   private final ZaktualizujDaneKontaktoweUseCase zaktualizujDaneKontaktoweUseCase;
@@ -44,5 +49,15 @@ public class PodmiotyGospodarczeFacade {
 
   public void zaktualizujDaneKontaktowe(FirmaPortalZewnDto firma) {
     zaktualizujDaneKontaktoweUseCase.zaktualizujDaneKontaktowe(firma);
+  }
+
+  @Transactional(TxType.REQUIRES_NEW)
+  public UUID pobierzOrazZapiszDaneFirmyZGus(String nip) {
+    // TODO do implementacji, na razie zapisuje się tylko NIP
+    return stworzPodmiotGospodarczyZGusUseCase.stworzPodmiotGospodarczy(
+            GusSzczegolyDto.builder()
+                    .nip(nip)
+                    .build()
+    );
   }
 }

@@ -29,4 +29,4 @@ import org.springframework.data.jpa.domain.Specification;
     @Spec (path = "a.powiat", params = "powiat", spec = LikeIgnoreCase.class),
     @Spec (path = "a.gmina", params = "gmina", spec = LikeIgnoreCase.class)
 })
-public interface PodmiotyGospodarczeFilterSpecification extends Specification<PodmiotGospodarczeViewEntity> { }
+public interface PodmiotyGospodarczeFilterSpecification extends Specification<PodmiotGospodarczyViewEntity> { }

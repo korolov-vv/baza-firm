@@ -1,16 +1,7 @@
 package com.baza.firmy.configuration.s3w;
 
 
-import static com.baza.firmy.configuration.s3w.S3Exceptions.nieMoznaDodacPliku;
-
 import com.baza.firmy.configuration.properties.AwsProperties;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.util.Objects;
-import java.util.UUID;
-import java.util.function.Consumer;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Async;
@@ -18,11 +9,17 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
-import software.amazon.awssdk.services.s3.model.CreateBucketRequest;
-import software.amazon.awssdk.services.s3.model.HeadBucketRequest;
-import software.amazon.awssdk.services.s3.model.NoSuchBucketException;
-import software.amazon.awssdk.services.s3.model.PutObjectRequest;
-import software.amazon.awssdk.services.s3.model.S3Exception;
+import software.amazon.awssdk.services.s3.model.*;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.util.Objects;
+import java.util.UUID;
+import java.util.function.Consumer;
+
+import static com.baza.firmy.configuration.s3w.S3Exceptions.nieMoznaDodacPliku;
 
 /**
  * Klasa jest Serwisem (element pośredniczący) związaną z dodawaniem plików. Powstała w celu wydzielenia wspólnej logiki pomiędzy
@@ -84,9 +81,9 @@ public class S3UploadService {
   }
 
   private void uploadFileToS3Bucket(final String filePath, final File file) {
-    if (!bucketExists(S3Constants.BUCKET_NAME)) {
-      createNewBucket();
-    }
+//    if (!bucketExists(S3Constants.BUCKET_NAME)) {
+//      createNewBucket();
+//    }
 
     s3Client.putObject(putObjectRequest(S3Constants.BUCKET_NAME, filePath, file), RequestBody.fromFile(file));
   }

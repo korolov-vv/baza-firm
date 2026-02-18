@@ -4,12 +4,13 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+
+import java.util.UUID;
 
 @Data
 @Builder
@@ -59,4 +60,16 @@ public class AdresViewEntity {
   private String simc;
   @Column(insertable = false, updatable = false)
   private String ulic;
+
+  @Override
+  public String toString() {
+    return (wojewodztwo != null ? wojewodztwo + ", " : "") +
+            (gmina != null ? gmina + ", " : "") +
+            (powiat != null ? powiat + ", " : "") +
+            (kodPocztowy != null ?  kodPocztowy + ", " : "") +
+            (miasto != null ? miasto + " " : "") +
+            (ulica != null ? ulica + " " : "") +
+            (budynek != null ? budynek : "") +
+            (lokal != null ? "/" + lokal : "");
+  }
 }

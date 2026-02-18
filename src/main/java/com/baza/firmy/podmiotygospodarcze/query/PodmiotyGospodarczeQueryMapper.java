@@ -22,10 +22,10 @@ interface PodmiotyGospodarczeQueryMapper {
     @Mapping(target = "krs", source = ".", qualifiedByName = "setKrs")
     @Mapping(target = "adresDzialalnosci", source = ".", qualifiedByName = "setAdresEntityDzialalnosci")
     @Mapping(target = "adresKorespondencyjny", source = ".", qualifiedByName = "setAdresKorespondencyjny")
-    PodmiotGospodarczyListDto toJdgListDtoList(PodmiotGospodarczeViewEntity entity);
+    PodmiotGospodarczyListDto toJdgListDtoList(PodmiotGospodarczyViewEntity entity);
 
     @Named("setPkdGlowny")
-    default Pkd setPkdGlowny(PodmiotGospodarczeViewEntity entity) {
+    default Pkd setPkdGlowny(PodmiotGospodarczyViewEntity entity) {
         return entity.getPkdGlowny()
                 .map(pkd -> Pkd.builder()
                         .kod(pkd.getKod())
@@ -35,7 +35,7 @@ interface PodmiotyGospodarczeQueryMapper {
     }
 
     @Named("setPkdList")
-    default List<Pkd> setPkdList(PodmiotGospodarczeViewEntity entity) {
+    default List<Pkd> setPkdList(PodmiotGospodarczyViewEntity entity) {
         return entity.getPkd().stream()
                 .map(pkd -> Pkd.builder()
                         .kod(pkd.getKod())
@@ -45,22 +45,22 @@ interface PodmiotyGospodarczeQueryMapper {
     }
 
     @Named("setNip")
-    default String setNip(PodmiotGospodarczeViewEntity podmiotGospodarczy) {
+    default String setNip(PodmiotGospodarczyViewEntity podmiotGospodarczy) {
         return podmiotGospodarczy.getNip();
     }
 
     @Named("setRegon")
-    default String setRegon(PodmiotGospodarczeViewEntity podmiotGospodarczy) {
+    default String setRegon(PodmiotGospodarczyViewEntity podmiotGospodarczy) {
         return podmiotGospodarczy.getRegon();
     }
 
     @Named("setKrs")
-    default String setKrs(PodmiotGospodarczeViewEntity podmiotGospodarczy) {
+    default String setKrs(PodmiotGospodarczyViewEntity podmiotGospodarczy) {
         return podmiotGospodarczy.getNumerKrs().orElse(Strings.EMPTY);
     }
 
     @Named("setAdresEntityDzialalnosci")
-    default AdresDto setAdresEntityDzialalnosci(PodmiotGospodarczeViewEntity podmiotGospodarczy) {
+    default AdresDto setAdresEntityDzialalnosci(PodmiotGospodarczyViewEntity podmiotGospodarczy) {
         return podmiotGospodarczy.getAdresDzialalnosci()
                 .map(adres -> AdresDto.builder()
                         .ulica(adres.getUlica())
@@ -77,7 +77,7 @@ interface PodmiotyGospodarczeQueryMapper {
     }
 
     @Named("setAdresKorespondencyjny")
-    default AdresDto setAdresKorespondencyjny(PodmiotGospodarczeViewEntity podmiotGospodarczy) {
+    default AdresDto setAdresKorespondencyjny(PodmiotGospodarczyViewEntity podmiotGospodarczy) {
         return AdresDto.builder()
                 .ulica(podmiotGospodarczy.getAdresKorespondencyjny().getUlica())
                 .budynek(podmiotGospodarczy.getAdresKorespondencyjny().getBudynek())
@@ -92,7 +92,7 @@ interface PodmiotyGospodarczeQueryMapper {
     }
 
     @Named("setWlascicielDto")
-    default WlascicielDto setWlascicielDto(PodmiotGospodarczeViewEntity podmiotGospodarczy) {
+    default WlascicielDto setWlascicielDto(PodmiotGospodarczyViewEntity podmiotGospodarczy) {
         return podmiotGospodarczy.getWlasciciel()
                 .map(osoba -> WlascicielDto.builder()
                         .imie(osoba.getImie())
