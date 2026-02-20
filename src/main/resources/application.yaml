@@ -93,7 +93,6 @@ keycloak-admin:
     -
       clientName: BAZAFIRM_WEB_APP
       clientId: bazafirm-admin-web
-      clientSecret: ${KEYCLOAK_APP_WEB_CLIENT_ADM_SECRET}
 
 keycloak-customer:
   server-url: ${KEYCLOAK_SERVER_URL}
@@ -107,4 +106,3 @@ keycloak-customer:
     -
       clientName: BAZAFIRM_WEB_APP
       clientId: customer-app-web
-      clientSecret: ${KEYCLOAK_APP_WEB_CLIENT_CUST_SECRET}
