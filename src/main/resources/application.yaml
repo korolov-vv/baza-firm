@@ -31,7 +31,7 @@ application:
   authorization:
     disabled:
       get:
-        - /health
+        - /actuator/health
         - /info
         - /prometheus
         - /metrics
