@@ -20,7 +20,7 @@ class PobierajListeJdgNoweService implements BazowySchedulerService {
 
   @Override
   public void executeScheduler(JobExecutionContext jobExecutionContext) {
-    log.info("Start EKSPORTUJ_LISTE_JDG_NOWE_JOB");
+    log.info("Start POBIERAJ_LISTE_JDG_NOWE_JOB");
     pobierzDaneZCeidgService.pobierzListyJdgNoweIZapisz(Map.of(
         "status", "AKTYWNY",
         "dataOd", LocalDate.now().minusDays(3).format(DateTimeFormatter.ISO_LOCAL_DATE),
