@@ -24,7 +24,7 @@ class StworzTrialDlaFirmyKlientaUseCase {
 
   public UUID stworzTrialDlaFirmyKlienta(UUID uuidFirmyKlienta) {
     firmySubscrypcjeQueryFacade.znajdzAktywnaSubscrypcjeDlaFirmy(uuidFirmyKlienta)
-            .ifPresent(_ -> {
+            .ifPresent(firmaSubscrypcjaDto -> {
                 throw new IllegalArgumentException("Firma ma już aktywną subscrypcję");
             });
 
