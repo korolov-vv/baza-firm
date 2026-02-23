@@ -32,7 +32,7 @@ public class WebSecurityConfiguration {
   private final CorsConfigurationSource corsConfigurationSource;
 
   @Bean
-  public SecurityFilterChain filterChain(HttpSecurity http) {
+  public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
     http.authorizeHttpRequests(authorize -> authorize
         .dispatcherTypeMatchers(DispatcherType.ERROR).permitAll()
         .anyRequest().authenticated());
