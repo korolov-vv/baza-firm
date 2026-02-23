@@ -1,35 +1,37 @@
-# ---- Stage 1: Build ----
-FROM eclipse-temurin:21 AS build
+# ---------- BUILD STAGE ----------
 
+FROM eclipse-temurin:21-jdk AS build
 WORKDIR /app
 
-# Copy Gradle wrapper and configuration first (for dependency caching)
-COPY gradlew ./
+# Copy Gradle wrapper and config
+
+COPY gradlew .
 COPY gradle gradle
 COPY build.gradle settings.gradle ./
 
-# Make the Gradle wrapper executable
 RUN chmod +x gradlew
 
-# Download dependencies (this layer will be cached)
-RUN ./gradlew dependencies --no-daemon || return 0
+# Copy source
 
-# Copy the rest of the source code
 COPY src src
 
-# Build the Spring Boot JAR (skip tests for faster build)
+# Build application (skip tests for Fly)
+
 RUN ./gradlew bootJar --no-daemon -x test
 
-# ---- Stage 2: Run ----
-FROM eclipse-temurin:21-jre
+# ---------- RUNTIME STAGE ----------
 
+FROM eclipse-temurin:21-jre
 WORKDIR /app
 
-# Copy the built JAR from the build stage
+# Copy built jar
+
 COPY --from=build /app/build/libs/*.jar app.jar
 
-# Expose the default Spring Boot port
+# Fly expects the app to bind to $PORT
+
+ENV PORT=8082
+
 EXPOSE 8082
 
-# Start the application
-CMD ["java", "-jar", "app.jar"]
+ENTRYPOINT ["java","-jar","/app/app.jar"]
