@@ -56,4 +56,8 @@ public class FirmySubscrypcjeQueryFacade {
     public Optional<FirmaSubscrypcjaViewEntity> findByUuidPelneInfo(UUID uuid) {
         return firmySubscrypcjeQueryRepository.findByUuidPelneInfo(uuid);
     }
+
+    public List<FirmaSubscrypcjaViewEntity> findAll() {
+        return firmySubscrypcjeQueryRepository.findAll();
+    }
 }

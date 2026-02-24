@@ -12,16 +12,15 @@ import org.quartz.JobExecutionContext;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.UUID;
+import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @RequiredArgsConstructor
 @Service
 class EksportujNoweFirmDoCrmSchrackService implements BazowySchedulerService {
-
-    private static final String PARAMETRY_WYSZUKIWANIA_KLUCZ = "parametryWyszukawania";
-    private static final String FIRMA_SUBSCRYPCJA_UUID_KLUCZ = "firmaSubscrypcjaUuid";
 
     private final FirmySubscrypcjeQueryFacade firmySubscrypcjeQueryFacade;
     private final ListeFirmCrmDlaKlientaPageProcessor listeFirmCrmDlaKlientaPageProcessor;
@@ -29,12 +28,24 @@ class EksportujNoweFirmDoCrmSchrackService implements BazowySchedulerService {
     @Override
     public void executeScheduler(JobExecutionContext jobExecutionContext) {
         log.info("Start EKSPORTUJ_NOWE_FIRMY_DO_CRM_SCHRACK_SCHEDULER_JOB");
-        ParametryWyszukiwaniaDto parametryWyszukiwaniaDto = (ParametryWyszukiwaniaDto) jobExecutionContext.getMergedJobDataMap().get(PARAMETRY_WYSZUKIWANIA_KLUCZ);
-        UUID firmaSubscrypcjaUuid = (UUID) jobExecutionContext.getMergedJobDataMap().get(FIRMA_SUBSCRYPCJA_UUID_KLUCZ);
+        ParametryWyszukiwaniaDto parametryWyszukiwaniaDto = (ParametryWyszukiwaniaDto) Map.of(
+                "parametryWyszukawania", ParametryWyszukiwaniaDto.builder()
+                        .pkd("4321Z,2712Z,6110Z")
+                        .dataRozpoczeciaOd(LocalDate.now().minusDays(3))
+                        .dataRozpoczeciaDo(LocalDate.now().minusDays(3))
+                        .build()
+        );
 
         try {
-            FirmaSubscrypcjaViewEntity firmaSubscrypcja = firmySubscrypcjeQueryFacade.findByUuidPelneInfo(firmaSubscrypcjaUuid)
-                    .orElseThrow(() -> new IllegalArgumentException("Nie znaleziono FirmaSubscrypcja o UUID: " + firmaSubscrypcjaUuid));
+            List<FirmaSubscrypcjaViewEntity> firmySubscrypcje = firmySubscrypcjeQueryFacade.findAll();
+            if (firmySubscrypcje.isEmpty()) {
+                throw new IllegalArgumentException("Nie znaleziono List<FirmaSubscrypcjaViewEntity>");
+            }
+
+            FirmaSubscrypcjaViewEntity firmaSubscrypcja = firmySubscrypcje.stream()
+                    .filter(firmaSubscrypcjaViewEntity -> firmaSubscrypcjaViewEntity.getFirmaKlienta().getNip().equals("5240018605"))
+                    .findFirst()
+                    .orElseThrow(() -> new IllegalArgumentException("Nie znaleziono FirmaSubscrypcjaViewEntity z NIPem równym 5240018605"));
 
             PodmiotGospodarczyViewEntity firmaKlient = firmaSubscrypcja.getFirmaKlienta();
             int iloscDostepnychFirm = firmaSubscrypcja.getSubscrypcja().getIloscDostepnychFirm();
@@ -45,7 +56,7 @@ class EksportujNoweFirmDoCrmSchrackService implements BazowySchedulerService {
             log.info("Zakończono tworzenie listy firm CRM. Utworzono łącznie {} firm dla klienta: {}",
                     totalCreated, firmaKlient.getUuid());
         } catch (Exception e) {
-            log.error("Błąd podczas tworzenia listy firm CRM dla subscrypcji: {}", firmaSubscrypcjaUuid, e);
+            log.error("Błąd podczas tworzenia listy firm CRM dla Schrack", e);
             throw e;
         }
 

@@ -4,7 +4,6 @@ import com.baza.firmy.common.util.MailSenderUtills;
 import com.baza.firmy.podmiotygospodarcze.domain.PodmiotyGospodarczeFacade;
 import com.baza.firmy.podmiotygospodarcze.query.PodmiotGospodarczyViewEntity;
 import com.baza.firmy.podmiotygospodarcze.query.PodmiotyGospodarczeQueryFacade;
-import com.baza.firmy.firmysubscrypcje.domain.FirmySubscrypcjeFacade;
 import com.baza.firmy.uzytkownicy.dto.StworzUzytkownikaDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -17,21 +16,20 @@ class StworzUzytkownikaUseCase {
 
   private final UzytkownicyRepository uzytkownicyRepository;
   private final UzytkownicyMapper uzytkownicyMapper;
-  private final FirmySubscrypcjeFacade firmySubscrypcjeFacade;
   private final PodmiotyGospodarczeQueryFacade podmiotyGospodarczeQueryFacade;
   private final PodmiotyGospodarczeFacade podmiotyGospodarczeFacade;
   private final MailSenderUtills mailSenderUtills;
 
   public UUID stworzUzytkownika(StworzUzytkownikaDto stworzUzytkownikaDto) {
-    if (uzytkownicyRepository.existsByFirmaNip(stworzUzytkownikaDto.getNip())) {
-      // TODO: zrobić service do notyfikacjii o takich zdarzeniach
-      mailSenderUtills.sendEmail(
-              "vadymkorolov@gmail.com",
-              "Próba tworzenia więcej niż jednego użytkownika dla firmy",
-              "Istnieje już uzytkownik dla firmy z podanym NIP: " + stworzUzytkownikaDto.getNip()
-      );
-      throw new IllegalArgumentException("Istnieje już uzytkownik dla firmy z podanym NIP: " + stworzUzytkownikaDto.getNip());
-    }
+//    if (uzytkownicyRepository.existsByFirmaNip(stworzUzytkownikaDto.getNip())) {
+//      // TODO: zrobić service do notyfikacjii o takich zdarzeniach
+//      mailSenderUtills.sendEmail(
+//              "vadymkorolov@gmail.com",
+//              "Próba tworzenia więcej niż jednego użytkownika dla firmy",
+//              "Istnieje już uzytkownik dla firmy z podanym NIP: " + stworzUzytkownikaDto.getNip()
+//      );
+//      throw new IllegalArgumentException("Istnieje już uzytkownik dla firmy z podanym NIP: " + stworzUzytkownikaDto.getNip());
+//    }
 
     UzytkownikEntity uzytkownikEntity = uzytkownicyMapper.toUzytkownikEntity(stworzUzytkownikaDto);
     uzytkownikEntity.setCzyEmailPotwierdzony(false);
