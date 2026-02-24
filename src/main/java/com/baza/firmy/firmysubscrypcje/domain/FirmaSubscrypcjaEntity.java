@@ -42,10 +42,10 @@ class FirmaSubscrypcjaEntity {
 
   @Id
   @SequenceGenerator(
-          name = "uzytkownicy_subscrypcje_seq",
+          name = "firmy_subscrypcje_seq",
           allocationSize = 1,
-          sequenceName = "uzytkownicy_subscrypcje_seq")
-  @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "uzytkownicy_subscrypcje_seq")
+          sequenceName = "firmy_subscrypcje_seq")
+  @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "firmy_subscrypcje_seq")
   @EqualsAndHashCode.Include
   private Long id;
   @CreatedDate
