@@ -23,7 +23,7 @@ class StworzFirmaCrmUseCase {
     }
     // Check if FirmaCrm already exists for this client-firm pair
     if (firmyCrmRepository.existsByFirmaKlientUuidAndFirmaCrmUuid(firmaKlientUuid, firmaCrmUuid)) {
-      log.debug("FirmaCrm już istnieje aktywna Subscrypcja dla klienta: {} i firmy: {}. Pomijam tworzenie.",
+      log.debug("FirmaCrm już istnieje Firma CRM dla firmaKlientUuid: {} oraz firmaCrmUuid: {}. Pomijam tworzenie.",
               firmaKlientUuid, firmaCrmUuid);
       return null;
     }
