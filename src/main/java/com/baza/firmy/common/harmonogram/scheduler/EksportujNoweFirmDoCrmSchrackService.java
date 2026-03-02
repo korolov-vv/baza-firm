@@ -31,7 +31,7 @@ class EksportujNoweFirmDoCrmSchrackService implements BazowySchedulerService {
         ParametryWyszukiwaniaDto parametryWyszukiwaniaDto = (ParametryWyszukiwaniaDto) Map.of(
                 "parametryWyszukawania", ParametryWyszukiwaniaDto.builder()
                         .pkd("4321Z,2712Z,6110Z")
-                        .dataRozpoczeciaOd(LocalDate.now().minusDays(3))
+                        .dataRozpoczeciaOd(LocalDate.now().minusDays(6))
                         .dataRozpoczeciaDo(LocalDate.now().minusDays(3))
                         .build()
         );
