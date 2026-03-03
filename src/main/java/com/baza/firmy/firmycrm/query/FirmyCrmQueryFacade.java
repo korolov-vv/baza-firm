@@ -33,12 +33,20 @@ public class FirmyCrmQueryFacade {
 
     public Page<FirmaCrmListDto> pobierzListeFirmDoKontaktuDzis(FirmaCrmFiltryDto filtry, Pageable pageable) {
 
-        return firmyCrmQueryRepository.znajdzFirmyDoKontaktuDzis(
+        return firmyCrmQueryRepository.znajdzFirmyDoKontaktu(
                 filtry.getUuidFirmyKlienta().orElseThrow(() -> new IllegalArgumentException("UUID firmy klienta jest wymagany")),
                         LocalDateTime.now(),
                         pageable
                 )
                 .map(firmyCrmQueryMapper::toFirmaCrmListDto);
+    }
+
+    public Boolean czySaFirmyDoKontaktuDzis(FirmaCrmFiltryDto filtry) {
+
+        return firmyCrmQueryRepository.czySaFirmyDoKontaktu(
+                filtry.getUuidFirmyKlienta().orElseThrow(() -> new IllegalArgumentException("UUID firmy klienta jest wymagany")),
+                        LocalDateTime.now()
+                );
     }
 
     public Optional<FirmaCrmDto> pobierzSzczegolyFirmy(UUID firmaKlientUuid, UUID firmaCrmUuid) {

@@ -70,6 +70,18 @@ class FirmyController {
         return ResponseEntity.ok(PageResponseDto.from(page));
     }
 
+    @GetMapping(value = "/do-kontaktu-dzis/czy-sa", produces = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(summary = "Usługa pobierająca listę firm")
+    public ResponseEntity<Boolean> czySaFirmyDoKontaktuDzis(@AuthenticationPrincipal UserPrincipal userPrincipal) {
+        UzytkownikViewEntity uzytkownik = sprawdzUzytkownikaOrazSubscrypcje(userPrincipal);
+
+        FirmaCrmFiltryDto filtry = FirmaCrmFiltryDto.builder()
+                .uuidFirmyKlienta(uzytkownik.getFirma().getUuid())
+                .build();
+
+        return ResponseEntity.ok(firmyCrmQueryFacade.czySaFirmyDoKontaktuDzis(filtry));
+    }
+
 
     @PutMapping(value = "/kontakt", consumes = MediaType.APPLICATION_JSON_VALUE)
     @Operation(summary = "Usługa aktualizująca szczegóły kontaktu z firmą")

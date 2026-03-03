@@ -20,6 +20,11 @@ interface FirmyCrmQueryRepository extends JpaRepository<FirmaCrmViewEntity, Long
   @Query("select f from FirmaCrmViewEntity f " +
           "where f.firmaKlient.uuid = :uuid " +
           "and (f.dataNastepnegoKontaktu = :data or f.createDate = :data)")
-  Page<FirmaCrmViewEntity> znajdzFirmyDoKontaktuDzis(@Param("uuid") UUID uuid, @Param("data") LocalDateTime data, Pageable pageable);
+  Page<FirmaCrmViewEntity> znajdzFirmyDoKontaktu(@Param("uuid") UUID uuid, @Param("data") LocalDateTime data, Pageable pageable);
+
+  @Query("select count(f) > 0 from FirmaCrmViewEntity f " +
+          "where f.firmaKlient.uuid = :uuid " +
+          "and (f.dataNastepnegoKontaktu = :data or f.createDate = :data)")
+  boolean czySaFirmyDoKontaktu(@Param("uuid") UUID uuid, @Param("data") LocalDateTime data);
 
 }
