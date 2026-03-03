@@ -13,6 +13,7 @@ import net.kaczmarzyk.spring.data.jpa.web.annotation.Spec;
 import org.springframework.data.jpa.domain.Specification;
 
 @Join(path = "firmaCrm", alias = "firmaCrm", type = JoinType.LEFT)
+@Join(path = "firmaKlient", alias = "firmaKlient", type = JoinType.LEFT)
 @Join(path = "firmaCrm.pkd", alias = "pkd", type = JoinType.LEFT)
 @Join(path = "firmaCrm.adresKorespondencyjny", alias = "a", type = JoinType.LEFT)
 @Conjunction(value = {
@@ -21,11 +22,13 @@ import org.springframework.data.jpa.domain.Specification;
         @Spec (path = "pkd.kod", params = "pkd", paramSeparator = ',', spec = In.class)
     })
 }, and = {
+    @Spec (path = "firmaKlient.uuid", params = "uuidFirmyKlienta", spec = Equal.class),
     @Spec (path = "firmaCrm.nazwa", params = "nazwa", spec = LikeIgnoreCase.class),
     @Spec (path = "firmaCrm.dataRozpoczecia", params = "dataRozpoczeciaOd", spec = GreaterThanOrEqual.class),
     @Spec (path = "firmaCrm.dataRozpoczecia", params = "dataRozpoczeciaDo", spec = LessThanOrEqual.class),
-    @Spec (path = "firmaCrm.createDate", params = "createDate", spec = GreaterThanOrEqual.class),
-    @Spec (path = "firmaCrm.status", params = "status", defaultVal = "AKTYWNY", spec = Equal.class),
+    @Spec (path = "firmaCrm.dataOstatniegoKontaktu", params = "dataOstatniegoKontaktuDo", spec = LessThanOrEqual.class),
+    @Spec (path = "firmaCrm.dataNastepnegoKontaktu", params = "dataNastepnegoKontaktuOd", spec = GreaterThanOrEqual.class),
+    @Spec (path = "firmaCrm.createDate", params = "dataDodaniaDoBazy", spec = GreaterThanOrEqual.class),
     @Spec (path = "a.wojewodztwo", params = "wojewodztwo", spec = LikeIgnoreCase.class),
     @Spec (path = "a.powiat", params = "powiat", spec = LikeIgnoreCase.class),
     @Spec (path = "a.gmina", params = "gmina", spec = LikeIgnoreCase.class)

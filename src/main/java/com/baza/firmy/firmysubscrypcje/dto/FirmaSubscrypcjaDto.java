@@ -16,6 +16,7 @@ import java.util.UUID;
 public class FirmaSubscrypcjaDto {
 
   private UUID uuid;
+  private UUID uuidFirmyKlienta;
   private String nazwa;
   private String opis;
   private int iloscDostepnychFirm;

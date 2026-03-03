@@ -26,15 +26,16 @@ public class FirmySubscrypcjeQueryFacade {
         }
         return listaAktywnychSubscrypcji.stream()
                 .findFirst()
-                .map(uzytkownikSubscrypcja -> FirmaSubscrypcjaDto.builder()
-                        .uuid(uzytkownikSubscrypcja.getUuid())
-                        .nazwa(uzytkownikSubscrypcja.getSubscrypcja().getNazwa())
-                        .opis(uzytkownikSubscrypcja.getSubscrypcja().getOpis())
-                        .iloscDostepnychFirm(uzytkownikSubscrypcja.getSubscrypcja().getIloscDostepnychFirm())
-                        .aktywnaOd(uzytkownikSubscrypcja.getAktywnaOd())
-                        .aktywnaDo(uzytkownikSubscrypcja.getAktywnaDo())
-                        .statusSubscrypcji(uzytkownikSubscrypcja.getStatusSubscrypcji())
-                        .parametrySubscrypcji(stworzParametrySubscrypcjiDto(uzytkownikSubscrypcja.getParametrySubscrypcji()))
+                .map(firmaSubscrypcja -> FirmaSubscrypcjaDto.builder()
+                        .uuid(firmaSubscrypcja.getUuid())
+                        .uuidFirmyKlienta(firmaSubscrypcja.getFirmaKlienta().getUuid())
+                        .nazwa(firmaSubscrypcja.getSubscrypcja().getNazwa())
+                        .opis(firmaSubscrypcja.getSubscrypcja().getOpis())
+                        .iloscDostepnychFirm(firmaSubscrypcja.getSubscrypcja().getIloscDostepnychFirm())
+                        .aktywnaOd(firmaSubscrypcja.getAktywnaOd())
+                        .aktywnaDo(firmaSubscrypcja.getAktywnaDo())
+                        .statusSubscrypcji(firmaSubscrypcja.getStatusSubscrypcji())
+                        .parametrySubscrypcji(stworzParametrySubscrypcjiDto(firmaSubscrypcja.getParametrySubscrypcji()))
                         .build());
     }
 
