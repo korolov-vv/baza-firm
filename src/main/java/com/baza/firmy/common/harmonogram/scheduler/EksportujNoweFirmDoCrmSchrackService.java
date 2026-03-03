@@ -19,7 +19,7 @@ import java.util.List;
 @Slf4j
 @RequiredArgsConstructor
 @Service
-class EksportujNoweFirmDoCrmSchrackService implements BazowySchedulerService {
+public class EksportujNoweFirmDoCrmSchrackService implements BazowySchedulerService {
 
     private final FirmySubscrypcjeQueryFacade firmySubscrypcjeQueryFacade;
     private final ListeFirmCrmDlaKlientaPageProcessor listeFirmCrmDlaKlientaPageProcessor;
