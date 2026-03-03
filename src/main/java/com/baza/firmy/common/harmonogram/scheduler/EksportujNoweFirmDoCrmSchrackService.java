@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.Map;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -28,13 +27,11 @@ class EksportujNoweFirmDoCrmSchrackService implements BazowySchedulerService {
     @Override
     public void executeScheduler(JobExecutionContext jobExecutionContext) {
         log.info("Start EKSPORTUJ_NOWE_FIRMY_DO_CRM_SCHRACK_SCHEDULER_JOB");
-        ParametryWyszukiwaniaDto parametryWyszukiwaniaDto = (ParametryWyszukiwaniaDto) Map.of(
-                "parametryWyszukawania", ParametryWyszukiwaniaDto.builder()
+        ParametryWyszukiwaniaDto parametryWyszukiwaniaDto = ParametryWyszukiwaniaDto.builder()
                         .pkd("4321Z,2712Z,6110Z")
                         .dataRozpoczeciaOd(LocalDate.now().minusDays(6))
                         .dataRozpoczeciaDo(LocalDate.now().minusDays(3))
-                        .build()
-        );
+                        .build();
 
         try {
             List<FirmaSubscrypcjaViewEntity> firmySubscrypcje = firmySubscrypcjeQueryFacade.findAll();

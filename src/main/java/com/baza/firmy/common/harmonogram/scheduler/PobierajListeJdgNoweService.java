@@ -23,7 +23,7 @@ class PobierajListeJdgNoweService implements BazowySchedulerService {
     log.info("Start POBIERAJ_LISTE_JDG_NOWE_JOB");
     pobierzDaneZCeidgService.pobierzListyJdgNoweIZapisz(Map.of(
         "status", "AKTYWNY",
-        "dataOd", LocalDate.now().minusDays(3).format(DateTimeFormatter.ISO_LOCAL_DATE),
+        "dataOd", LocalDate.now().minusDays(6).format(DateTimeFormatter.ISO_LOCAL_DATE),
         "dataDo", LocalDate.now().minusDays(3).format(DateTimeFormatter.ISO_LOCAL_DATE)
     ), null);
 

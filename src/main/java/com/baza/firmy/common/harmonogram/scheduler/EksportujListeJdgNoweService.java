@@ -1,12 +1,13 @@
 package com.baza.firmy.common.harmonogram.scheduler;
 
 import com.baza.firmy.dto.ParametryWyszukiwaniaDto;
-import java.time.LocalDate;
-import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.quartz.JobExecutionContext;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDate;
+import java.util.Map;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -21,7 +22,7 @@ class EksportujListeJdgNoweService implements BazowySchedulerService {
   Map<String, Object> parametry = Map.of(
       "parametryWyszukawania", ParametryWyszukiwaniaDto.builder()
               .pkd("4321Z,2712Z,6110Z")
-              .dataRozpoczeciaOd(LocalDate.now().minusDays(3))
+              .dataRozpoczeciaOd(LocalDate.now().minusDays(6))
               .dataRozpoczeciaDo(LocalDate.now().minusDays(3))
           .build()
   );
