@@ -21,6 +21,6 @@ class WyslijListeJdgNoweService implements BazowySchedulerService {
   mailSenderService.sendEmailWithFirms(
       "k.grabowski@schrack.pl",
       "Lista JDG",
-      String.format("Cześć! W załączniku firmy z %s", LocalDate.now().minusDays(6)));
+      String.format("Cześć! W załączniku firmy z %s", LocalDate.now().minusDays(3)));
  }
 }

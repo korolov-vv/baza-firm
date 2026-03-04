@@ -29,7 +29,7 @@ public class EksportujNoweFirmDoCrmSchrackService implements BazowySchedulerServ
         log.info("Start EKSPORTUJ_NOWE_FIRMY_DO_CRM_SCHRACK_SCHEDULER_JOB");
         ParametryWyszukiwaniaDto parametryWyszukiwaniaDto = ParametryWyszukiwaniaDto.builder()
                         .pkd("4321Z,2712Z,6110Z")
-                        .dataRozpoczeciaOd(LocalDate.now().minusDays(6))
+                        .dataRozpoczeciaOd(LocalDate.now().minusDays(3))
                         .dataRozpoczeciaDo(LocalDate.now().minusDays(3))
                         .build();
 
