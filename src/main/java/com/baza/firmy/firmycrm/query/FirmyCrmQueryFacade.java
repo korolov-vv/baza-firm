@@ -11,6 +11,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Optional;
@@ -41,11 +42,11 @@ public class FirmyCrmQueryFacade {
                 .map(firmyCrmQueryMapper::toFirmaCrmListDto);
     }
 
-    public Boolean czySaFirmyDoKontaktuDzis(FirmaCrmFiltryDto filtry) {
+    public int pobierzIloscFirmDoKontaktuDzis(FirmaCrmFiltryDto filtry) {
 
-        return firmyCrmQueryRepository.czySaFirmyDoKontaktu(
+        return firmyCrmQueryRepository.pobierzIloscFirmDoKontaktuDzis(
                 filtry.getUuidFirmyKlienta().orElseThrow(() -> new IllegalArgumentException("UUID firmy klienta jest wymagany")),
-                        LocalDateTime.now()
+                LocalDate.now().atStartOfDay()
                 );
     }
 

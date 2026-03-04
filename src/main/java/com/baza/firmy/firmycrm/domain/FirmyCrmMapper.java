@@ -18,7 +18,7 @@ interface FirmyCrmMapper {
     @Mapping(target = "pkdGlowny", source = ".", qualifiedByName = "setPkdGlowny")
     @Mapping(target = "nip", source = ".", qualifiedByName = "setNip")
     @Mapping(target = "nazwa", source = "firmaCrm.nazwa")
-    @Mapping(target = "wojewodztwo", source = "firmaCrm.adresKorespondencyjny.wojewodztwo")
+    @Mapping(target = "wojewodztwo", source = ".", qualifiedByName = "setWojewodztwo")
     @Mapping(target = "telefon", source = "firmaCrm.telefon")
     @Mapping(target = "email", source = "firmaCrm.email")
     @Mapping(target = "statusKontaktu", source = "statusKontaktu.label")
@@ -86,6 +86,13 @@ interface FirmyCrmMapper {
     default String setAdresDzialalnosci(FirmaCrmEntity entity) {
         return entity.getFirmaCrm().getAdresDzialalnosci()
                 .map(AdresViewEntity::toString)
+                .orElse(null);
+    }
+
+    @Named("setWojewodztwo")
+    default String setWojewodztwo(FirmaCrmEntity entity) {
+        return entity.getFirmaCrm().getAdresKorespondencyjny()
+                .map(AdresViewEntity::getWojewodztwo)
                 .orElse(null);
     }
 }

@@ -70,16 +70,16 @@ class FirmyController {
         return ResponseEntity.ok(PageResponseDto.from(page));
     }
 
-    @GetMapping(value = "/do-kontaktu-dzis/czy-sa", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/do-kontaktu-dzis/ilosc", produces = MediaType.APPLICATION_JSON_VALUE)
     @Operation(summary = "Usługa pobierająca listę firm")
-    public ResponseEntity<Boolean> czySaFirmyDoKontaktuDzis(@AuthenticationPrincipal UserPrincipal userPrincipal) {
+    public ResponseEntity<Integer> pobierzIloscFirmDoKontaktuDzis(@AuthenticationPrincipal UserPrincipal userPrincipal) {
         UzytkownikViewEntity uzytkownik = sprawdzUzytkownikaOrazSubscrypcje(userPrincipal);
 
         FirmaCrmFiltryDto filtry = FirmaCrmFiltryDto.builder()
                 .uuidFirmyKlienta(uzytkownik.getFirma().getUuid())
                 .build();
 
-        return ResponseEntity.ok(firmyCrmQueryFacade.czySaFirmyDoKontaktuDzis(filtry));
+        return ResponseEntity.ok(firmyCrmQueryFacade.pobierzIloscFirmDoKontaktuDzis(filtry));
     }
 
 
