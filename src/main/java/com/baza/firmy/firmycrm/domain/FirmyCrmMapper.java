@@ -77,7 +77,9 @@ interface FirmyCrmMapper {
 
     @Named("setAdresKorespondencyjny")
     default String setAdresKorespondencyjny(FirmaCrmEntity entity) {
-        return entity.getFirmaCrm().getAdresKorespondencyjny().toString();
+        return entity.getFirmaCrm().getAdresKorespondencyjny()
+                .map(AdresViewEntity::toString)
+                .orElse(null);
     }
 
     @Named("setAdresDzialalnosci")

@@ -151,6 +151,10 @@ public class PodmiotGospodarczyViewEntity {
         return Optional.ofNullable(adresDzialalnosci);
     }
 
+    public Optional<AdresViewEntity> getAdresKorespondencyjny() {
+        return Optional.ofNullable(adresKorespondencyjny);
+    }
+
     public Optional<PkdViewEntity> getPkdEntityGlowny() {
         return Optional.ofNullable(pkdGlowny);
     }

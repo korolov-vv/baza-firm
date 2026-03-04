@@ -44,6 +44,10 @@ public class PodmiotGospodarczyListDto {
     return Optional.ofNullable(adresDzialalnosci);
   }
 
+  public Optional<AdresDto> getAdresKorespondencyjny() {
+    return Optional.ofNullable(adresKorespondencyjny);
+  }
+
   public Optional<Pkd> getPkdGlowny() {
     return Optional.ofNullable(pkdGlowny);
   }

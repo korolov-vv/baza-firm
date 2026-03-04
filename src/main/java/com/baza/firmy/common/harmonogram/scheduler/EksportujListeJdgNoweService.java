@@ -22,13 +22,12 @@ class EksportujListeJdgNoweService implements BazowySchedulerService {
   Map<String, Object> parametry = Map.of(
       "parametryWyszukawania", ParametryWyszukiwaniaDto.builder()
               .pkd("4321Z,2712Z,6110Z")
-              .dataRozpoczeciaOd(LocalDate.now().minusDays(3))
+              .dataRozpoczeciaOd(LocalDate.now().minusDays(7))
               .dataRozpoczeciaDo(LocalDate.now().minusDays(3))
           .build()
   );
   quartzManager.stworzZadanieScheduleraRaportu(
       SchedulerSingleEnum.SCHRACK_LISTA_FIRM_SCHEDULER, parametry);
   log.info("Complete EKSPORTUJ_LISTE_JDG_NOWE_JOB");
-
  }
 }

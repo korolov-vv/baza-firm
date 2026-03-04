@@ -53,7 +53,7 @@ public class XslxDocumentUtils {
         createCell(row, 6, jdg.getTelefon(), cellStyle);
         createCell(row, 7, jdg.getPkdGlowny().map(Pkd::getKod).orElse(Strings.EMPTY), cellStyle);
         createCell(row, 8, jdg.getPkd().stream().map(Pkd::getKod).collect(Collectors.joining(", ")), cellStyle);
-        createCell(row, 9, jdg.getAdresKorespondencyjny().toString(), cellStyle);
+        createCell(row, 9, jdg.getAdresKorespondencyjny().map(AdresDto::toString).orElse(Strings.EMPTY), cellStyle);
         createCell(row, 10, jdg.getAdresDzialalnosci().map(AdresDto::toString).orElse(Strings.EMPTY), cellStyle);
       }
 

@@ -78,17 +78,19 @@ interface PodmiotyGospodarczeQueryMapper {
 
     @Named("setAdresKorespondencyjny")
     default AdresDto setAdresKorespondencyjny(PodmiotGospodarczyViewEntity podmiotGospodarczy) {
-        return AdresDto.builder()
-                .ulica(podmiotGospodarczy.getAdresKorespondencyjny().getUlica())
-                .budynek(podmiotGospodarczy.getAdresKorespondencyjny().getBudynek())
-                .lokal(podmiotGospodarczy.getAdresKorespondencyjny().getLokal())
-                .miasto(podmiotGospodarczy.getAdresKorespondencyjny().getMiasto())
-                .wojewodztwo(podmiotGospodarczy.getAdresKorespondencyjny().getWojewodztwo())
-                .powiat(podmiotGospodarczy.getAdresKorespondencyjny().getPowiat())
-                .gmina(podmiotGospodarczy.getAdresKorespondencyjny().getGmina())
-                .kraj(podmiotGospodarczy.getAdresKorespondencyjny().getKraj())
-                .kod(podmiotGospodarczy.getAdresKorespondencyjny().getKodPocztowy())
-                .build();
+        return podmiotGospodarczy.getAdresKorespondencyjny()
+                .map(adres -> AdresDto.builder()
+                        .ulica(adres.getUlica())
+                        .budynek(adres.getBudynek())
+                        .lokal(adres.getLokal())
+                        .miasto(adres.getMiasto())
+                        .wojewodztwo(adres.getWojewodztwo())
+                        .powiat(adres.getPowiat())
+                        .gmina(adres.getGmina())
+                        .kraj(adres.getKraj())
+                        .kod(adres.getKodPocztowy())
+                        .build())
+                .orElse(null);
     }
 
     @Named("setWlascicielDto")
