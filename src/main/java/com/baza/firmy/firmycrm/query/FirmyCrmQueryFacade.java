@@ -12,7 +12,6 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 import java.util.UUID;
@@ -36,7 +35,7 @@ public class FirmyCrmQueryFacade {
 
         return firmyCrmQueryRepository.znajdzFirmyDoKontaktu(
                 filtry.getUuidFirmyKlienta().orElseThrow(() -> new IllegalArgumentException("UUID firmy klienta jest wymagany")),
-                        LocalDateTime.now(),
+                        LocalDate.now().atStartOfDay(),
                         pageable
                 )
                 .map(firmyCrmQueryMapper::toFirmaCrmListDto);
