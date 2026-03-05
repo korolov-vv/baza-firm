@@ -22,7 +22,7 @@ class EksportujListeJdgNoweService implements BazowySchedulerService {
   Map<String, Object> parametry = Map.of(
       "parametryWyszukawania", ParametryWyszukiwaniaDto.builder()
               .pkd("4321Z,2712Z,6110Z")
-              .dataRozpoczeciaOd(LocalDate.now().minusDays(7))
+              .dataRozpoczeciaOd(LocalDate.now().minusDays(3))
               .dataRozpoczeciaDo(LocalDate.now().minusDays(3))
           .build()
   );
