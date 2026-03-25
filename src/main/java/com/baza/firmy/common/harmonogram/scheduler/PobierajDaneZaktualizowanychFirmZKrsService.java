@@ -54,9 +54,7 @@ public class PobierajDaneZaktualizowanychFirmZKrsService implements BazowySchedu
            final var odpis = krsService.pobierzOdpisAktualny(krs);
 
            if (Objects.isNull(odpis.get())) {
-             log.warn("Nie udało się pobrać odpisu aktualnego KRS dla numeru: {}", krs);
-             listaNiepobranychKrs.add(krs);
-             return;
+             throw new RuntimeException("Nie udało się pobrać odpisu aktualnego KRS dla numeru: " + krs + "odpis is null");
            }
 
            if (podmiotyGospodarczeQueryFacade.czyIstniejePoKrs(krs)) {
