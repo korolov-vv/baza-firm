@@ -7,13 +7,14 @@ import com.baza.firmy.danezkrs.query.ListaZaktualizowanychKrsQueryFacade;
 import com.baza.firmy.dto.ListaZmienionychWpisowDto;
 import com.baza.firmy.podmiotygospodarcze.domain.PodmiotyGospodarczeFacade;
 import com.baza.firmy.podmiotygospodarcze.query.PodmiotyGospodarczeQueryFacade;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.quartz.JobExecutionContext;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -46,6 +47,7 @@ public class PobierajDaneZaktualizowanychFirmZKrsService implements BazowySchedu
 
     listaZaktualizowanychKrsFacade.zmienStatusListyWpisow(
         listaZmienionychWpisowDto.getUuid(), StatusPobieraniaEnum.W_TRAKCIE);
+
     listaZmienionychWpisowDto.getIdentyfikatoryWpisow()
        .forEach(krs -> {
          try {
@@ -69,13 +71,13 @@ public class PobierajDaneZaktualizowanychFirmZKrsService implements BazowySchedu
        });
 
     if (!listaNiepobranychKrs.isEmpty()) {
-      log.warn("Nie udało się pobrać danych z KRS dla następujących wpisów: {}", listaNiepobranychKrs);
       listaZaktualizowanychKrsFacade.zmienStatusListyWpisow(
           listaZmienionychWpisowDto.getUuid(), StatusPobieraniaEnum.ZAKONCZONE_Z_BLENDAMI, listaNiepobranychKrs);
+      log.warn("Nie udało się pobrać danych z KRS dla następujących wpisów: {}", listaNiepobranychKrs);
     } else {
-      log.info("Pobieranie danych z KRS dla zaktualizowanych firm zakończone pomyślnie.");
       listaZaktualizowanychKrsFacade.zmienStatusListyWpisow(
           listaZmienionychWpisowDto.getUuid(), StatusPobieraniaEnum.ZAKONCZONE);
+      log.info("Pobieranie danych z KRS dla zaktualizowanych firm zakończone pomyślnie.");
     }
   }
 }

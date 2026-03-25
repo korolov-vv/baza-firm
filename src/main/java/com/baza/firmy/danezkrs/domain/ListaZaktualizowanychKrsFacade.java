@@ -3,11 +3,12 @@ package com.baza.firmy.danezkrs.domain;
 
 import com.baza.firmy.constants.enums.StatusPobieraniaEnum;
 import com.baza.firmy.response.krs.ListaZmienionychWpisowKrsResponse;
-import java.util.List;
-import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.UUID;
 
 @Service
 @Slf4j
