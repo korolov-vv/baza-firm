@@ -5,12 +5,24 @@ import com.baza.firmy.constants.enums.BusinessStatus;
 import com.baza.firmy.osoby.query.OsobaViewEntity;
 import com.baza.firmy.pkd.query.PkdViewEntity;
 import com.baza.firmy.podmiotygospodarcze.domain.Rejestr;
-import com.baza.firmy.podmiotygospodarcze.domain.dto.JdgSzczegolyArchiveDto;
-import com.baza.firmy.podmiotygospodarcze.domain.dto.JdgSzczegolyDto;
 import com.baza.firmy.podmiotygospodarcze.domain.dto.SpolkaDto;
-import com.baza.firmy.response.krs.OdpisAktualnyResponse;
-import jakarta.persistence.*;
-import lombok.*;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
+import jakarta.persistence.Version;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 import org.springframework.data.annotation.CreatedDate;
@@ -18,7 +30,11 @@ import org.springframework.data.annotation.LastModifiedDate;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 @Data
 @Builder
@@ -123,18 +139,6 @@ public class PodmiotGospodarczyViewEntity {
     private String adresDoreczenElektronicznych;
     @Column(insertable = false, updatable = false)
     private String innaFormaKontaktu;
-
-    @Column(columnDefinition = "jsonb", insertable = false, updatable = false)
-    @JdbcTypeCode(SqlTypes.JSON)
-    private JdgSzczegolyArchiveDto pelneInfoArchive;
-
-    @Column(columnDefinition = "jsonb")
-    @JdbcTypeCode(SqlTypes.JSON)
-    private JdgSzczegolyDto pelneInfo;
-
-    @Column(columnDefinition = "jsonb")
-    @JdbcTypeCode(SqlTypes.JSON)
-    private OdpisAktualnyResponse pelneInfoSpolka;
 
     @Column(insertable = false, updatable = false)
     private String link;

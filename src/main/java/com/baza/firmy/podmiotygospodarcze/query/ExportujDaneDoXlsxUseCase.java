@@ -3,11 +3,8 @@ package com.baza.firmy.podmiotygospodarcze.query;
 import com.baza.firmy.common.util.FileUtills;
 import com.baza.firmy.common.util.XslxDocumentUtils;
 import com.baza.firmy.dto.FileDto;
-import com.baza.firmy.dto.PodmiotGospodarczyListDto;
 import com.baza.firmy.dto.ParametryWyszukiwaniaDto;
-import java.io.ByteArrayOutputStream;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
+import com.baza.firmy.dto.PodmiotGospodarczyListDto;
 import lombok.RequiredArgsConstructor;
 import net.kaczmarzyk.spring.data.jpa.utils.SpecificationBuilder;
 import org.springframework.data.domain.Page;
@@ -15,6 +12,10 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
+
+import java.io.ByteArrayOutputStream;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 @Component
 @RequiredArgsConstructor
@@ -67,7 +68,7 @@ public class ExportujDaneDoXlsxUseCase {
   private void readDataAndSaveToFile(Specification<PodmiotGospodarczyViewEntity> specification, FileDto fileDto) {
     ByteArrayOutputStream out = new ByteArrayOutputStream();
     int pageNumber = 0;
-    int pageSize = 1000;
+    int pageSize = 200;
     Page<PodmiotGospodarczyListDto> page;
 
     do {

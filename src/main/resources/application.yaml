@@ -20,6 +20,8 @@ spring:
     properties:
       hibernate:
         default_schema: ${DB_SCHEMA}
+        jdbc:
+          fetch_size: 50
   lifecycle:
     timeout-per-shutdown-phase: 60s
   liquibase:
