@@ -30,14 +30,20 @@ public class FileUtills {
   private final S3UploadService s3UploadService;
 
   @Transactional
-  public FileDto saveToFile(ByteArrayInputStream excelData, FileDto fileDto) {
-    FileEntity file = saveFile(excelData, fileDto);
-    s3UploadService.uploadFile(file.getPath(), file.getFileName(), excelData.readAllBytes());
-    log.info("File saved to: {}", fileDto.getPath() + "/" + fileDto.getFileName());
-    return fileMapper.toFileDto(file);
+  public FileDto saveToFile(File excelFile, FileDto fileDto) {
+    try {
+      FileEntity file = saveFile(excelFile, fileDto);
+      s3UploadService.uploadFile(file.getPath(), file.getFileName(), excelFile);
+      log.info("File saved to: {}", fileDto.getPath() + "/" + fileDto.getFileName());
+      return fileMapper.toFileDto(file);
+    } finally {
+      if (excelFile.exists() && !excelFile.delete()) {
+        log.warn("Nie udało się usunąć pliku tymczasowego: {}", excelFile.getAbsolutePath());
+      }
+    }
   }
 
-  private FileEntity saveFile(ByteArrayInputStream excelData, FileDto fileDto) {
+  private FileEntity saveFile(File excelFile, FileDto fileDto) {
     FileEntity file;
     if (fileDto.getId() == null) {
       file = new FileEntity();
@@ -45,7 +51,7 @@ public class FileUtills {
       file.setFileName(fileDto.getFileName());
       file.setPath(fileDto.getPath());
       file.setExtention(fileDto.getExtention());
-      file.setSize((long) excelData.available());
+      file.setSize(excelFile.length());
     } else {
       file = fileRepository.findById(fileDto.getId())
           .orElseThrow(() -> new RuntimeException("File not found"));

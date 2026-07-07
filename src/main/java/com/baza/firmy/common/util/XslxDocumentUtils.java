@@ -10,8 +10,8 @@ import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.stereotype.Component;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -76,20 +76,19 @@ public class XslxDocumentUtils {
     }
   }
 
-  /**
-   * Serializes and disposes the streaming workbook, returning its bytes.
-   */
-  public ByteArrayInputStream finalizeWorkbook(SXSSFWorkbook workbook) {
-    ByteArrayOutputStream out = new ByteArrayOutputStream();
+  public File finalizeWorkbookToTempFile(SXSSFWorkbook workbook, String fileName) {
     try {
-      workbook.write(out);
+      File tempFile = File.createTempFile("xlsx-export-", "-" + fileName);
+      try (FileOutputStream outputStream = new FileOutputStream(tempFile)) {
+        workbook.write(outputStream);
+      }
+      return tempFile;
     } catch (IOException e) {
       log.error("Error writing Excel file: {}", e.getMessage());
-      return new ByteArrayInputStream(new byte[0]);
+      throw new RuntimeException("Error writing Excel file", e);
     } finally {
       workbook.dispose(); // delete temp files created by SXSSF
     }
-    return new ByteArrayInputStream(out.toByteArray());
   }
 
   private CellStyle createHeaderStyle(Workbook workbook) {
