@@ -7,7 +7,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.logging.log4j.util.Strings;
 import org.apache.poi.ss.usermodel.*;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.stereotype.Component;
 
 import java.io.ByteArrayInputStream;
@@ -21,62 +21,75 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class XslxDocumentUtils {
 
-  public ByteArrayInputStream appendToExcel(ByteArrayOutputStream out, List<PodmiotGospodarczyListDto> jdgList, boolean isFirstPage, boolean isLastPage) {
-    try (Workbook workbook = isFirstPage ? new XSSFWorkbook() : WorkbookFactory.create(new ByteArrayInputStream(out.toByteArray()))) {
-      Sheet sheet = isFirstPage ? workbook.createSheet("Dane firm") : workbook.getSheetAt(0);
+  private static final String[] COLUMNS = {
+      "Nazwa", "NIP", "REGON", "KRS", "Data rozpoczęcia działalności",
+      "Email", "Telefon", "PKD główny", "PKD dodatkowe",
+      "AdresEntity Korespondencyjny", "AdresEntity Działalności"
+  };
+  // Fixed column widths in units of 1/256 of a character width
+  private static final int[] COLUMN_WIDTHS = {
+      12000, 4000, 5000, 6000, 8000, 8000, 5000, 4000, 12000, 14000, 14000
+  };
+  // Row window kept in memory at a time; older rows are flushed to a temp file
+  private static final int STREAMING_ROW_WINDOW = 500;
 
-      CellStyle headerStyle = createHeaderStyle(workbook);
-      CellStyle cellStyle = createCellStyle(workbook);
+  /**
+   * Creates a new streaming workbook with a header row.
+   * The caller is responsible for calling {@link #finalizeWorkbook} when done.
+   */
+  public SXSSFWorkbook createStreamingWorkbook() {
+    SXSSFWorkbook workbook = new SXSSFWorkbook(STREAMING_ROW_WINDOW);
+    Sheet sheet = workbook.createSheet("Dane firm");
 
-      String[] columns = {"Nazwa", "NIP", "REGON", "KRS", "Data rozpoczęcia działalności", "Email", "Telefon", "PKD główny", "PKD dodatkowe", "AdresEntity Korespondencyjny", "AdresEntity Działalności"};
-
-      if (isFirstPage) {
-        Row headerRow = sheet.createRow(0);
-        for (int i = 0; i < columns.length; i++) {
-          Cell cell = headerRow.createCell(i);
-          cell.setCellValue(columns[i]);
-          cell.setCellStyle(headerStyle);
-        }
-      }
-
-      int rowNum = sheet.getLastRowNum() + 1;
-
-      for (PodmiotGospodarczyListDto jdg : jdgList) {
-        Row row = sheet.createRow(rowNum++);
-
-        createCell(row, 0, jdg.getNazwa(), cellStyle);
-        createCell(row, 1, jdg.getNip(), cellStyle);
-        createCell(row, 2, jdg.getRegon(), cellStyle);
-        createCell(row, 3, jdg.getKrs(), cellStyle);
-        createCell(row, 4, jdg.getDataRozpoczecia(), cellStyle);
-        createCell(row, 5, jdg.getEmail(), cellStyle);
-        createCell(row, 6, jdg.getTelefon(), cellStyle);
-        createCell(row, 7, jdg.getPkdGlowny().map(Pkd::getKod).orElse(Strings.EMPTY), cellStyle);
-        createCell(row, 8, jdg.getPkd().stream().map(Pkd::getKod).collect(Collectors.joining(", ")), cellStyle);
-        createCell(row, 9, jdg.getAdresKorespondencyjny().map(AdresDto::toString).orElse(Strings.EMPTY), cellStyle);
-        createCell(row, 10, jdg.getAdresDzialalnosci().map(AdresDto::toString).orElse(Strings.EMPTY), cellStyle);
-      }
-
-      for (int i = 0; i < columns.length; i++) {
-        if (i != 4) {
-          sheet.autoSizeColumn(i);
-        }
-      }
-
-      if (isLastPage) {
-        addBoldOutsideBorder(sheet, rowNum, columns.length);
-      }
-
-      out.reset();
-      workbook.write(out);
-      return new ByteArrayInputStream(out.toByteArray());
-    } catch (IOException e) {
-      log.error("Error generating Excel file: {}", e.getMessage());
-      return new ByteArrayInputStream(new byte[0]);
-    } catch (Exception e) {
-      log.error("Unexpected error: {}", e.getMessage());
-      return new ByteArrayInputStream(new byte[0]);
+    CellStyle headerStyle = createHeaderStyle(workbook);
+    Row headerRow = sheet.createRow(0);
+    for (int i = 0; i < COLUMNS.length; i++) {
+      Cell cell = headerRow.createCell(i);
+      cell.setCellValue(COLUMNS[i]);
+      cell.setCellStyle(headerStyle);
+      sheet.setColumnWidth(i, COLUMN_WIDTHS[i]);
     }
+    return workbook;
+  }
+
+  /**
+   * Appends a batch of records to the workbook sheet.
+   */
+  public void appendRows(SXSSFWorkbook workbook, List<PodmiotGospodarczyListDto> records) {
+    Sheet sheet = workbook.getSheetAt(0);
+    CellStyle cellStyle = createCellStyle(workbook);
+    int rowNum = sheet.getLastRowNum() + 1;
+
+    for (PodmiotGospodarczyListDto jdg : records) {
+      Row row = sheet.createRow(rowNum++);
+      createCell(row, 0, jdg.getNazwa(), cellStyle);
+      createCell(row, 1, jdg.getNip(), cellStyle);
+      createCell(row, 2, jdg.getRegon(), cellStyle);
+      createCell(row, 3, jdg.getKrs(), cellStyle);
+      createCell(row, 4, jdg.getDataRozpoczecia(), cellStyle);
+      createCell(row, 5, jdg.getEmail(), cellStyle);
+      createCell(row, 6, jdg.getTelefon(), cellStyle);
+      createCell(row, 7, jdg.getPkdGlowny().map(Pkd::getKod).orElse(Strings.EMPTY), cellStyle);
+      createCell(row, 8, jdg.getPkd().stream().map(Pkd::getKod).collect(Collectors.joining(", ")), cellStyle);
+      createCell(row, 9, jdg.getAdresKorespondencyjny().map(AdresDto::toString).orElse(Strings.EMPTY), cellStyle);
+      createCell(row, 10, jdg.getAdresDzialalnosci().map(AdresDto::toString).orElse(Strings.EMPTY), cellStyle);
+    }
+  }
+
+  /**
+   * Serializes and disposes the streaming workbook, returning its bytes.
+   */
+  public ByteArrayInputStream finalizeWorkbook(SXSSFWorkbook workbook) {
+    ByteArrayOutputStream out = new ByteArrayOutputStream();
+    try {
+      workbook.write(out);
+    } catch (IOException e) {
+      log.error("Error writing Excel file: {}", e.getMessage());
+      return new ByteArrayInputStream(new byte[0]);
+    } finally {
+      workbook.dispose(); // delete temp files created by SXSSF
+    }
+    return new ByteArrayInputStream(out.toByteArray());
   }
 
   private CellStyle createHeaderStyle(Workbook workbook) {
@@ -106,60 +119,4 @@ public class XslxDocumentUtils {
     cell.setCellStyle(style);
   }
 
-  private void addBoldOutsideBorder(Sheet sheet, int rowCount, int columnCount) {
-    applyBoldTopBorder(sheet, columnCount);
-    applyBoldBottomBorder(sheet, rowCount, columnCount);
-    applyBoldLeftBorder(sheet, rowCount);
-    applyBoldRightBorder(sheet, rowCount, columnCount);
-  }
-
-  private void applyBoldTopBorder(Sheet sheet, int columnCount) {
-    for (int i = 0; i < columnCount; i++) {
-      Cell topCell = sheet.getRow(0).getCell(i);
-      topCell.getCellStyle().setBorderTop(BorderStyle.THICK);
-    }
-  }
-
-  private void applyBoldBottomBorder(Sheet sheet, int rowCount, int columnCount) {
-    for (int i = 0; i < columnCount; i++) {
-      Cell bottomCell = sheet.getRow(rowCount - 1).getCell(i);
-      bottomCell.getCellStyle().setBorderBottom(BorderStyle.THICK);
-    }
-  }
-
-  private void applyBoldLeftBorder(Sheet sheet, int rowCount) {
-    for (int i = 0; i < rowCount; i++) {
-      if (i == 0) {
-        Cell leftTopCell = sheet.getRow(i).getCell(0);
-        leftTopCell.getCellStyle().setBorderTop(BorderStyle.THICK);
-        leftTopCell.getCellStyle().setBorderLeft(BorderStyle.THICK);
-      } else if (i == rowCount - 1) {
-        Cell leftBottomCell = sheet.getRow(i).getCell(0);
-        leftBottomCell.getCellStyle().setBorderBottom(BorderStyle.THICK);
-        leftBottomCell.getCellStyle().setBorderLeft(BorderStyle.THICK);
-      } else {
-        Cell leftCell = sheet.getRow(i).getCell(0);
-        leftCell.getCellStyle().setBorderTop(BorderStyle.THIN);
-        leftCell.getCellStyle().setBorderLeft(BorderStyle.THICK);
-      }
-    }
-  }
-
-  private void applyBoldRightBorder(Sheet sheet, int rowCount, int columnCount) {
-    for (int i = 0; i < rowCount; i++) {
-      if (i == 0) {
-        Cell leftTopCell = sheet.getRow(i).getCell(columnCount - 1);
-        leftTopCell.getCellStyle().setBorderTop(BorderStyle.THICK);
-        leftTopCell.getCellStyle().setBorderRight(BorderStyle.THICK);
-      } else if (i == rowCount - 1) {
-        Cell leftBottomCell = sheet.getRow(i).getCell(columnCount - 1);
-        leftBottomCell.getCellStyle().setBorderBottom(BorderStyle.THICK);
-        leftBottomCell.getCellStyle().setBorderRight(BorderStyle.THICK);
-      } else {
-        Cell leftCell = sheet.getRow(i).getCell(columnCount - 1);
-        leftCell.getCellStyle().setBorderTop(BorderStyle.THIN);
-        leftCell.getCellStyle().setBorderRight(BorderStyle.THIN);
-      }
-    }
-  }
 }
