@@ -7,6 +7,7 @@ import com.baza.firmy.dto.ParametryWyszukiwaniaDto;
 import com.baza.firmy.dto.PodmiotGospodarczyListDto;
 import lombok.RequiredArgsConstructor;
 import net.kaczmarzyk.spring.data.jpa.utils.SpecificationBuilder;
+import org.apache.logging.log4j.util.Strings;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -37,7 +38,7 @@ public class ExportujDaneDoXlsxUseCase {
   private static FileDto createFileDto(ParametryWyszukiwaniaDto parametry) {
     FileDto fileDto = new FileDto();
     fileDto.setVersion(0);
-    fileDto.setFileName("Jdg_list_" + parametry.getDataRozpoczeciaOd() + ".xlsx");
+    fileDto.setFileName("Jdg_list_" + parametry.getDataRozpoczeciaOd() != null ? parametry.getDataRozpoczeciaOd().format(DateTimeFormatter.ISO_DATE) : Strings.EMPTY + ".xlsx");
     fileDto.setPath("schrack/" + LocalDate.now().minusDays(3).getYear() + "/" + LocalDate.now().minusDays(3).getMonth());
     fileDto.setExtention("XLSX");
     fileDto.setSize(0L);
