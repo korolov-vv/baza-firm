@@ -38,7 +38,7 @@ public class ExportujDaneDoXlsxUseCase {
   private static FileDto createFileDto(ParametryWyszukiwaniaDto parametry) {
     FileDto fileDto = new FileDto();
     fileDto.setVersion(0);
-    fileDto.setFileName("Jdg_list_" + parametry.getDataRozpoczeciaOd() != null ? parametry.getDataRozpoczeciaOd().format(DateTimeFormatter.ISO_DATE) : Strings.EMPTY + ".xlsx");
+    fileDto.setFileName("Jdg_list_" + (parametry.getDataRozpoczeciaOd() != null ? parametry.getDataRozpoczeciaOd().format(DateTimeFormatter.ISO_DATE) : Strings.EMPTY) + ".xlsx");
     fileDto.setPath("schrack/" + LocalDate.now().minusDays(3).getYear() + "/" + LocalDate.now().minusDays(3).getMonth());
     fileDto.setExtention("XLSX");
     fileDto.setSize(0L);
