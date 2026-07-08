@@ -7,13 +7,13 @@ import com.baza.firmy.dto.ParametryWyszukiwaniaDto;
 import com.baza.firmy.dto.PodmiotGospodarczyListDto;
 import lombok.RequiredArgsConstructor;
 import net.kaczmarzyk.spring.data.jpa.utils.SpecificationBuilder;
-import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 
+import java.io.ByteArrayOutputStream;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
@@ -66,18 +66,21 @@ public class ExportujDaneDoXlsxUseCase {
   }
 
   private void readDataAndSaveToFile(Specification<PodmiotGospodarczyViewEntity> specification, FileDto fileDto) {
-    SXSSFWorkbook workbook = xslxDocumentUtils.createStreamingWorkbook();
+    ByteArrayOutputStream out = new ByteArrayOutputStream();
     int pageNumber = 0;
-    int pageSize = 1000;
+    int pageSize = 200;
     Page<PodmiotGospodarczyListDto> page;
 
     do {
       page = fetchData(specification, pageNumber, pageSize);
-      xslxDocumentUtils.appendRows(workbook, page.getContent());
+      if (pageNumber > 0) {
+        fileUtills.readFromFile(out, fileDto.getPath(), fileDto.getFileName());
+      }
+      fileDto = fileUtills.saveToFile(xslxDocumentUtils.appendToExcel(out, page.getContent(),
+              pageNumber == 0, pageNumber == page.getTotalPages()),
+          fileDto);
       pageNumber++;
     } while (page.hasNext());
-
-    fileUtills.saveToFile(xslxDocumentUtils.finalizeWorkbook(workbook), fileDto);
   }
 
   private Page<PodmiotGospodarczyListDto> fetchData(Specification<PodmiotGospodarczyViewEntity> specification, int pageNumber,
