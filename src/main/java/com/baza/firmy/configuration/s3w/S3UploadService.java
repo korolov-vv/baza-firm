@@ -49,17 +49,8 @@ public class S3UploadService {
   public void uploadFile(final String filePath, final String filename, final byte[] fileBytes) {
     try {
       final File file = writeByte(fileBytes, filename);
-      uploadFileToS3Bucket(filePath, filename, file);
+      uploadFileToS3Bucket(filePath, file);
       boolean ignore = file.delete(); // usunięcie pliku który tworzy sie na lokalnym dysku
-    } catch (final S3Exception ex) {
-      log.error("Błąd podczas dodawania pliku", ex);
-      throw nieMoznaDodacPliku(filename, ex);
-    }
-  }
-
-  public void uploadFile(final String filePath, final String filename, final File file) {
-    try {
-      uploadFileToS3Bucket(filePath, filename, file);
     } catch (final S3Exception ex) {
       log.error("Błąd podczas dodawania pliku", ex);
       throw nieMoznaDodacPliku(filename, ex);
@@ -94,17 +85,14 @@ public class S3UploadService {
 //      createNewBucket();
 //    }
 
-    uploadFileToS3Bucket(filePath, file.getName(), file);
+    s3Client.putObject(putObjectRequest(S3Constants.BUCKET_NAME, filePath, file), RequestBody.fromFile(file));
   }
 
-  private void uploadFileToS3Bucket(final String filePath, final String filename, final File file) {
-    s3Client.putObject(putObjectRequest(S3Constants.BUCKET_NAME, filePath, filename), RequestBody.fromFile(file));
-  }
-
-  private PutObjectRequest putObjectRequest(String bucketName, final String filePath, final String filename) {
+  private PutObjectRequest putObjectRequest(String bucketName, final String filePath, final File file) {
     return PutObjectRequest.builder()
+        .checksumSHA256(file.getName())
         .bucket(bucketName)
-        .key(filePath + "/" + filename)
+        .key(filePath + "/" + file.getName())
         .build();
   }
 

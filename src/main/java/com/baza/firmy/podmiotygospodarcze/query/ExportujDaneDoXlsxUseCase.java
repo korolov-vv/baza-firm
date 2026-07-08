@@ -77,7 +77,7 @@ public class ExportujDaneDoXlsxUseCase {
       pageNumber++;
     } while (page.hasNext());
 
-    fileUtills.saveToFile(xslxDocumentUtils.finalizeWorkbookToTempFile(workbook, fileDto.getFileName()), fileDto);
+    fileUtills.saveToFile(xslxDocumentUtils.finalizeWorkbook(workbook), fileDto);
   }
 
   private Page<PodmiotGospodarczyListDto> fetchData(Specification<PodmiotGospodarczyViewEntity> specification, int pageNumber,
