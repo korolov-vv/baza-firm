@@ -68,7 +68,7 @@ public class ExportujDaneDoXlsxUseCase {
   private void readDataAndSaveToFile(Specification<PodmiotGospodarczyViewEntity> specification, FileDto fileDto) {
     ByteArrayOutputStream out = new ByteArrayOutputStream();
     int pageNumber = 0;
-    int pageSize = 200;
+    int pageSize = 1000;
     Page<PodmiotGospodarczyListDto> page;
 
     do {
