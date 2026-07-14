@@ -63,7 +63,6 @@ public class ExportujDaneDoXlsxUseCase {
         .withParam("wojewodztwo", parametry.getWojewodztwo())
         .withParam("powiat", parametry.getPowiat())
         .withParam("gmina", parametry.getGmina())
-            .withParam("czyTelefon", "true")
         .build();
   }
 
