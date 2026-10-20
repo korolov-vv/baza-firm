@@ -90,7 +90,6 @@ public class S3UploadService {
 
   private PutObjectRequest putObjectRequest(String bucketName, final String filePath, final File file) {
     return PutObjectRequest.builder()
-        .checksumSHA256(file.getName())
         .bucket(bucketName)
         .key(filePath + "/" + file.getName())
         .build();
