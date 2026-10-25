@@ -7,8 +7,8 @@ spring:
     web-application-type: servlet
   application:
     name: firms
-    profiles:
-      active: ${DEPLOY_ENV}
+  profiles:
+    active: ${DEPLOY_ENV}
   datasource:
     url: ${POSTGRESQL_DB_URL}
     username: ${POSTGRESQL_DB_USERNAME}
@@ -27,7 +27,6 @@ spring:
   liquibase:
     change-log: classpath:db/changelog/baza-firmy-changelog.yaml
     default-schema: ${DB_SCHEMA}
-    url: ${POSTGRESQL_DB_URL}
   security:
     oauth2:
       resourceserver:
