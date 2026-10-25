@@ -27,6 +27,7 @@ spring:
   liquibase:
     change-log: classpath:db/changelog/baza-firmy-changelog.yaml
     default-schema: ${DB_SCHEMA}
+    url: ${POSTGRESQL_DB_URL}
   security:
     oauth2:
       resourceserver:
